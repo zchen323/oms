@@ -15,6 +15,8 @@
 hs_err_pid*
 
 .DS_Store
+.metadata
 
 target/
-
+Servers/
+RemoteSystemsTempFiles/
