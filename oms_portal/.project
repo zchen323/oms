@@ -3,6 +3,9 @@
 	<name>oms_web2</name>
 	<comment></comment>
 	<projects>
+		<project>oms_services</project>
+		<project>oms_dao</project>
+		<project>oms_common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

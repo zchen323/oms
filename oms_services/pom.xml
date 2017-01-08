@@ -11,19 +11,41 @@
                 <jackson.version>1.9.10</jackson.version>
                 <jdk.version>1.7</jdk.version>
         </properties>
+   <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.spring.platform</groupId>
+                <artifactId>platform-bom</artifactId>
+                <version>Athens-SR2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 
         <dependencies>
                 <!-- Spring 4 dependencies -->
                 <dependency>
                         <groupId>org.springframework</groupId>
                         <artifactId>spring-core</artifactId>
-                        <version>${spring.version}</version>
+                        
                 </dependency>
                 <dependency>
                         <groupId>org.springframework</groupId>
                         <artifactId>spring-context</artifactId>
-                        <version>${spring.version}</version>
+         
+                        
                 </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>        		
 		
 		<!-- ccg oms dependencies -->
 		<dependency>
