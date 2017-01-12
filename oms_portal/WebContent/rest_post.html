@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+    	var path = $('#path').val();
+    	var requestJson = $('#request').val();
+    	//alert(requestJson);
+    	$.ajax({
+    		url: path,
+    		type: 'POST',
+    		data: requestJson,
+    		contentType: 'application/json',
+    		success:function(data){
+    			console.log(data);
+    			$('#response').val(JSON.stringify(data));
+    		}
+    	});
+     });   
+});
+</script>
+</head>
+<body>
+<h1>REST POST</h1>
+Path: <input type="text" name="path" id="path" size="93" /><br />
+Request JSON:
+<br />
+<textarea id="request" rows="20" cols="100"></textarea><br />
+<button>Submit</button>
+<br /><br />
+Response:<br />
+<textarea id="response" rows="10" cols="100"></textarea>
+</body>
+</html>
