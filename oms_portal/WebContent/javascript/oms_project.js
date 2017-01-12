@@ -149,7 +149,7 @@ oms.project.createTaskItemPanel=function(taskdata)
 	// now build commend and document panel
 	var clgrid=oms.task.createTaskCommentPanel(taskdata,taskid);
 	var dlgrid=oms.task.createTaskDocumentPanel(taskdata,taskid);	
-	console.log(clgrid);
+//	console.log(clgrid);
 	var taskpanel=Ext.create('Ext.panel.Panel',{
 		id:taskid,
 			scrollable:true,
