@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<pre>
+GET: api/user/find/{username}
+	sample response: {"username":"chen3","email":"chen@gmail.com","password":"123456","roles":["ROLE_USER","XXXXX"]}
+
+GET: api/user/delete/{username}
+
+GET: api/user/addToRole/{username}/{role}
+
+GET: api/user/removeFromRole/{username}/{role}
+
+POST: api/user/updateEmail
+		{"username":"chen3","email":"chen@email.com"}
+
+POST: api/user/create
+		{"username":"chen3","email":"chen@gmail.com","password":"123456","roles":["ROLE_USER","XXXXX"]}
+		Not: email and roles are optional
+		
+POST: api/user/changePassword	
+		{"username":"chen3","oldPassword":"123456","newPassword":"aaaaa"}	
+</pre>
+</body>
+</html>
