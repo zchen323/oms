@@ -75,15 +75,12 @@ defaults: {
 bodyPadding: 2
 },
 items: [
-{title:'Work Queue',
-html:oms.ui.getWorkQueueHtml(12)
-},
+{title:'My Projects',
+	html:oms.ui.getUserProjectHtml(12)
+}, 
 {title:'My Documents',
 html:oms.ui.getUserDocumentHtml(12)
 },
-{title:'My Projects',
-html:oms.ui.getUserProjectHtml(12)
-}, 
 {title:'Reports',
 html:oms.ui.getReportHtml()
 },
@@ -117,15 +114,15 @@ items:[]
 // load sample project view
 
 var ppanel=oms.project.createProjectPanel(oms.project.sample1);
-var tpanel=oms.task.createTaskMainPanel(oms.task.sample1);
+//var tpanel=oms.task.createTaskMainPanel(oms.task.sample1);
 var dpanel=oms.doc.createDocMainPanel(oms.doc.sample1);
-var adminpanel=oms.admin.createAdminMainPanel();
+var adminpanel=oms.admin.createAdminPanel();
 var viewport=Ext.getCmp('centerViewPort');
 viewport.add(ppanel);
-viewport.add(tpanel);
+//viewport.add(tpanel);
 viewport.add(dpanel);
 viewport.add(adminpanel);
 viewport.doLayout();
-viewport.setActiveTab(3);
+viewport.setActiveTab(2);
 
 });
