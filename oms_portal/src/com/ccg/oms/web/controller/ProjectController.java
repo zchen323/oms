@@ -7,19 +7,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccg.oms.common.data.Project;
-import com.ccg.oms.service.OmsService;
+import com.ccg.oms.service.ProjectServices;
 
 @Controller
 @RequestMapping("/project")
 public class ProjectController {
 	
 	@Autowired
-	private OmsService service;
+	private ProjectServices service;
 	
 
 	@RequestMapping(value="name", method=RequestMethod.GET)
 	public @ResponseBody Project getShop(){
-		return service.getProjectById(1);
+		service.findProjectById(1);
+		return null;
 	}
 }
 

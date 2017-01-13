@@ -1,41 +1,43 @@
 package com.ccg.oms.dao.entiry;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="project")
 public class Project {
+
+	private int id;
+	private String name;
+	private String category;
+	private String description;
+	private String status;
+	
+	private Boolean prime;
+	private String primeName;
+	private String primeContactInfo;
+	
+	private String createdBy;
+	
+	private Timestamp createdDate;
+	private Timestamp dueDate;
+	private Timestamp completedDate;
+	private Timestamp lastUpdateDate;
+	
+	private List<ProjectUser> users;
+
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
-	private String name;
-	//private String category;
-	private String description;
-	
-//	@Enumerated(EnumType.STRING)
-//	private ProjectStatus status;
-//	
-//	private Customer customer;
-//	
-//	private boolean byPrime;
-//	private String primeName;
-//	
-//	private Date proposalDueDate;
-//	private Date startDate;
-//	private Date completeDate;
-//	private Date lastDateDate;
-//	
-//	private User owner;
-//	private User createdBy;
-//	private List<User> teamMembers;
-	
-	
 	public int getId() {
 		return id;
 	}
@@ -48,84 +50,81 @@ public class Project {
 	public void setName(String name) {
 		this.name = name;
 	}
-//	public String getCategory() {
-//		return category;
-//	}
-//	public void setCategory(String category) {
-//		this.category = category;
-//	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
 	}
-//	public ProjectStatus getStatus() {
-//		return status;
-//	}
-//	public void setStatus(ProjectStatus status) {
-//		this.status = status;
-//	}
-//	public Customer getCustomer() {
-//		return customer;
-//	}
-//	public void setCustomer(Customer customer) {
-//		this.customer = customer;
-//	}
-//	public boolean isByPrime() {
-//		return byPrime;
-//	}
-//	public void setByPrime(boolean byPrime) {
-//		this.byPrime = byPrime;
-//	}
-//	public String getPrimeName() {
-//		return primeName;
-//	}
-//	public void setPrimeName(String primeName) {
-//		this.primeName = primeName;
-//	}
-//	public Date getProposalDueDate() {
-//		return proposalDueDate;
-//	}
-//	public void setProposalDueDate(Date proposalDueDate) {
-//		this.proposalDueDate = proposalDueDate;
-//	}
-//	public Date getStartDate() {
-//		return startDate;
-//	}
-//	public void setStartDate(Date startDate) {
-//		this.startDate = startDate;
-//	}
-//	public Date getCompleteDate() {
-//		return completeDate;
-//	}
-//	public void setCompleteDate(Date completeDate) {
-//		this.completeDate = completeDate;
-//	}
-//	public Date getLastDateDate() {
-//		return lastDateDate;
-//	}
-//	public void setLastDateDate(Date lastDateDate) {
-//		this.lastDateDate = lastDateDate;
-//	}
-//	public User getOwner() {
-//		return owner;
-//	}
-//	public void setOwner(User owner) {
-//		this.owner = owner;
-//	}
-//	public User getCreatedBy() {
-//		return createdBy;
-//	}
-//	public void setCreatedBy(User createdBy) {
-//		this.createdBy = createdBy;
-//	}
-//	public List<User> getTeamMembers() {
-//		return teamMembers;
-//	}
-//	public void setTeamMembers(List<User> teamMembers) {
-//		this.teamMembers = teamMembers;
-//	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public Boolean isPrime() {
+		return prime;
+	}
+	public void setPrime(Boolean prime) {
+		this.prime = prime;
+	}
+	public String getPrimeName() {
+		return primeName;
+	}
+	public void setPrimeName(String primeName) {
+		this.primeName = primeName;
+	}
+	public String getPrimeContactInfo() {
+		return primeContactInfo;
+	}
+	public void setPrimeContactInfo(String primeContactInfo) {
+		this.primeContactInfo = primeContactInfo;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public Timestamp getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+	public Timestamp getDueDate() {
+		return dueDate;
+	}
+	public void setDueDate(Timestamp dueDate) {
+		this.dueDate = dueDate;
+	}
+	public Timestamp getCompletedDate() {
+		return completedDate;
+	}
+	public void setCompletedDate(Timestamp completedDate) {
+		this.completedDate = completedDate;
+	}
+	public Timestamp getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+	public void setLastUpdateDate(Timestamp lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+	
+	@OneToMany(mappedBy="project", cascade=CascadeType.ALL)
+	public List<ProjectUser> getUsers() {
+		return users;
+	}
+	public void setUsers(List<ProjectUser> users) {
+		this.users = users;
+	}
+	
 }
 
 /*
