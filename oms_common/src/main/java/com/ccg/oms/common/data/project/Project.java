@@ -1,4 +1,4 @@
-package com.ccg.oms.common.data;
+package com.ccg.oms.common.data.project;
 
 public class Project {
 	

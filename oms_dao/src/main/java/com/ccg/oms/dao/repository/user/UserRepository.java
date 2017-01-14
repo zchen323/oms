@@ -1,4 +1,4 @@
-package com.ccg.oms.dao.repository;
+package com.ccg.oms.dao.repository.user;
 
 import org.springframework.data.repository.CrudRepository;
 

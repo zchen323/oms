@@ -7,6 +7,9 @@
 	<name>oms dao</name>
 	<description>database access</description>
 
+<properties>
+    <org.mapstruct.version>1.1.0.Final</org.mapstruct.version>
+</properties>
 
    <dependencyManagement>
         <dependencies>
@@ -48,6 +51,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>ccg</groupId>
+        	<artifactId>oms_common</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
         </dependency>
 	</dependencies>
 </project>

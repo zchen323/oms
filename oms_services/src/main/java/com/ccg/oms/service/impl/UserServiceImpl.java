@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ccg.oms.common.data.user.User;
 import com.ccg.oms.common.data.user.UserWithPassword;
 import com.ccg.oms.dao.entiry.user.UserRole;
-import com.ccg.oms.dao.repository.UserRepository;
-import com.ccg.oms.dao.repository.UserRoleRepository;
+import com.ccg.oms.dao.repository.user.UserRepository;
+import com.ccg.oms.dao.repository.user.UserRoleRepository;
 import com.ccg.oms.service.UserServices;
 
 @Service

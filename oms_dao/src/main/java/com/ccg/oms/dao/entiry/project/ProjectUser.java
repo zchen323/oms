@@ -1,4 +1,4 @@
-package com.ccg.oms.dao.entiry;
+package com.ccg.oms.dao.entiry.project;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,7 +1,8 @@
-package com.ccg.oms.dao.repository;
+package com.ccg.oms.dao.repository.project;
 
-import com.ccg.oms.dao.entiry.Project;
 import org.springframework.data.repository.CrudRepository;
+
+import com.ccg.oms.dao.entiry.project.Project;
 
 public interface ProjectRepository extends CrudRepository<Project, Integer>{
 

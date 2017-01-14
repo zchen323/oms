@@ -1,4 +1,4 @@
-package com.ccg.oms.dao.entiry;
+package com.ccg.oms.dao.entiry.project;
 
 import java.sql.Date;
 import java.sql.Timestamp;
