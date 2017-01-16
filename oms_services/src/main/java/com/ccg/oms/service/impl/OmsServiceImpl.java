@@ -15,7 +15,7 @@ public class OmsServiceImpl implements OmsService{
 
 	public Project getProjectById(int id) {
 		
-		com.ccg.oms.dao.entiry.project.Project proj = projectRepository.findOne(id);
+		com.ccg.oms.dao.entiry.project.ProjectEntity proj = projectRepository.findOne(id);
 		
 		Project project = new Project();		
 		project.setDescription(proj.getDescription());

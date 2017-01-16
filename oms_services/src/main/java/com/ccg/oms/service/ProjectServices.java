@@ -2,6 +2,7 @@ package com.ccg.oms.service;
 
 import java.util.List;
 
+import com.ccg.oms.common.data.document.DocType;
 import com.ccg.oms.common.data.project.ProjectTemplate;
 import com.ccg.oms.common.data.project.ProjectUserRoleType;
 import com.ccg.oms.common.data.project.TaskTemplate;
@@ -21,5 +22,8 @@ public interface ProjectServices {
 	TaskTemplate getTaskTemplateById(Integer id);
 	void saveTaskTemplate(TaskTemplate taskTemplate);
 	void deleteTaskTemplate(Integer id);
+	
+	List<DocType> getDocTypes();
+	void saveDoctype(DocType docType);
 	
 }

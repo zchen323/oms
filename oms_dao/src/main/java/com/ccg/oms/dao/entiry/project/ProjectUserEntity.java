@@ -10,12 +10,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="project_users")
-public class ProjectUser {
+public class ProjectUserEntity {
 	
 	private int id;
 	private String username;
 	private String role;
-	private Project project;
+	private ProjectEntity project;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +40,10 @@ public class ProjectUser {
 	
 	@ManyToOne
 	@JoinColumn(name="projectId")
-	public Project getProject() {
+	public ProjectEntity getProject() {
 		return project;
 	}
-	public void setProject(Project project) {
+	public void setProject(ProjectEntity project) {
 		this.project = project;
 	}
 	

@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="doctype")
-public class DocType {
+public class DocTypeEntity {
 
 	private String doctype;
 	private String description;

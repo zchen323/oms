@@ -1,6 +1,5 @@
 package com.ccg.oms.dao.entiry.project;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="project")
-public class Project {
+public class ProjectEntity {
 
 	private int id;
 	private String name;
@@ -33,7 +32,7 @@ public class Project {
 	private Timestamp completedDate;
 	private Timestamp lastUpdateDate;
 	
-	private List<ProjectUser> users;
+	private List<ProjectUserEntity> users;
 
 	
 	@Id
@@ -118,10 +117,10 @@ public class Project {
 	}
 	
 	@OneToMany(mappedBy="project", cascade=CascadeType.ALL)
-	public List<ProjectUser> getUsers() {
+	public List<ProjectUserEntity> getUsers() {
 		return users;
 	}
-	public void setUsers(List<ProjectUser> users) {
+	public void setUsers(List<ProjectUserEntity> users) {
 		this.users = users;
 	}
 	

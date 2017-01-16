@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="projecttemplate")
-public class ProjectTemplate {
+public class ProjectTemplateEntity {
 	
 	private Integer id;
 	private String name;

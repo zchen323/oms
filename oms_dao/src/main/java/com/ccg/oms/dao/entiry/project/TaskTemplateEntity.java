@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="tasktemplate")
-public class TaskTemplate {
+public class TaskTemplateEntity {
 	
 	private Integer id;
 	private String name;

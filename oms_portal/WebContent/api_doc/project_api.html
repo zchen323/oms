@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Project API</h1>
+<h2>Project User Role</h2>
+<pre>
+GET api/project/projectUserRoleType/all
+
+			{
+			   "status": "success",
+			   "result": [
+			      {
+			         "roletype": "admin2",
+			         "description": "this is description.......",
+			         "status": "a"
+			      },
+			      {
+			         "roletype": "admin3",
+			         "description": "this is description......."
+			      }
+			   ]
+			}
+
+POST api/project/projectUserRoleType
+</pre>
+<h2>Project Template</h2>
+<pre>
+GET: api/projectprojectTemplate/all
+		{
+		   "status": "success",
+		   "result": [
+		      {
+		         "id": 4,
+		         "name": "teamplate 6",
+		         "config": {
+		            "name": "name"
+		         }
+		      },
+		      {
+		         "id": 5,
+		         "name": "teamplate 9",
+		         "description": "this is description....",
+		         "status": "a",
+		         "config": {
+		            "name": "name"
+		         }
+		      }
+		   ]
+		}
+GET: api/project/projectTemplate/{id}		
+		
+POST: api/project/projectTemplate
+		{
+		   "name": "teamplate 9",
+		   "description":"this is description....",
+		   "status":"a",
+		   "config": "{\"name\":\"name\"}"
+		}
+DELETE: api/project/projectTemplate/{id}
+</pre>
+<h2>Task Template</h2>
+<pre>
+GET: api/project/taskTemplate/all
+		{
+		   "status": "success",
+		   "result": [
+		      {
+		         "id": 1,
+		         "name": "teamplate 10",
+		         "description": "this is description....",
+		         "status": "a",
+		         "createdTS": 1484545181000,
+		         "config": {
+		            "name": "name"
+		         }
+		      }
+		   ]
+		}
+GET: api/project/taskTemplate/{id}
+
+POST: api/project/taskTemplate
+		{
+		   "name": "teamplate 10",
+		   "description":"this is description....",
+		   "status":"a",
+		   "config": "{\"name\":\"name\"}"
+		}
+DELETE: api/project/taskTemplate/{id}
+</pre>
+<h2>Doc Type</h2>
+<pre>
+GET: api/project/docType/all
+		{
+		   "status": "success",
+		   "result": [
+		      {
+		         "doctype": "type 1",
+		         "description": "this is description...."
+		      }
+		   ]
+		}
+POST: api/project/docType
+		{
+		    "doctype": "type 2",
+		    "description": "this is description....",
+		    "sampleURL": "http://sampledoc.com/sample"
+		}
+
+
+</pre>
+
+
+
+</body>
+</html>
