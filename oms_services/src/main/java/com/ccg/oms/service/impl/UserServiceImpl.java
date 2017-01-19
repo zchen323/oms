@@ -1,5 +1,6 @@
 package com.ccg.oms.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ccg.oms.common.data.user.User;
 import com.ccg.oms.common.data.user.UserWithPassword;
+import com.ccg.oms.dao.entiry.user.UserEntity;
+import com.ccg.oms.dao.entiry.user.UserEntity2;
 import com.ccg.oms.dao.entiry.user.UserRoleEntity;
+import com.ccg.oms.dao.entiry.user.UserRoleEntity2;
+import com.ccg.oms.dao.repository.user.User2Repository;
 import com.ccg.oms.dao.repository.user.UserRepository;
 import com.ccg.oms.dao.repository.user.UserRoleRepository;
 import com.ccg.oms.service.UserServices;
@@ -21,11 +26,16 @@ public class UserServiceImpl implements UserServices{
 	UserRepository userRepository;
 	
 	@Autowired
+	User2Repository user2Repository;	
+	
+	@Autowired
 	UserRoleRepository roleRepository;
+	
+	
 
 	@Transactional
 	public User findUserById(String username) {
-		com.ccg.oms.dao.entiry.user.UserEntity userEntity = userRepository.findOne(username);
+		UserEntity userEntity = userRepository.findOne(username);
 		if(!userEntity.getEnabled()){
 			return null;
 		}
@@ -36,9 +46,31 @@ public class UserServiceImpl implements UserServices{
 		}
 		return user;
 	}
+	
+	@Override
+	@Transactional
+	public List<User> getUsers() {
+		
+		List<User> users = new ArrayList<User>();
+		
+		Iterable<UserEntity2> entities = user2Repository.findAll();
+		for(UserEntity2 entity : entities){
+			if(entity.getEnabled()){
+				User user = new User();
+				user.setEmail(entity.getEmail());
+				user.setUsername(entity.getUsername());				
+				Set<UserRoleEntity2> roles = entity.getRoles();
+				for(UserRoleEntity2 role :roles){
+					user.getRoles().add(role.getRole());
+				}
+				users.add(user);
+			}
+		}
+		return users;
+	}
 
 	public void createUser(UserWithPassword user) {
-		com.ccg.oms.dao.entiry.user.UserEntity userEntity = this.mapToUserEntity(user);
+		UserEntity userEntity = this.mapToUserEntity(user);
 		userEntity.setPassword(user.getPassword());
 		userRepository.save(userEntity);
 		
@@ -54,13 +86,13 @@ public class UserServiceImpl implements UserServices{
 	}
 
 	public void removeUser(String username) {
-		com.ccg.oms.dao.entiry.user.UserEntity userEntity = userRepository.findOne(username);
+		UserEntity userEntity = userRepository.findOne(username);
 		userEntity.setEnabled(false);
 		userRepository.save(userEntity);
 	}
 
 	public void createUserWithRoles(User user, String password) {
-		com.ccg.oms.dao.entiry.user.UserEntity userEntity = this.mapToUserEntity(user);
+		UserEntity userEntity = this.mapToUserEntity(user);
 		userEntity.setPassword(password);
 		userRepository.save(userEntity);		
 	}
@@ -84,7 +116,6 @@ public class UserServiceImpl implements UserServices{
 	@Transactional
 	public void changePassword(String username, String oldPassword, String newPassword){
 		com.ccg.oms.dao.entiry.user.UserEntity user = userRepository.findOne(username);
-		System.out.println("=====" + oldPassword + ", " + newPassword);
 		if(user.getPassword().equals(oldPassword)){
 			user.setPassword(newPassword);
 		}
@@ -109,4 +140,6 @@ public class UserServiceImpl implements UserServices{
 		userEntity.setUsername(user.getUsername());
 		return userEntity;
 	}
+
+
 }

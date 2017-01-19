@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Admin API</h1>
+GET: api/admin
+<pre>
+{
+   "status": "success",
+   "result": {
+      "users": [
+         {
+            "username": "chen3",
+            "email": "chen@gmail.com",
+            "roles": [
+               "ROLE_USER",
+               "XXXXX"
+            ]
+         }
+      ],
+      "docTypes": [
+         {
+            "doctype": "type 1",
+            "description": "this is description...."
+         },
+         {
+            "doctype": "type 2",
+            "description": "this is description....",
+            "sampleURL": "http://sampledoc.com/sample",
+            "createdTS": 1484546174000
+         }
+      ],
+      "projectUserRoleTypes": [
+         {
+            "roletype": "admin"
+         },
+         {
+            "roletype": "abc",
+            "description": "efc"
+         },
+         {
+            "roletype": "abc1",
+            "description": "efc"
+         },
+         {
+            "roletype": "admin2",
+            "description": "this is description.......",
+            "status": "a"
+         },
+         {
+            "roletype": "admin3",
+            "description": "this is description......."
+         },
+         {
+            "roletype": "admin4",
+            "description": "this is description.......",
+            "createdTS": 1484426811000
+         },
+         {
+            "roletype": "admin6",
+            "description": "this is description.......",
+            "createdTS": 1484445305000
+         }
+      ],
+      "prjectTemplates": [
+         {
+            "id": 1,
+            "name": "teamplate 1"
+         },
+         {
+            "id": 2,
+            "name": "teamplate 1",
+            "config": "config"
+         },
+         {
+            "id": 3,
+            "name": "teamplate 1",
+            "config": {
+               "name": "name"
+            }
+         },
+         {
+            "id": 4,
+            "name": "teamplate 6",
+            "config": {
+               "name": "name"
+            }
+         },
+         {
+            "id": 5,
+            "name": "teamplate 9",
+            "description": "this is description....",
+            "status": "a",
+            "config": {
+               "name": "name"
+            }
+         },
+         {
+            "id": 6,
+            "name": "teamplate 10",
+            "description": "this is description....",
+            "status": "a",
+            "createdTS": 1484544726000,
+            "config": {
+               "name": "name"
+            }
+         }
+      ],
+      "taskTemplates": [
+         {
+            "id": 1,
+            "name": "teamplate 10",
+            "description": "this is description....",
+            "status": "a",
+            "createdTS": 1484545181000,
+            "config": {
+               "name": "name"
+            }
+         }
+      ]
+   }
+}
+</pre>
+
+</body>
+</html>

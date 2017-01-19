@@ -17,6 +17,7 @@ import com.ccg.oms.dao.entiry.project.ProjectTemplateEntity;
 import com.ccg.oms.dao.entiry.project.ProjectUserRoleTypeEntity;
 import com.ccg.oms.dao.entiry.project.TaskTemplateEntity;
 import com.ccg.oms.dao.entiry.user.UserEntity;
+import com.ccg.oms.dao.entiry.user.UserEntity2;
 
 @Mapper
 public interface BeanAndEntityMapper {
@@ -39,6 +40,7 @@ public interface BeanAndEntityMapper {
 	// user
 	User entityToBean(UserEntity entity);
 	UserEntity beanToEntity(User bean);
+	//com.ccg.oms.common.data.admin.User entityToBean(UserEntity2 entity);
 	
 	// document
 	DocType entityToBean(DocTypeEntity entity);

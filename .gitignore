@@ -18,6 +18,11 @@ hs_err_pid*
 .metadata
 .recommenders
 
-target/
+
+target
+
+#!target/generated-sources/*
+#target/generated-sources/*
+#!target/generated-sources/annotations/*
 Servers/
 RemoteSystemsTempFiles/
