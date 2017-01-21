@@ -31,6 +31,12 @@ oms.admin.users=[
 [3,"user","ulast ufirst","user@ccg.com","user",true,"01/01/2016"]
 ];
 
+oms.admin.users1=[
+	[1,"ccg","CCGLast CCGFirst","ccg@ccg.com","PM",true,"01/01/2014"],
+	[2,"admin","Alast AFirst","admin@ccg.com","admin",true,"01/01/2015"],
+	[3,"user","ulast ufirst","user@ccg.com","user",true,"01/01/2016"]
+	];
+
 oms.admin.createRoleAdminPanel=function()
 {
 var rolestore=Ext.create('Ext.data.ArrayStore', {
