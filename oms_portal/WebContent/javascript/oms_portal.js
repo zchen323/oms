@@ -124,5 +124,5 @@ viewport.add(dpanel);
 viewport.add(adminpanel);
 viewport.doLayout();
 viewport.setActiveTab(2);
-
+oms.admin.refreshData();
 });
