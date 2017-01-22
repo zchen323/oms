@@ -61,6 +61,19 @@ create table documents(
 	primary key(`id`)
 );
 
+create table userdetail(
+	`username` varchar(45) not null,
+	`name` varchar(50),
+	`company` varchar(100),
+	`phone` varchar(60),
+	`email` varchar(100),
+	`address` varchar(200),
+	`isContractor` tinyint(1),
+	`fullAccess` tinyint(1),
+	`createdTS` datetime,
+	primary key(`username`) 
+);
+
 create table task_documents(
 	
 )

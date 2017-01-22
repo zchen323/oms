@@ -7,19 +7,20 @@ import com.ccg.oms.common.data.project.ProjectTemplate;
 import com.ccg.oms.common.data.project.ProjectUserRoleType;
 import com.ccg.oms.common.data.project.TaskTemplate;
 import com.ccg.oms.common.data.user.User;
+import com.ccg.oms.common.data.user.UserInfo;
 
 public class Admin {
 	
-	private List<User> users;
+	private List<UserInfo> users;
 	private List<DocType> docTypes;
 	private List<ProjectUserRoleType> projectUserRoleTypes;
 	private List<ProjectTemplate> prjectTemplates;
 	private List<TaskTemplate> taskTemplates;
 	
-	public List<User> getUsers() {
+	public List<UserInfo> getUsers() {
 		return users;
 	}
-	public void setUsers(List<User> users) {
+	public void setUsers(List<UserInfo> users) {
 		this.users = users;
 	}
 	public List<DocType> getDocTypes() {

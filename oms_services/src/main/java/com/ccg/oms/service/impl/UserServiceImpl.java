@@ -1,20 +1,28 @@
 package com.ccg.oms.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ccg.oms.common.data.user.NewUser;
 import com.ccg.oms.common.data.user.User;
+import com.ccg.oms.common.data.user.UserInfo;
 import com.ccg.oms.common.data.user.UserWithPassword;
+import com.ccg.oms.dao.entiry.user.UserDetailEntity;
 import com.ccg.oms.dao.entiry.user.UserEntity;
 import com.ccg.oms.dao.entiry.user.UserEntity2;
 import com.ccg.oms.dao.entiry.user.UserRoleEntity;
 import com.ccg.oms.dao.entiry.user.UserRoleEntity2;
 import com.ccg.oms.dao.repository.user.User2Repository;
+import com.ccg.oms.dao.repository.user.UserDetailRepository;
 import com.ccg.oms.dao.repository.user.UserRepository;
 import com.ccg.oms.dao.repository.user.UserRoleRepository;
 import com.ccg.oms.service.UserServices;
@@ -30,6 +38,9 @@ public class UserServiceImpl implements UserServices{
 	
 	@Autowired
 	UserRoleRepository roleRepository;
+	
+	@Autowired
+	UserDetailRepository detailRepository;
 	
 	
 
@@ -141,5 +152,95 @@ public class UserServiceImpl implements UserServices{
 		return userEntity;
 	}
 
+	@Override
+	@Transactional
+	public void createNewUser(NewUser newUser) {
+		
+		if(!newUser.getPass().equals(newUser.getVerify())){
+			throw new RuntimeException("password and verify does not match!");
+		}
+		
+		UserEntity2 entity = user2Repository.findOne(newUser.getUser());
+		if(entity != null && entity.getEnabled()){
+				throw new RuntimeException("User: " + newUser.getUser() + " already exists");
+		}
+		
+		if(entity != null){
+			entity.setEnabled(true);
+		}else{
+			entity = new UserEntity2();
+		}
+		
+		// update user and user_role talbe
+		entity.setEmail(newUser.getEmail());
+		entity.setUsername(newUser.getUser());
+		entity.setPassword(newUser.getPass());
+		
+		UserRoleEntity2 roleEntity = new UserRoleEntity2();
+		roleEntity.setRole(newUser.getRole());
+		roleEntity.setUser(entity);
+		Set<UserRoleEntity2> roleSet = new HashSet<UserRoleEntity2>();
+		roleSet.add(roleEntity);
+		
+		entity.setRoles(roleSet);
+		user2Repository.save(entity);
+		
+		// update detail table
+		UserDetailEntity detailEntity = detailRepository.findOne(newUser.getUser());
+		if(detailEntity == null){
+			detailEntity = new UserDetailEntity();
+		}
+		detailEntity.setUsername(newUser.getUser());
+		detailEntity.setName(newUser.getName());
+		detailEntity.setCompany(newUser.getCompany());
+		detailEntity.setFullAccess(newUser.getFullaccess());
+		detailEntity.setIsContractor(newUser.getIscontractor());
+		detailEntity.setEmail(newUser.getEmail());
+		detailEntity.setCreatedTS(new Timestamp(System.currentTimeMillis()));
+		
+		detailRepository.save(detailEntity);
+	}
+
+	@Override
+	@Transactional
+	public List<UserInfo> getUserInfo() {		
+		Iterable<UserEntity2> userEntities = user2Repository.findAll();
+		Map<String, UserInfo> map = new HashMap<String, UserInfo>();
+		for(UserEntity2 userEntity : userEntities){
+			UserInfo info = new UserInfo();
+			info.setUsername(userEntity.getUsername());
+			info.setEmail(userEntity.getEmail());
+			StringBuffer sb = new StringBuffer();
+			Set<UserRoleEntity2> roles = userEntity.getRoles();
+			for(UserRoleEntity2 role : roles){
+				sb.append(role.getRole()).append(", ");
+			}
+			String temp = sb.toString();
+			if(temp.length() > 2){
+				temp = temp.substring(0, temp.length() - 2);
+			}
+			info.setRole(temp);
+			map.put(info.getUsername(), info);
+		}
+		
+		// get user detail
+		Iterable<UserDetailEntity> detailEntities = detailRepository.findAll();
+		for(UserDetailEntity detail : detailEntities){
+			String username = detail.getUsername();
+			UserInfo info = map.get(username);
+			if(info != null){
+				info.setFullaccess(detail.getFullAccess());
+				info.setCreatedDate(detail.getCreatedTS());
+				info.setName(detail.getName());
+			}
+		}
+		List<UserInfo> list = new ArrayList<UserInfo>();
+		Set<String> keySet = map.keySet();
+		for(String key : keySet){
+			list.add(map.get(key));
+		}
+		
+		return list;
+	}
 
 }

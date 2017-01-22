@@ -24,7 +24,7 @@ public class AdminServiceImpl implements AdminServices {
 		admin.setPrjectTemplates(projectService.getProjectTemplate());
 		admin.setProjectUserRoleTypes(projectService.getProjectUserRoleTypes());
 		admin.setTaskTemplates(projectService.getTaskTemplate());
-		admin.setUsers(userServices.getUsers());		
+		admin.setUsers(userServices.getUserInfo());		
 		return admin;
 	}
 }

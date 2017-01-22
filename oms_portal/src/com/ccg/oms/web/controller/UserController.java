@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
+import com.ccg.oms.common.data.user.NewUser;
 import com.ccg.oms.common.data.user.User;
 import com.ccg.oms.common.data.user.UserChangePassword;
 import com.ccg.oms.common.data.user.UserWithPassword;
 import com.ccg.oms.service.UserServices;
+import com.ccg.util.JSON;
 
 @Controller
 @RequestMapping("/user")
@@ -21,6 +23,20 @@ public class UserController {
 
 	@Autowired
 	private UserServices services;
+	
+	@RequestMapping(method=RequestMethod.POST)
+	public @ResponseBody RestResponse createNewUse(@RequestBody NewUser input){
+		RestResponse result = new RestResponse();
+		try{
+			services.createNewUser(input);
+			result.setStatus(RestResponseConstants.SUCCESS);
+		}catch(Exception e){
+			result.setStatus(RestResponseConstants.FAIL);
+			result.setMessage(e.getMessage());
+			e.printStackTrace();			
+		}
+		return result;
+	}	
 
 	@RequestMapping(value="find/{username}", method=RequestMethod.GET)
 	public @ResponseBody RestResponse getUser(@PathVariable String username ){
