@@ -48,6 +48,7 @@ title:'Roles'
 });
 return grid;
 };
+
 oms.admin.createUserAdminPanel=function()
 {
 var ustore=Ext.create('Ext.data.JsonStore', {
@@ -135,142 +136,142 @@ return grid;
 
 oms.admin.createAdminPanel=function()
 {
-var ugrid=oms.admin.createUserAdminPanel();
-var dtgrid=oms.admin.createDoctypeAdminPanel();
-//var stgrid=oms.admin.createSearchTypeAdminPanel();
-var panel=Ext.create('Ext.panel.Panel',{
-id:"adminMain",
-layout:'vbox',
-title:"OMS Admin",
-border:true,
-items:[
-{
-xtype:'tabpanel',
-id:'adminDetails',
-width:'99%',
-margin:'2 2 2 2',
-flex:1, 
-defaults:{
-bodypadding:10,
-scrollable:true,
-border:true
-},
-//tabPosition: 'right', 
-items:[
-dtgrid,// doc type
-oms.admin.createProjectRoleTypeAdminPanel(),
-ugrid,// user
-oms.admin.createTLPanel(), // tasktemplate
-oms.admin.createPLPanel() // project template
-// oms.admin.userEditPanel
-]
-}
-]
-});
+	var ugrid=oms.admin.createUserAdminPanel();
+	var dtgrid=oms.admin.createDoctypeAdminPanel();
+	//var stgrid=oms.admin.createSearchTypeAdminPanel();
+	var panel=Ext.create('Ext.panel.Panel',{
+		id:"adminMain",
+		layout:'vbox',
+		title:"OMS Admin",
+		border:true,
+		items:[
+			{
+				xtype:'tabpanel',
+				id:'adminDetails',
+				width:'99%',
+				margin:'2 2 2 2',
+				flex:1, 
+				defaults:{
+					bodypadding:10,
+					scrollable:true,
+					border:true
+				},
+				//tabPosition: 'right', 
+				items:[
+					dtgrid,// doc type
+					oms.admin.createProjectRoleTypeAdminPanel(),
+					ugrid,// user
+					oms.admin.createTLPanel(), // tasktemplate
+					oms.admin.createPLPanel() // project template
+					// oms.admin.userEditPanel
+					]
+			}
+			]
+	});
 return panel;
 };
 
 oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
-frame: true,
-float:true,
-closable:true, 
-title: 'Edit User',
-bodyPadding: 10,
-scrollable:true,
-closeAction: 'hide',
-width: 360,
-modal: false,
-defaultType: 'textfield',
-fieldDefaults: {
-labelAlign: 'right',
-labelWidth: 150,
-msgTarget: 'side'
-},
-items:[
-{ fieldLabel: 'User Name', name: 'user', emptyText: 'user id' },
-{ fieldLabel: 'Password', name: 'pass', emptyText: 'password', inputType: 'password' },
-{ fieldLabel: 'Verify', name: 'pass', emptyText: 'password', inputType: 'password' },
-{
-fieldLabel: 'Name',
-emptyText: 'Name',
-name: 'name'
-}, 
-{
-fieldLabel: 'Company',
-name: 'company'
-}, 
-{
-fieldLabel: 'Email',
-name: 'email',
-vtype: 'email'
-},
-{ fieldLabel:'is Contractor',
-xtype:'checkbox',
-name:'iscontractor'
-},
-{
-fieldLabel:'Role',
-name:'role'
-},
-{
-fieldLabel:'Restr. Access',
-xtype:'checkbox',
-name:'fullaccess'
-}
-],
-buttons: [{
-text: 'Save',
-disabled: true,
-formBind: true
-}]
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Edit User',
+	bodyPadding: 10,
+	scrollable:true,
+	closeAction: 'hide',
+		width: 360,
+		modal: false,
+		defaultType: 'textfield',
+		fieldDefaults: {
+			labelAlign: 'right',
+			labelWidth: 150,
+			msgTarget: 'side'
+		},
+	items:[
+			{ fieldLabel: 'User Name', name: 'user', emptyText: 'user id' },
+			{ fieldLabel: 'Password', name: 'pass', emptyText: 'password', inputType: 'password' },
+			{ fieldLabel: 'Verify', name: 'pass', emptyText: 'password', inputType: 'password' },
+			{
+				fieldLabel: 'Name',
+				emptyText: 'Name',
+				name: 'name'
+			}, 
+			{
+				fieldLabel: 'Company',
+				name: 'company'
+			}, 
+			{
+				fieldLabel: 'Email',
+				name: 'email',
+				vtype: 'email'
+			},
+			{ fieldLabel:'is Contractor',
+				xtype:'checkbox',
+				name:'iscontractor'
+				},
+				{
+					fieldLabel:'Role',
+					name:'role'
+				},
+				{
+					fieldLabel:'Restr. Access',
+					xtype:'checkbox',
+					name:'fullaccess'
+				}
+			],
+			buttons: [{
+				text: 'Save',
+				disabled: true,
+				formBind: true
+			}]
 
 });
 
 oms.admin.createSearchTypeAdminPanel=function()
 {
-var ststore=Ext.create('Ext.data.JsonStore',{
-storeId:'ststore',
-fields:[
-{name:'id'},
-{name:'searchname'},
-{name:'type'}
-]
+	var ststore=Ext.create('Ext.data.JsonStore',{
+		storeId:'ststore',
+		fields:[
+			{name:'id'},
+			{name:'searchname'},
+			{name:'type'}
+			]
 });
 
 var grid=Ext.create('Ext.grid.Panel',{
-id:'searchtypegrid',
-store:ststore, 
-scrollable:true,
-tbar:[
-{
-text:"Add New Search" ,
-listeners:{
-click:
-{
-element:'el',
-fn:function(){
-oms.admin.userEditPanel.show();}
-}
-}
-}
-],
-columns: [
-{text: "Search ID",dataIndex: 'id',width:120},
-{text: "Search Name", dataIndex: 'searchname',flex:1}, 
-{text: "Type", dataIndex: 'type',width:200},
-{text: "Action",width:60,index:'id',
-renderer:function(val)
-{
-var html='<img src="css/images/shared/icons/fam/user_edit.png"><img src="css/images/shared/icons/fam/delete.gif" >';
-return html;
+	id:'searchtypegrid',
+	store:ststore, 
+	scrollable:true,
+	tbar:[
+		{
+			text:"Add New Search" ,
+			listeners:{
+				click:
+				{
+					element:'el',
+					fn:function(){
+						oms.admin.userEditPanel.show();}
+				}
+			}
+		}
+		],
+		columns: [
+			{text: "Search ID",dataIndex: 'id',width:120},
+			{text: "Search Name", dataIndex: 'searchname',flex:1}, 
+			{text: "Type", dataIndex: 'type',width:200},
+			{text: "Action",width:60,index:'id',
+				renderer:function(val)
+				{
+					var html='<img src="css/images/shared/icons/fam/user_edit.png"><img src="css/images/shared/icons/fam/delete.gif" >';
+					return html;
 
-}
-}
-],
-columnLines: true, 
-title:'Search Types' 
-});
-return grid;
+				}
+			}
+			],
+			columnLines: true, 
+			title:'Search Types' 
+	});
+	return grid;
 };
 
 // doc type edit panel
@@ -365,9 +366,9 @@ oms.admin.createDoctypeAdminPanel=function(){
 	                icon: 'css/images/shared/icons/fam/delete.gif',
 	                tooltip: 'Delete',
 	                handler: function(grid, rowIndex, colIndex) {
-	                    var rec = grid.getStore().getAt(rowIndex).data;
+	                    var rec = grid.getStore().getAt(rowIndex);
 	                    console.log(rec);
-	                  //  Ext.getCmp("doctypeEditForm").getForm().loadRecord(rec);
+	                    Ext.getCmp("doctypeEditForm").getForm().loadRecord(rec);
 	                    Ext.getCmp('btdtsave').setVisible(false);
 						Ext.getCmp('btdtdelete').setVisible(true);
 						oms.admin.DoctypeEditPanel.show();
@@ -380,6 +381,41 @@ oms.admin.createDoctypeAdminPanel=function(){
 	});
 	return grid;
 	};
+
+oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
+		frame: true,
+		float:true,
+		closable:true, 
+		title: 'Edit Project Role',
+		bodyPadding: 10,
+		scrollable:true,
+		closeAction: 'hide',
+		width: 480,
+		//modal: false,
+
+		items:[{xtype:'form',	
+			id:'projroleEditForm',
+			defaultType: 'textfield',
+			fieldDefaults: {
+				labelAlign: 'right',
+				labelWidth: 150,
+				bodyPadding: 10,
+				},
+				items:[
+					{ fieldLabel: 'Role Name', name: 'roletype', emptyText: 'New Role Type' },
+					{ fieldLabel: 'Description', name: 'description'}
+					]
+		}],
+		buttons: [{
+			text: 'Save',
+			id:'btprsave'
+			},
+			{
+				text:'Delete',
+			  id:'btprdelete'
+			}
+			]
+		});
 
 oms.admin.createProjectRoleTypeAdminPanel=function()
 {
@@ -397,29 +433,40 @@ oms.admin.createProjectRoleTypeAdminPanel=function()
 		store:store, 
 		scrollable:true,
 		tbar:[
-		{
-		text:"New Project Role" ,
-		listeners:{
-		click:
-		{
-		element:'el',
-		fn:function(){
-		alert("not implemented");}
-		}
-		}
-		}
+			{
+				text:"Create New Project Role" ,
+				listeners:{
+					click:
+					{
+						element:'el',
+						fn:function(){
+						
+						Ext.getCmp('btprsave').setVisible(true);
+						Ext.getCmp('btprdelete').setVisible(false);
+						oms.admin.ProjectRoleEditPanel.show();
+					}
+				}
+			}
+			}
 		],
 
 		columns: [
-		{text: "Doc Type", dataIndex: 'roletype',width:220}, 
+		{text: "Role Type", dataIndex: 'roletype',width:220}, 
 		{text: "Description", dataIndex: 'description',flex:1},
-		{text: "Action",dataIndex:"roletype",width:60,
-		renderer:function(val)
 		{
-		var html='<img src="css/images/shared/icons/fam/delete.gif" >';
-		return html;
-
-		}
+            xtype:'actioncolumn',
+            width:100,
+            items: [{
+                icon: 'css/images/shared/icons/fam/delete.gif',
+                tooltip: 'Delete',
+                handler: function(grid, rowIndex, colIndex) {
+                    var rec = grid.getStore().getAt(rowIndex);
+                    Ext.getCmp("projroleEditForm").getForm().loadRecord(rec);
+                    Ext.getCmp('btprsave').setVisible(false);
+					Ext.getCmp('btprdelete').setVisible(true);
+					oms.admin.ProjectRoleEditPanel.show();
+                }
+            }]
 		}
 		],
 		columnLines: true, 
