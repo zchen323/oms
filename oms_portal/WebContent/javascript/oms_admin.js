@@ -2,136 +2,102 @@
 // Doctype Editing / Search type Editing / User Role editing /
 // Task Template Editing
 
-oms.admin.createRoleAdminPanel=function()
-{
-var rolestore=Ext.create('Ext.data.JsonStore', {
-// store configs
-storeId: 'roleStore',
-fields: [ 
-{name: 'role' }, 
-{name: 'fullaccess',type:'boolean'} 
-]});
-
-var grid=Ext.create('Ext.grid.Panel',{
-id:'projrolegrid',
-store:rolestore, 
-scrollable:true,
-tbar:[
-{
-text:"Add New Role" ,
-listeners:{
-click:
-{
-element:'el',
-fn:function(){
-oms.admin.userEditPanel.show();}
-}
-}
-}
-],
-
-columns: [
-
-{text: "Role Name", dataIndex: 'role'}, 
-{text: "Restricted Access",dataIndex:'fullaccess'}, 
-{text: "Action",dataIndex:"taskID",width:60,
-renderer:function(val)
-{
-var html='<img src="css/images/shared/icons/fam/user_edit.png"><img src="css/images/shared/icons/fam/user_delete.png" >';
-return html;
-
-}
-}
-],
-columnLines: true, 
-title:'Roles' 
-});
-return grid;
-};
 
 oms.admin.createUserAdminPanel=function()
 {
-var ustore=Ext.create('Ext.data.JsonStore', {
-// store configs
-storeId: 'ulistStore',
-fields: [
-{name: 'userID'},
-{name: 'username' }, 
-{name: 'name'},
-{name: 'email'},
-{name: 'role'},
-{name: 'fullaccess',type:'boolean'},
-{name: "createdTS",type:'date'}
-]
-});
-var grid=Ext.create('Ext.grid.Panel',{
-id:'userlistadmingrid',
-store:ustore, 
-scrollable:true,
-tbar:[
-{
-text:"Add New User" ,
-listeners:{
-click:
-{
-element:'el',
-fn:function(){
-oms.admin.userEditPanel.show();}
-}
-}
-}
-],
+	var ustore=Ext.create('Ext.data.JsonStore', {
+		// store configs
+		storeId: 'ulistStore',
+		fields: [
+			{name: 'username' }, 
+			{name: 'name'},
+			{name: 'email'},
+			{name: 'role'},
+			{name: 'fullaccess',type:'boolean'},
+			{name: "createdTS",type:'date'}
+			]
+	});
+	var grid=Ext.create('Ext.grid.Panel',{
+		id:'userlistadmingrid',
+		store:ustore, 
+		scrollable:true,
+		tbar:[
+			{
+				text:"Add New User" ,
+				listeners:{
+					click:
+					{
+						element:'el',
+						fn:function(){
+							Ext.getCmp('btusersave').setVisible(true);
+							Ext.getCmp('btuserdelete').setVisible(false);
+						oms.admin.userEditPanel.show();}
+					}
+				}
+			}
+			],
 
-columns: [
-{text:"Restricted Access",dataIndex:'fullaccess', width:160,
-renderer:function(val)
-{
-if(val==true)
-{
-return "<img src='css/images/sec.jpg' width=20 />"; 
-}
-return "";
-} 
-},
-{text: "Username", flex:2,dataIndex: 'username',
-renderer:function(val)
-{
-if(val==null)
-{
-return "<a href='#'>Upload Now</a>";
-}
-else{
-return val;
-}
-
-}
-},
-{text: "Name", dataIndex: 'name',width:180}, 
-{text: "Created", dataIndex: 'createdTS',formatter: 'date("m/d/Y")'},
-{text: "Email", dataIndex: 'email',width:160}, 
-{text: "Role.",dataIndex:"role",width:120,
-renderer:function(val)
-{
-if(val=="Y")
-{
-return '<font color=red>'+val+'</font>';
-}
-return val;
-}
-},
-{text: "Action",dataIndex:"taskID",width:60,
-renderer:function(val)
-{
-var html='<img src="css/images/shared/icons/fam/user_edit.png"><img src="css/images/shared/icons/fam/user_delete.png" >';
-return html;
-
-}
-}
-],
-columnLines: true, 
-title:'Users' 
-});
-return grid;
+			columns: [
+				{text:"Restricted Access",dataIndex:'fullaccess', width:160,
+					renderer:function(val)
+					{
+						if(val==true)
+						{
+							return "<img src='css/images/sec.jpg' width=20 />"; 
+						}
+						return "";
+					} 
+				},
+				{text: "Username", flex:2,dataIndex: 'username',
+					renderer:function(val)
+					{
+						if(val==null)
+						{
+							return "<a href='#'>Upload Now</a>";
+						}
+						else{
+							return val;
+						}
+					}
+				},
+				{text: "Name", dataIndex: 'name',width:180}, 
+				{text: "Created", dataIndex: 'createdTS',formatter: 'date("m/d/Y")'},
+				{text: "Email", dataIndex: 'email',width:160}, 
+				{text: "Role.",dataIndex:"role"	},
+				{
+		            xtype:'actioncolumn',
+		            width:100,
+		            items: [{
+		                icon: 'css/images/shared/icons/fam/user_edit.png',  // Use a URL in the icon config
+		                tooltip: 'Edit',
+		                handler: function(grid, rowIndex, colIndex) {
+		                    var rec = grid.getStore().getAt(rowIndex);
+		                    console.log(rec);
+		                    Ext.getCmp("userEditform").getForm().loadRecord(rec);
+		                    console.log(rec.data);
+		                    Ext.getCmp('btusersave').setVisible(true);
+							Ext.getCmp('btuserdelete').setVisible(false);
+							oms.admin.userEditPanel.show();
+		                }
+		            },{
+		                icon: 'css/images/shared/icons/fam/user_delete.png',
+		                tooltip: 'Delete',
+		                handler: function(grid, rowIndex, colIndex) {
+		                    var rec = grid.getStore().getAt(rowIndex);
+		                    console.log(rec);
+		                    Ext.getCmp("userEditform").getForm().loadRecord(rec);
+		                    Ext.getCmp('btusersave').setVisible(false);
+							Ext.getCmp('btuserdelete').setVisible(true);
+							oms.admin.userEditPanel.show();
+		                }
+		            }]
+		        }
+				
+				],
+				columnLines: true, 
+				title:'Users' 
+	});
+	return grid;
 };
 
 oms.admin.createAdminPanel=function()
@@ -179,16 +145,19 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 	bodyPadding: 10,
 	scrollable:true,
 	closeAction: 'hide',
-		width: 360,
-		modal: false,
+	width: 420,
+	modal: false,
+	items:[{xtype:'form',
+		width:'98%',
+		id:'userEditform',
 		defaultType: 'textfield',
 		fieldDefaults: {
 			labelAlign: 'right',
 			labelWidth: 150,
 			msgTarget: 'side'
 		},
-	items:[
-			{ fieldLabel: 'User Name', name: 'user', emptyText: 'user id' },
+		items:[
+			{ fieldLabel: 'User Name', name: 'username', emptyText: 'user id' },
 			{ fieldLabel: 'Password', name: 'pass', emptyText: 'password', inputType: 'password' },
 			{ fieldLabel: 'Verify', name: 'pass', emptyText: 'password', inputType: 'password' },
 			{
@@ -214,65 +183,27 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 					name:'role'
 				},
 				{
-					fieldLabel:'Restr. Access',
+					fieldLabel:'Full Access',
 					xtype:'checkbox',
 					name:'fullaccess'
-				}
+				},
+				{fieldLabel:'Created TS',xtype:'datefield', dataIndex: 'createdTS',formatter: 'date("m/d/Y")'},
 			],
+		}],
+	
 			buttons: [{
 				text: 'Save',
-				disabled: true,
-				formBind: true
-			}]
-
-});
-
-oms.admin.createSearchTypeAdminPanel=function()
-{
-	var ststore=Ext.create('Ext.data.JsonStore',{
-		storeId:'ststore',
-		fields:[
-			{name:'id'},
-			{name:'searchname'},
-			{name:'type'}
+				id:'btusersave'
+			},
+			{
+				text:'Delete',
+				id:'btuserdelete'
+			}
 			]
+
 });
 
-var grid=Ext.create('Ext.grid.Panel',{
-	id:'searchtypegrid',
-	store:ststore, 
-	scrollable:true,
-	tbar:[
-		{
-			text:"Add New Search" ,
-			listeners:{
-				click:
-				{
-					element:'el',
-					fn:function(){
-						oms.admin.userEditPanel.show();}
-				}
-			}
-		}
-		],
-		columns: [
-			{text: "Search ID",dataIndex: 'id',width:120},
-			{text: "Search Name", dataIndex: 'searchname',flex:1}, 
-			{text: "Type", dataIndex: 'type',width:200},
-			{text: "Action",width:60,index:'id',
-				renderer:function(val)
-				{
-					var html='<img src="css/images/shared/icons/fam/user_edit.png"><img src="css/images/shared/icons/fam/delete.gif" >';
-					return html;
 
-				}
-			}
-			],
-			columnLines: true, 
-			title:'Search Types' 
-	});
-	return grid;
-};
 
 // doc type edit panel
 oms.admin.DoctypeEditPanel=Ext.create('Ext.window.Window',{
