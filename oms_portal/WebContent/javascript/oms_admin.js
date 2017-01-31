@@ -29,8 +29,8 @@ oms.admin.createUserAdminPanel=function()
 					{
 						element:'el',
 						fn:function(){
-							Ext.getCmp('btusersave').setVisible(true);
-							Ext.getCmp('btuserdelete').setVisible(false);
+							//Ext.getCmp('btusersave').setVisible(true);
+							//Ext.getCmp('btuserdelete').setVisible(false);
 						oms.admin.userEditPanel.show();}
 					}
 				}
@@ -139,6 +139,8 @@ return panel;
 
 oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 	frame: true,
+	id:'usereditpanel',
+	name:'userform',
 	float:true,
 	closable:true, 
 	title: 'Edit User',
@@ -149,6 +151,7 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 	modal: false,
 	items:[{xtype:'form',
 		width:'98%',
+		id: 'userform',
 		id:'userEditform',
 		defaultType: 'textfield',
 		fieldDefaults: {
@@ -176,6 +179,10 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 			},
 			{ fieldLabel:'is Contractor',
 				xtype:'checkbox',
+				value:0,
+				inputValue:true,
+				uncheckValue:false,
+				
 				name:'iscontractor'
 				},
 				{
@@ -185,15 +192,47 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 				{
 					fieldLabel:'Full Access',
 					xtype:'checkbox',
+					value:0,
+					inputValue:true,
+					uncheckValue:false,
 					name:'fullaccess'
-				},
-				{fieldLabel:'Created TS',xtype:'datefield', dataIndex: 'createdTS',formatter: 'date("m/d/Y")'},
+				}//,
+				//{fieldLabel:'Created TS',xtype:'datefield', dataIndex: 'createdTS',formatter: 'date("m/d/Y")'},
 			],
 		}],
 	
 			buttons: [{
-				text: 'Save',
-				id:'btusersave'
+				text: 'Save22',
+				id:'btusersave',
+				handler : function() {
+					console.log("create new user");
+					//var items = this.up('window').items.items;
+					var formdata = this.up('window').down('form').getValues();;
+					console.log(formdata);
+					var jsonData2 = JSON.stringify(formdata);
+					console.log(jsonData2);
+					
+					
+					//console.log(formdata);
+					// ajax call backend to create new user
+					Ext.Ajax.request({
+						url : "api/user",
+						method : 'POST',
+						jsonData : JSON.stringify(formdata),
+						success : function(response, option) {
+							console.log(response);
+							var respObj = Ext.decode(response.responseText);
+							Ext.Msg.alert(respObj.status, respObj.message);
+							if (respObj.status === 'success') {
+								oms.admin.userEditPanel.hide();
+							}
+						},
+						failure : function(response, option) {
+							console.log(response);
+							Ext.Msg.alert('Error', response.responseText);
+						}
+					});
+				}
 			},
 			{
 				text:'Delete',

@@ -156,13 +156,23 @@ public class UserServiceImpl implements UserServices{
 	@Transactional
 	public void createNewUser(NewUser newUser) {
 		
-		if(!newUser.getPass().equals(newUser.getVerify())){
-			throw new RuntimeException("password and verify does not match!");
+		if(newUser != null){
+			String[] pass = newUser.getPass();
+			if(pass != null && pass.length < 2 ||
+					!pass[0].equals(pass[1])){
+				
+				System.out.println(pass[0] + ",  " + pass[1]);	
+				throw new RuntimeException("password and verify does not match!");
+			}
+		}else{
+			throw new RuntimeException("new user is empty");
 		}
 		
-		UserEntity2 entity = user2Repository.findOne(newUser.getUser());
+		UserEntity2 entity = user2Repository.findOne(newUser.getUsername());
 		if(entity != null && entity.getEnabled()){
-				throw new RuntimeException("User: " + newUser.getUser() + " already exists");
+				if(!entity.getPassword().equals(newUser.getPass()[0])){
+					throw new RuntimeException("User: " + newUser.getUsername() + " already exists");
+				}
 		}
 		
 		if(entity != null){
@@ -173,8 +183,8 @@ public class UserServiceImpl implements UserServices{
 		
 		// update user and user_role talbe
 		entity.setEmail(newUser.getEmail());
-		entity.setUsername(newUser.getUser());
-		entity.setPassword(newUser.getPass());
+		entity.setUsername(newUser.getUsername());
+		entity.setPassword(newUser.getPass()[0]);
 		
 		UserRoleEntity2 roleEntity = new UserRoleEntity2();
 		roleEntity.setRole(newUser.getRole());
@@ -186,11 +196,11 @@ public class UserServiceImpl implements UserServices{
 		user2Repository.save(entity);
 		
 		// update detail table
-		UserDetailEntity detailEntity = detailRepository.findOne(newUser.getUser());
+		UserDetailEntity detailEntity = detailRepository.findOne(newUser.getUsername());
 		if(detailEntity == null){
 			detailEntity = new UserDetailEntity();
 		}
-		detailEntity.setUsername(newUser.getUser());
+		detailEntity.setUsername(newUser.getUsername());
 		detailEntity.setName(newUser.getName());
 		detailEntity.setCompany(newUser.getCompany());
 		detailEntity.setFullAccess(newUser.getFullaccess());

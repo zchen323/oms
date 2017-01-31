@@ -26,10 +26,13 @@ public class UserController {
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public @ResponseBody RestResponse createNewUse(@RequestBody NewUser input){
+		//System.out.println(input);
 		RestResponse result = new RestResponse();
+		NewUser newuser = input;
 		try{
-			services.createNewUser(input);
+			services.createNewUser(newuser);
 			result.setStatus(RestResponseConstants.SUCCESS);
+			result.setMessage("User is added");
 		}catch(Exception e){
 			result.setStatus(RestResponseConstants.FAIL);
 			result.setMessage(e.getMessage());

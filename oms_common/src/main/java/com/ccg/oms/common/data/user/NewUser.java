@@ -9,33 +9,25 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */		
 @JsonInclude(Include.NON_NULL)
 public class NewUser {
-	//{"user":"q","pass":"q","name":"q","company":"q","email":"","iscontractor":false,"role":"q","fullaccess":false}
-	private String user;
-	private String pass;
-	private String verify;
+	private String username;
+	private String[] pass;
 	private String name;
 	private String company;
 	private String email;
 	private Boolean iscontractor;
 	private Boolean fullaccess;
 	private String role;
-	public String getUser() {
-		return user;
+	public String getUsername() {
+		return username;
 	}
-	public void setUser(String user) {
-		this.user = user;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	public String getPass() {
+	public String[] getPass() {
 		return pass;
 	}
-	public void setPass(String pass) {
+	public void setPass(String[] pass) {
 		this.pass = pass;
-	}
-	public String getVerify() {
-		return verify;
-	}
-	public void setVerify(String verify) {
-		this.verify = verify;
 	}
 	public String getName() {
 		return name;
@@ -73,6 +65,5 @@ public class NewUser {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
 	
 }
