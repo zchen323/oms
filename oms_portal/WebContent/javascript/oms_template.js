@@ -1,5 +1,72 @@
 // this javascript handle UI for template editing
 
+oms.admin.PTAddTTPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Assign Task',
+	bodyPadding: 10,
+	scrollable:true,
+	closeAction: 'hide',
+	width: 420,
+	mygrid:null,
+	//modal: false,
+	items:[{xtype:'form',	
+		id:'ptAddTTform',
+		width:'95%',
+		frame:false,
+		border:0,
+		items:[
+			{
+				xtype:'combobox',
+				labelWidth:120,
+				fieldWidth:280,
+				id:'ttcombo',
+				valueField:'id',
+				displayField:'name',
+				queryMode: 'local',
+	            typeAhead: true,
+				fieldLabel:'Task Templates',
+				store:Ext.create('Ext.data.JsonStore', {fields: [{name: 'id' },{name: 'name'}]})
+			}
+		]
+	}
+	],
+	buttons: [{
+		text: 'Add',
+		listeners:{
+			click:
+			{
+				element:'el',
+				fn:function(){
+					
+					var rec=Ext.getCmp('ttcombo').getSelection();
+					//console.log(value);
+					
+					if(rec==null)
+						{
+							Ext.Msg.alert("Error","No selected value");
+						}
+					else
+					{
+						//console.log(value);
+						var grid=oms.admin.PTAddTTPanel.mygrid;
+						var store=grid.getStore();
+						
+						store.add(rec.data);
+						//console.log(store.getData());
+						//console.log(value);
+						oms.admin.PTAddTTPanel.hide();
+					}
+					//oms.admin.TTAddDTPanel.hide();
+					
+				}
+			}
+			}
+		
+		}
+		]
+	});
 oms.admin.TTAddDTPanel=Ext.create('Ext.window.Window',{
 	frame: true,
 	float:true,
@@ -42,7 +109,7 @@ oms.admin.TTAddDTPanel=Ext.create('Ext.window.Window',{
 					var value=Ext.getCmp('dtcombo').getValue();
 					if(value==null)
 						{
-							alert("No selected value");
+						Ext.Msg.alert("Error","No selected value");
 						}
 					else
 					{
@@ -96,6 +163,46 @@ oms.admin.TTEditPanel=Ext.create('Ext.window.Window',{
 		]
 	});
 
+oms.admin.PTEditPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Project Template Info',
+	bodyPadding: 10,
+	scrollable:true,
+	closeAction: 'hide',
+	width: 480,
+	MinHeight:220,
+	//modal: false,
+
+	items:[{xtype:'form',	
+		id:'pteditform',
+		width:'95%',
+		defaultType: 'textfield',
+		fieldDefaults: {
+			labelAlign: 'right',
+			labelWidth: 150,
+			bodyPadding: 10,
+			},items:[
+	{ fieldLabel: 'Project Template ID', name: 'id'},
+	{ fieldLabel: 'Template Name', name: 'name'},
+	{ fieldLabel: 'Description', name: 'description'},
+	{ fieldLabel: 'Status',name:'status'}]}
+	],
+	buttons: [{
+		text: 'Save',
+		listeners:{
+			click:{
+				element:'el',
+				fn:function(){
+					
+				}
+			}
+		}
+		}
+		]
+	});
+
 oms.admin.createTLPanel=function(){
 	var panel=Ext.create('Ext.panel.Panel',{
 	layout:'accordion',
@@ -109,7 +216,6 @@ oms.admin.createTLPanel=function(){
 					{
 						element:'el',
 						fn:function(){
-
 							oms.admin.TTEditPanel.show();
 						}
 					}
@@ -322,7 +428,7 @@ oms.admin.createTTItemPanel=function(task){
 					});
 //	ttPanel.getForm().loadRecord({Data:task});
 	var panel=Ext.create('Ext.panel.Panel',{
-					title:"["+task.name+"]", 
+					title:"Task Template:["+task.name+"]", 
 					width: '80%',
 					layout: 'hbox',
 					tools:[{type:'up'}],
@@ -342,7 +448,18 @@ oms.admin.createPLPanel=function(){
 	id:'projtmpltadmin',
 	title:'Projects Templates',
 	tbar:[
-		{text:'New Project Template'}
+		{
+			text:'New Project Template',
+			listeners:{
+				click:{
+					element:'el',
+					fn:function()
+					{
+						oms.admin.PTEditPanel.show();
+					}
+				}
+			}
+		}
 	]
 	});
 	return panel; 
@@ -359,48 +476,212 @@ oms.admin.buildPLDetails=function(data){
 	}
 	panel.doLayout();
 };
-oms.admin.createPTItemPanel=function(task)
+oms.admin.createPTItemPanel=function(proj)
 {
-	
-	function buildTaskListHtml()
-	{
-		var res="<table width=100%>";
-		res+='<tr><td width=15% ></td><td>Task Template 12</td><td width=100><img src="css/images/shared/icons/fam/add.png"><img src="css/images/shared/icons/fam/delete.gif" ></td></tr>';
-		res+='<tr><td width=15% ></td><td>NDA DRAFT TASK</td><td><img src="css/images/shared/icons/fam/add.png"><img src="css/images/shared/icons/fam/delete.gif" ></td></tr>';
-		res+='<tr><td width=15% ></td><td>FINATIAL REVIEW TASK</td><td><img src="css/images/shared/icons/fam/add.png"><img src="css/images/shared/icons/fam/delete.gif" ></td></tr>';
-		res+="</table>";
-		return res;
-	}
 
-	var docpanel=Ext.create('Ext.panel.Panel',{ 
-					title:'',
-					margin:'5 5 5 5',
-					frame:true,
-					width:'20%',
-					minHeight:200, 
-					scrollable:true,
-					html:""
-					});
-	var searchPanel=Ext.create('Ext.panel.Panel',{
+	var ustore=Ext.create('Ext.data.JsonStore', {
+		// store configs
+		//storeId: 'ttdtstore'+task.id,
+		fields: [
+			{name: 'id' },
+			{name: 'name'}
+			]
+	});
+	// now loaddata
+	proj.config="{tasks:[{id:1,name:'task 1'},{id:2,name:'task 2'}]}";
+	if(proj.config)
+	{
+		//task.config ="{docs:[{doctype:'type1'},{doctype:'type2'},{doctype:'NDR'},{doctype:'RFP Draft'},{doctype:'RFP Final'}]}";
+		
+		var obj=Ext.JSON.decode(proj.config);
+		//console.log(obj);
+			if(obj.tasks)
+			{
+				ustore.setData(obj.tasks);
+			}
+			
+	}
+	
+	var grid=Ext.create('Ext.grid.Panel',{
+		id:'ptdtgrid'+proj.id,
+		store:ustore, 
+		scrollable:true,
+		hideHeaders:true,
+		columnLines:false,
+		width:'90%',
+	//	minHeight:220,
+		columns: [
+			{text:'ID',dataIndex:'id',width:'10%'},
+			{text: "Task Name", dataIndex: 'name',width:'70%'}, 
+			{
+	            xtype:'actioncolumn',
+	            width:30,
+	            items: [
+	            	{
+	                icon: 'css/images/up.png'}],
+	                handler: function(grid, rowIndex, colIndex) {    
+	                	if(rowIndex>0)
+	                	{
+	                		var rec=grid.getStore().getAt(rowIndex);
+	                		grid.getStore().removeAt(rowIndex);
+	                		grid.getStore().insert(rowIndex-1,rec);
+	                	}
+	            }
+			},
+			{
+	            xtype:'actioncolumn',
+	            width:30,
+	            items: [
+	            	{
+	            		icon: 'css/images/down.png'}], 
+	            		handler: function(grid, rowIndex, colIndex)
+	            		{    
+	            			if(rowIndex<grid.getStore().data.length-1)
+	                		{
+	                		var rec=grid.getStore().getAt(rowIndex);
+	                		grid.getStore().removeAt(rowIndex);
+	                		grid.getStore().insert(rowIndex+1,rec);
+	                		}
+	            		}
+	                
+					},			
+					{
+						xtype:'actioncolumn',
+						width:30,
+						items: [{
+							icon: 'css/images/shared/icons/fam/delete.gif'}], 
+							handler: function(grid, rowIndex, colIndex) {
+	                	
+								grid.getStore().removeAt(rowIndex);
+	                	
+							}
+					},			
+			]
+		});
+	
+	var ptPanel=Ext.create('Ext.form.Panel',{
+		title:'Project Template Info:',
+		margin:'5 5 5 5',
+		width:'30%',
+		minHeight:160,
+		scrollable:true,
+		frame:true,
+		defaultType:'displayfield',
+		items:[
+			{
+				name:'id', 
+				fieldLabel:'Template ID:', 
+				margin: '0 2 0 15',
+				value:proj.id,
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
+				name:'name', 
+				fieldLabel:'Template Name:', 
+				value:proj.name,
+				margin: '0 2 0 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
+				name:'description', 
+				fieldLabel:'Description', 
+				value:proj.description,
+				margin: '0 2 0 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
+				name:'status', 
+				fieldLabel:'Status:', 
+				value:proj.status,
+				margin: '0 2 0 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			}
+		],
+		buttons:[
+			{
+				text:'Edit Template Info',
+				listeners:{
+					click:{
+						element:'el',
+						fn:function(){
+							//console.log(Ext.getCmp('tteditform').getForm());
+							console.log(proj);
+							Ext.getCmp('pteditform').getForm().loadRecord({getData:function(){return proj;}});
+							oms.admin.PTEditPanel.show();
+						}
+					}
+				}
+			}
+		]
+		});
+	
+	var tlPanel=Ext.create('Ext.panel.Panel',{
 					title:'Task List:',
 					margin:'5 5 5 5',
-					width:'78%',
+					width:'68%',
 					minHeight:200,
 					scrollable:true,
 					frame:true,
-					html:buildTaskListHtml()
+					items:grid,
+					buttons:[						
+						{
+							text:'Add Task',
+							listeners:
+							{
+								click:
+								{	
+									element:'el',
+									fn:function()
+									{
+										var store=Ext.getCmp('ttcombo').getStore();
+										store.setData(oms.admin.cachedata.taskTemplates);
+										oms.admin.PTAddTTPanel.mygrid=grid;
+										oms.admin.PTAddTTPanel.show();
+									}
+								}
+							}
+						},
+						{text:"Save",
+							listeners:
+							{
+								click:
+								{	
+									element:'el',
+									fn:function()
+									{
+										var recs=grid.getStore().data.items;
+										var res=[];
+										for(var i=0;i<recs.length;i++)
+										{
+											//console.log(recs[i]);
+											res[i]=recs[i].data;
+										}
+										console.log(res);
+										Ext.Msg.alert("Saving Config data",Ext.encode(res));
+									}
+								}
+							}	
+						}
+					]
 					});
-	var panel=Ext.create('Ext.panel.Panel',{
-					title:"["+task.name+"]", 
+	
+			var panel=Ext.create('Ext.panel.Panel',{
+					title:"Project Template: ["+proj.name+"]", 
 					width: '98%',
 					layout: 'hbox',
 					tools:[{type:'up'}],
 					minHeight:320,
 					frame:true,
 					items:[
-						docpanel,searchPanel
+						ptPanel,tlPanel
 						]
-						});
+						}
+	
+			);
 	return panel;
 };
 
