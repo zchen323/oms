@@ -1,8 +1,6 @@
 // this is the admin js
 // Doctype Editing / Search type Editing / User Role editing /
 // Task Template Editing
-
-
 oms.admin.createUserAdminPanel=function()
 {
 	var ustore=Ext.create('Ext.data.JsonStore', {
