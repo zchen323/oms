@@ -1,5 +1,8 @@
 package com.ccg.oms.common.data.user;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -66,4 +69,20 @@ public class NewUser {
 		this.role = role;
 	}
 	
+	public Set<String> getRoleSet(){
+		Set<String> roleSet = new HashSet<String>();
+		if(role != null){
+			String[] roles = role.split(",");
+			for(String role : roles){
+				roleSet.add(role.trim());
+			}
+		}
+		return roleSet;
+	}
+	
+	public static void main(String[] args){
+		NewUser user = new NewUser();
+		user.setRole("  zzzzk , zzzz  , zzzz, zzzzk,zzzz   ");
+		System.out.println(user.getRoleSet());
+	}
 }

@@ -39,8 +39,40 @@ public class UserController {
 			e.printStackTrace();			
 		}
 		return result;
-	}	
-
+	}
+	
+	@RequestMapping(method=RequestMethod.PUT)
+	public @ResponseBody RestResponse updateUse(@RequestBody NewUser input){
+		System.out.println(input);
+		RestResponse result = new RestResponse();
+		NewUser newuser = input;
+		try{
+			services.updateUser(newuser);
+			result.setStatus(RestResponseConstants.SUCCESS);
+			result.setMessage("User is updated");
+		}catch(Exception e){
+			result.setStatus(RestResponseConstants.FAIL);
+			result.setMessage(e.getMessage());
+			e.printStackTrace();			
+		}
+		return result;
+	}
+	
+	@RequestMapping(value="{username}", method=RequestMethod.DELETE)
+	public @ResponseBody RestResponse deleteUser(@PathVariable String username){
+		System.out.println(username);
+		RestResponse result = new RestResponse();
+		try{
+			services.removeUser(username);
+			result.setMessage("User: " + username + " has been deleted");
+			result.setStatus(RestResponseConstants.SUCCESS);
+		}catch(Exception e){
+			result.setMessage(e.getMessage());
+			result.setStatus(RestResponseConstants.FAIL);
+		}
+		return result;
+	}
+	
 	@RequestMapping(value="find/{username}", method=RequestMethod.GET)
 	public @ResponseBody RestResponse getUser(@PathVariable String username ){
 		User user = services.findUserById(username);
@@ -55,11 +87,11 @@ public class UserController {
 		return response;
 	}
 	
-	@RequestMapping(value="delete/{username}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse deleteUser(@PathVariable String username){
-		services.removeUser(username);
-		return RestResponse.getSuccessResponse();
-	}
+//	@RequestMapping(value="delete/{username}", method=RequestMethod.GET)
+//	public @ResponseBody RestResponse deleteUser(@PathVariable String username){
+//		services.removeUser(username);
+//		return RestResponse.getSuccessResponse();
+//	}
 
 	@RequestMapping(value="addToRole/{username}/{role}", method=RequestMethod.GET)
 	public @ResponseBody RestResponse addUserToRole(@PathVariable String username, @PathVariable String role){

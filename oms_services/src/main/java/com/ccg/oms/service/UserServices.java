@@ -20,5 +20,6 @@ public interface UserServices {
 	public void updateEmail(String username, String newEmail);
 	
 	public void createNewUser(NewUser newUser);
+	public void updateUser(NewUser newUser);
 	public List<UserInfo> getUserInfo();
 }

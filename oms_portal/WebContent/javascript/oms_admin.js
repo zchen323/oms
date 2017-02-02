@@ -27,9 +27,16 @@ oms.admin.createUserAdminPanel=function()
 					{
 						element:'el',
 						fn:function(){
-							//Ext.getCmp('btusersave').setVisible(true);
-							//Ext.getCmp('btuserdelete').setVisible(false);
-						oms.admin.userEditPanel.show();}
+							Ext.getCmp('btusersave').setVisible(true);
+							Ext.getCmp('btuserdelete').setVisible(false);
+							Ext.getCmp('btuserupdate').setVisible(false);
+							Ext.getCmp("userEditform").getForm().reset();
+							Ext.getCmp('userpassword').setVisible(true);
+							Ext.getCmp('userverify').setVisible(true);
+							Ext.getCmp('username').setReadOnly(false);
+							oms.admin.userEditPanel.setTitle('Add New User'),
+							oms.admin.userEditPanel.show();
+						}
 					}
 				}
 			}
@@ -73,8 +80,13 @@ oms.admin.createUserAdminPanel=function()
 		                    console.log(rec);
 		                    Ext.getCmp("userEditform").getForm().loadRecord(rec);
 		                    console.log(rec.data);
-		                    Ext.getCmp('btusersave').setVisible(true);
+		                    Ext.getCmp('btusersave').setVisible(false);
 							Ext.getCmp('btuserdelete').setVisible(false);
+							Ext.getCmp('btuserupdate').setVisible(true);
+							Ext.getCmp('userpassword').setVisible(false);
+							Ext.getCmp('userverify').setVisible(false);
+							Ext.getCmp('username').setReadOnly(true);
+							oms.admin.userEditPanel.setTitle('Update User'),
 							oms.admin.userEditPanel.show();
 		                }
 		            },{
@@ -85,7 +97,11 @@ oms.admin.createUserAdminPanel=function()
 		                    console.log(rec);
 		                    Ext.getCmp("userEditform").getForm().loadRecord(rec);
 		                    Ext.getCmp('btusersave').setVisible(false);
+		                    Ext.getCmp('btuserupdate').setVisible(false);
 							Ext.getCmp('btuserdelete').setVisible(true);
+							Ext.getCmp('userpassword').setVisible(false);
+							Ext.getCmp('userverify').setVisible(false);
+							oms.admin.userEditPanel.setTitle('Delete User');
 							oms.admin.userEditPanel.show();
 		                }
 		            }]
@@ -141,7 +157,7 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 	name:'userform',
 	float:true,
 	closable:true, 
-	title: 'Edit User',
+	title: 'Add New User',
 	bodyPadding: 10,
 	scrollable:true,
 	closeAction: 'hide',
@@ -149,7 +165,7 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 	modal: false,
 	items:[{xtype:'form',
 		width:'98%',
-		id: 'userform',
+		//id: 'userform',
 		id:'userEditform',
 		defaultType: 'textfield',
 		fieldDefaults: {
@@ -158,9 +174,26 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 			msgTarget: 'side'
 		},
 		items:[
-			{ fieldLabel: 'User Name', name: 'username', emptyText: 'user id' },
-			{ fieldLabel: 'Password', name: 'pass', emptyText: 'password', inputType: 'password' },
-			{ fieldLabel: 'Verify', name: 'pass', emptyText: 'password', inputType: 'password' },
+			{ 
+				fieldLabel: 'User Name', 
+				name: 'username', 
+				emptyText: 'user id',
+				id: 'username',
+			},
+			{ 
+				fieldLabel: 'Password', 
+				name: 'pass', 
+				emptyText: 'password', 
+				inputType: 'password',
+				id: 'userpassword'
+			},
+			{ 
+				fieldLabel: 'Verify', 
+				name: 'pass', 
+				emptyText: 'password', 
+				inputType: 'password',
+				id: 'userverify'
+			},
 			{
 				fieldLabel: 'Name',
 				emptyText: 'Name',
@@ -200,7 +233,7 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 		}],
 	
 			buttons: [{
-				text: 'Save22',
+				text: 'Save',
 				id:'btusersave',
 				handler : function() {
 					console.log("create new user");
@@ -234,7 +267,54 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 			},
 			{
 				text:'Delete',
-				id:'btuserdelete'
+				id:'btuserdelete',
+				handler: function(){
+					var formdata = Ext.getCmp("userEditform").getForm().getValues();
+					var username = formdata['username'];
+					console.log(username);
+					Ext.Ajax.request({
+						url: "api/user/" + username,
+						method: 'DELETE',
+						success: function(response, option){
+							console.log(response);
+							var respObj = Ext.decode(response.responseText);
+							Ext.Msg.alert(respObj.status, respObj.message);
+							if (respObj.status === 'success') {
+								oms.admin.userEditPanel.hide();
+							}
+						},
+						failure: function(response, option){
+							console.log(response);
+							Ext.Msg.alert('Error', response.responseText);
+						}
+					});
+					
+				}
+			},
+			{
+				text: 'Update',
+				id: 'btuserupdate',
+				handler: function(){
+					var formdata = Ext.getCmp("userEditform").getForm().getValues();
+					console.log(formdata);
+					Ext.Ajax.request({
+						url : "api/user",
+						method : 'PUT',
+						jsonData : JSON.stringify(formdata),
+						success : function(response, option) {
+							console.log(response);
+							var respObj = Ext.decode(response.responseText);
+							Ext.Msg.alert(respObj.status, respObj.message);
+							if (respObj.status === 'success') {
+								oms.admin.userEditPanel.hide();
+							}
+						},
+						failure : function(response, option) {
+							console.log(response);
+							Ext.Msg.alert('Error', response.responseText);
+						}
+					});
+				}
 			}
 			]
 
@@ -375,12 +455,15 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 					]
 		}],
 		buttons: [{
-			text: 'Save',
-			id:'btprsave'
+				text: 'Save',
+				id:'btprsave'
 			},
 			{
 				text:'Delete',
-			  id:'btprdelete'
+				id:'btprdelete',
+				handler: function(){
+					
+				}
 			}
 			]
 		});

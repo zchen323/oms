@@ -39,7 +39,7 @@ public class UserEntity2 {
 		this.email = email;
 	}
 	
-	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="user", cascade=CascadeType.REMOVE)
 	public Set<UserRoleEntity2> getRoles() {
 		return roles;
 	}

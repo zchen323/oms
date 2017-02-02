@@ -217,20 +217,22 @@ public class UserServiceImpl implements UserServices{
 		Iterable<UserEntity2> userEntities = user2Repository.findAll();
 		Map<String, UserInfo> map = new HashMap<String, UserInfo>();
 		for(UserEntity2 userEntity : userEntities){
-			UserInfo info = new UserInfo();
-			info.setUsername(userEntity.getUsername());
-			info.setEmail(userEntity.getEmail());
-			StringBuffer sb = new StringBuffer();
-			Set<UserRoleEntity2> roles = userEntity.getRoles();
-			for(UserRoleEntity2 role : roles){
-				sb.append(role.getRole()).append(", ");
+			if(userEntity.getEnabled() && !userEntity.getUsername().trim().isEmpty()){
+				UserInfo info = new UserInfo();
+				info.setUsername(userEntity.getUsername());
+				info.setEmail(userEntity.getEmail());
+				StringBuffer sb = new StringBuffer();
+				Set<UserRoleEntity2> roles = userEntity.getRoles();
+				for(UserRoleEntity2 role : roles){
+					sb.append(role.getRole()).append(", ");
+				}
+				String temp = sb.toString();
+				if(temp.length() > 2){
+					temp = temp.substring(0, temp.length() - 2);
+				}
+				info.setRole(temp);
+				map.put(info.getUsername(), info);
 			}
-			String temp = sb.toString();
-			if(temp.length() > 2){
-				temp = temp.substring(0, temp.length() - 2);
-			}
-			info.setRole(temp);
-			map.put(info.getUsername(), info);
 		}
 		
 		// get user detail
@@ -252,5 +254,80 @@ public class UserServiceImpl implements UserServices{
 		
 		return list;
 	}
+
+	private void deleteRoleByUsername(String username){
+		roleRepository.deleteByUsername(username);
+	}
+	
+	@Override
+	@Transactional
+	public void updateUser(NewUser newUser) {
+		UserEntity2 entity = user2Repository.findOne(newUser.getUsername());
+		if(entity == null){
+			throw new RuntimeException("User: " + newUser.getUsername() + " not found");
+		}
+		
+		// update user and user_role talbe
+		entity.setEmail(newUser.getEmail());
+		
+		//deleteRoleByUsername(newUser.getUsername());
+		//roleRepository.deleteByUsername(newUser.getUsername());
+		
+//		Set<UserRoleEntity2> roleSet = new HashSet<UserRoleEntity2>();
+//		Set<String> roles = newUser.getRoleSet();
+//		for(String role : roles){
+//			UserRoleEntity2 roleEntity = new UserRoleEntity2();
+//			roleEntity.setRole(role);
+//			roleEntity.setUser(entity);		
+//			roleSet.add(roleEntity);
+//			//System.out.println("=====" + role);
+//		}
+//
+//		entity.setRoles(null);
+		
+		
+		user2Repository.save(entity);
+		
+		// update detail table
+		UserDetailEntity detailEntity = detailRepository.findOne(newUser.getUsername());
+		if(detailEntity == null){
+			detailEntity = new UserDetailEntity();
+		}
+		detailEntity.setUsername(newUser.getUsername());
+		detailEntity.setName(newUser.getName());
+		detailEntity.setCompany(newUser.getCompany());
+		detailEntity.setFullAccess(newUser.getFullaccess());
+		detailEntity.setIsContractor(newUser.getIscontractor());
+		detailEntity.setEmail(newUser.getEmail());		
+		detailRepository.save(detailEntity);		// TODO Auto-generated method stub
+		
+		
+		
+		// update use roles
+		Set<UserRoleEntity2>  roleEntityset = entity.getRoles();
+		Set<String> existingRoles = new HashSet<String>();
+		for(UserRoleEntity2 roleEntity : roleEntityset){
+			existingRoles.add(roleEntity.getRole());
+		}
+		
+		// remove 
+		for(String role : existingRoles){
+			if(!newUser.getRoleSet().contains(role)){
+				// remove form db
+				roleRepository.deleteByUsernameAndRole(entity.getUsername(), role);
+			}
+		}
+		
+		// add new
+		for(String role : newUser.getRoleSet()){
+			if(!existingRoles.contains(role)){
+				UserRoleEntity roleEntity = new UserRoleEntity();
+				roleEntity.setRole(role);
+				roleEntity.setUsername(newUser.getUsername());
+				roleRepository.save(roleEntity);
+			}
+		}
+	}
+	
 
 }
