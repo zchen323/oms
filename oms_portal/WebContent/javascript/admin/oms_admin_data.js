@@ -23,6 +23,9 @@ oms.admin.refreshData=function()
 			// proj templates
 
 			oms.admin.buildPLDetails(oms.admin.cachedata.prjectTemplates);
+			
+			// populate project template combo box
+			Ext.getCmp('ptcombo').getStore().setData(oms.admin.cachedata.prjectTemplates);
 		},
 		failure: function(response) 
 		        { 

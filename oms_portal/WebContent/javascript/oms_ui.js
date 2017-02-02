@@ -38,7 +38,7 @@ oms.ui={
 		getUserProjectHtml:function(user)
 		{
 			
-				var res='<a href=""><img src="css/images/shared/icons/fam/add.png"/>Create Project </a> ';
+				var res='<a href="" onclick="oms.project.createNewProjPanel.show();return false;"><img src="css/images/shared/icons/fam/add.png"/>Create Project </a> ';
 				res=res+'<p><a href=""><img src="css/images/shared/icons/fam/grid.png"/>Open Project </a>';
 				res=res+'<p><b><u><font size=2 color="#336699">Recent Project:</font></u></b>';
 				res=res+"<ul>";
