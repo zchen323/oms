@@ -266,6 +266,7 @@ oms.admin.createTTItemPanel=function(task){
 		hideHeaders:true,
 		columnLines:false,
 		width:'90%',
+		selType: 'checkboxmodel',
 	//	minHeight:220,
 		columns: [
 			{text: "Documents", dataIndex: 'doctype',width:'80%'}, 
@@ -488,7 +489,7 @@ oms.admin.createPTItemPanel=function(proj)
 			]
 	});
 	// now loaddata
-	proj.config="{tasks:[{id:1,name:'task 1'},{id:2,name:'task 2'}]}";
+//	proj.config="{tasks:[{id:1,name:'task 1'},{id:2,name:'task 2'}]}";
 	if(proj.config)
 	{
 		//task.config ="{docs:[{doctype:'type1'},{doctype:'type2'},{doctype:'NDR'},{doctype:'RFP Draft'},{doctype:'RFP Final'}]}";
@@ -660,8 +661,8 @@ oms.admin.createPTItemPanel=function(proj)
 											//console.log(recs[i]);
 											res[i]=recs[i].data;
 										}
-										console.log(res);
-										Ext.Msg.alert("Saving Config data",Ext.encode(res));
+										
+										Ext.Msg.alert("Saving Config data",Ext.encode({tasks:res}));
 									}
 								}
 							}	

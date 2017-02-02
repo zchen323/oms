@@ -5,32 +5,32 @@ oms.userpref={};
 
 function calnextyear(start,rate,addon,addonrate)
 {
-var res=start*rate+addon*addonrate;
-return res;
+	var res=start*rate+addon*addonrate;
+	return res;
 }
 
 function displayRate()
 {
-var start=50000;
-var rate=1.36;
-var addon=20000;
-var addonrate=1.18;
-var res=start;
+	var start=50000;
+	var rate=1.36;
+	var addon=20000;
+	var addonrate=1.18;
+	var res=start;
 for(var year=2017;year<=2027;year++)
 {
-res=calnextyear(res,rate,addon,addonrate);
-console.log("year of "+year+" .... "+res);
+	res=calnextyear(res,rate,addon,addonrate);
+	console.log("year of "+year+" .... "+res);
 }
 }
-Ext.define('com.ccg.oms.portalHeader', {
-extend: 'Ext.Container',
-xtype: 'oms-portal-header',
-title: document.title,
-cls: 'app-header',
-height: 40,
-layout: {
-type: 'hbox',
-align: 'middle'
+	Ext.define('com.ccg.oms.portalHeader', {
+		extend: 'Ext.Container',
+		xtype: 'oms-portal-header',
+		title: document.title,
+		cls: 'app-header',
+		height: 40,
+		layout: {
+			type: 'hbox',
+			align: 'middle'
 },
 items: [{
 xtype: 'component',
@@ -120,9 +120,10 @@ var adminpanel=oms.admin.createAdminPanel();
 var viewport=Ext.getCmp('centerViewPort');
 viewport.add(ppanel);
 //viewport.add(tpanel);
-viewport.add(dpanel);
-viewport.add(adminpanel);
-viewport.doLayout();
-viewport.setActiveTab(2);
-oms.admin.refreshData();
+	viewport.add(dpanel);
+	viewport.add(adminpanel);
+	viewport.doLayout();
+	viewport.setActiveTab(2);
+	//viewport.add(oms.project.createNewProjPanel);
+	oms.admin.refreshData();
 });

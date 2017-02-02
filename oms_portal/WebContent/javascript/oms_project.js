@@ -2,6 +2,155 @@
 oms.project={}; // project builder
 // this will return a fieldSets
 
+// panel for create new project
+oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Create New Project',
+	bodyPadding: 10,
+	width:800,
+	scrollable:true,
+	closeAction: 'hide',
+	layout:'hbox',
+	items:[
+		{
+		xtype:'form',
+		border:0,
+		defaultType:'textfield',
+		layout:'vbox', 
+		bodypadding:'10 10 10 10',
+		items:[
+			{
+				name:'projName', 
+				fieldLabel:'Project Name:',  
+				value:'New Project',
+				margin: '0 2 2 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
+				name:'projAgency', 
+				fieldLabel:'Project Agency:',  
+				margin: '0 2 2 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
+				name:'projOrg', 
+				fieldLabel:"Organization:",
+				margin: '0 2 2 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+				},
+				{ 
+					name:'projloc',
+					fieldLabel:'Project Location',
+					margin: '0 2 2 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle' 
+					},
+					{
+					name:'contactoffice', 
+					fieldLabel:'Contact Office',
+					margin: '0 2 2 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+
+					},
+					{
+					name:'projcategory',
+					fieldLabel:'Category',
+					margin: '0 2 2 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+					},
+					{
+
+					name:'isPrimeProject',
+					fieldLabel:'Through Prime',
+					xtype:'checkbox',
+					margin: '0 2 2 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+					},
+					{
+					name:'primeName',
+					fieldLabel:'Prime Name:',
+					margin: '0 2 2 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+					},
+					{
+					name:'projduedate',
+					fieldLabel:'Target Date', 
+					margin: '0 2 2 15',
+					xtype:'datefield',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+					},
+					{
+						xtype:'combobox',
+						margin: '0 2 2 15',
+						id:'ptcombo',
+						valueField:'id',
+						displayField:'name',
+						queryMode: 'local',
+			            typeAhead: true,
+						fieldLabel:'Project Template',
+						labelCls:'omslabelstyle',
+						fieldCls:'omsfieldstyle',
+						store:Ext.create('Ext.data.JsonStore', {
+							fields: [
+								{name: 'id' },
+								{name: 'name'}
+								]
+						}),
+						listeners:{
+							change:{
+								elment:'el',
+								fn:function(obj,newV,oldV,ops){
+									//Ext.Msg.alert('alert',newV);
+									var rec=obj.getSelection();
+									var data=Ext.decode(rec.data.config);
+									//console.log(data);
+									var store=Ext.getCmp('createProjTasksGrid').getStore();
+									//console.log(store);
+									store.setData(data.tasks);
+									Ext.getCmp('createProjTasksGrid').getSelectionModel().selectAll(true);
+								}							
+							}
+						}
+					}
+				]
+		},
+		{
+			width:'60%', frame:true,border:1,
+			xtype:'grid',
+			id:'createProjTasksGrid',
+			selType: 'checkboxmodel',
+			minHeight:120,
+			//hideHeaders:true,
+			columnLines:false,
+			store:Ext.create('Ext.data.JsonStore', {
+				fields: [
+					{name: 'id' },
+					{name: 'name'}
+					]
+			}),
+			columns: [
+				{text:'ID',dataIndex:'id',width:'10%'},
+				{text: "Task Name", dataIndex: 'name',width:'70%'}		
+				]
+		}
+		],
+	buttons:[
+		{text:"Create New Project"}
+	]
+});
+
+
+
 oms.project.makeLastUpdateHtml=function()
 {
 var res="<ul style='font-size:8pt;color:#336699'>";
