@@ -194,9 +194,20 @@ public class ProjectServicesImpl implements ProjectServices{
 			entity.setCreatedTS(new Timestamp(System.currentTimeMillis()));
 			docTypeRepository.save(entity);
 		}else{
-			BeanUtils.copyProperties(entity, record);
+			record.setDescription(docType.getDescription());
+			record.setSampleURL(docType.getSampleURL());
 			docTypeRepository.save(record);
 		}		
+	}
+	
+	@Override
+	public void deleteDoctype(String docTypeId) {
+		DocTypeEntity record = docTypeRepository.findOne(docTypeId);
+		if(record != null){
+			docTypeRepository.delete(record);
+		}else{
+			throw new RuntimeException("Doc type: " + docTypeId + " is not found");
+		}
 	}
 
 }

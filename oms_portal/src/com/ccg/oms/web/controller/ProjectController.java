@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccg.oms.common.data.RestResponse;
+import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.document.DocType;
 import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.ProjectTemplate;
@@ -120,9 +121,28 @@ public class ProjectController {
 	
 	@RequestMapping(value="docType", method=RequestMethod.POST)
 	public @ResponseBody RestResponse saveDocType(@RequestBody DocType input){
-		service.saveDoctype(input);
-		return RestResponse.getSuccessResponse();
+		RestResponse restResp = RestResponse.getSuccessResponse();
+		try{
+			service.saveDoctype(input);
+			restResp.setMessage("Doc type has been saved");
+		}catch(Exception e){
+			restResp.setMessage(e.getMessage());
+			restResp.setStatus(RestResponseConstants.FAIL);
+		}
+		return restResp;
 	}
-	
+
+	@RequestMapping(value="docType/{doctype}", method=RequestMethod.DELETE)
+	public @ResponseBody RestResponse deleteDocType(@PathVariable String doctype){
+		RestResponse restResp = RestResponse.getSuccessResponse();
+		try{
+			service.deleteDoctype(doctype);
+			restResp.setMessage("Doc type" + doctype + "  has been deleted");
+		}catch(Exception e){
+			restResp.setMessage(e.getMessage());
+			restResp.setStatus(RestResponseConstants.FAIL);
+		}
+		return restResp;
+	}	
 }
 

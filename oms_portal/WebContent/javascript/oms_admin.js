@@ -348,12 +348,54 @@ oms.admin.DoctypeEditPanel=Ext.create('Ext.window.Window',{
 	{ fieldLabel: 'Sample URL',name:'sampleURL'}]}
 	],
 	buttons: [{
-		text: 'Save',
-		id:'btdtsave'
+			text: 'Save',
+			id:'btdtsave',
+			handler: function(){
+				var formdata = Ext.getCmp("doctypeEditForm").getForm().getValues();
+				console.log(formdata);
+				Ext.Ajax.request({
+					url : "api/project/docType",
+					method : 'POST',
+					jsonData : JSON.stringify(formdata),
+					success : function(response, option) {
+						console.log(response);
+						var respObj = Ext.decode(response.responseText);
+						Ext.Msg.alert(respObj.status, respObj.message);
+						if (respObj.status === 'success') {
+							oms.admin.DoctypeEditPanel.hide();
+						}
+					},
+					failure : function(response, option) {
+						console.log(response);
+						Ext.Msg.alert('Error', response.responseText);
+					}
+				});
+			}
 		},
 		{
 			text:'Delete',
-		  id:'btdtdelete'
+			id:'btdtdelete',
+			handler: function(){
+				var formdata = Ext.getCmp("doctypeEditForm").getForm().getValues();
+				console.log(formdata);
+				Ext.Ajax.request({
+					url : "api/project/docType/" + formdata['doctype'],
+					method : 'DELETE',
+					jsonData : JSON.stringify(formdata),
+					success : function(response, option) {
+						console.log(response);
+						var respObj = Ext.decode(response.responseText);
+						Ext.Msg.alert(respObj.status, respObj.message);
+						if (respObj.status === 'success') {
+							oms.admin.DoctypeEditPanel.hide();
+						}
+					},
+					failure : function(response, option) {
+						console.log(response);
+						Ext.Msg.alert('Error', response.responseText);
+					}
+				});
+			}
 		}
 		]
 	});
@@ -384,9 +426,9 @@ oms.admin.createDoctypeAdminPanel=function(){
 					fn:function(){
 						Ext.getCmp('btdtsave').setVisible(true);
 						Ext.getCmp('btdtdelete').setVisible(false);
+						Ext.getCmp("doctypeEditForm").getForm().reset();
 						oms.admin.DoctypeEditPanel.show();
-					
-						}
+					}
 				}
 			}
 		}
@@ -456,12 +498,18 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 		}],
 		buttons: [{
 				text: 'Save',
-				id:'btprsave'
+				id:'btprsave',
+				handler: function(){
+					var formdata = Ext.getCmp("projroleEditForm").getForm().getValues();
+					console.log(formdata);
+				}
 			},
 			{
 				text:'Delete',
 				id:'btprdelete',
 				handler: function(){
+					var formdata = Ext.getCmp("projroleEditForm").getForm().getValues();
+					console.log(formdata);
 					
 				}
 			}

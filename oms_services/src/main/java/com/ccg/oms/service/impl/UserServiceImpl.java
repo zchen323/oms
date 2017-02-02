@@ -186,12 +186,15 @@ public class UserServiceImpl implements UserServices{
 		entity.setUsername(newUser.getUsername());
 		entity.setPassword(newUser.getPass()[0]);
 		
-		UserRoleEntity2 roleEntity = new UserRoleEntity2();
-		roleEntity.setRole(newUser.getRole());
-		roleEntity.setUser(entity);
 		Set<UserRoleEntity2> roleSet = new HashSet<UserRoleEntity2>();
-		roleSet.add(roleEntity);
-		
+		for(String role : newUser.getRoleSet()){
+			System.out.println("=================" + role);
+			UserRoleEntity2 roleEntity = new UserRoleEntity2();
+			roleEntity.setRole(role);
+			roleEntity.setUser(entity);
+			roleSet.add(roleEntity);
+		}
+
 		entity.setRoles(roleSet);
 		user2Repository.save(entity);
 		
@@ -254,10 +257,6 @@ public class UserServiceImpl implements UserServices{
 		
 		return list;
 	}
-
-	private void deleteRoleByUsername(String username){
-		roleRepository.deleteByUsername(username);
-	}
 	
 	@Override
 	@Transactional
@@ -269,23 +268,6 @@ public class UserServiceImpl implements UserServices{
 		
 		// update user and user_role talbe
 		entity.setEmail(newUser.getEmail());
-		
-		//deleteRoleByUsername(newUser.getUsername());
-		//roleRepository.deleteByUsername(newUser.getUsername());
-		
-//		Set<UserRoleEntity2> roleSet = new HashSet<UserRoleEntity2>();
-//		Set<String> roles = newUser.getRoleSet();
-//		for(String role : roles){
-//			UserRoleEntity2 roleEntity = new UserRoleEntity2();
-//			roleEntity.setRole(role);
-//			roleEntity.setUser(entity);		
-//			roleSet.add(roleEntity);
-//			//System.out.println("=====" + role);
-//		}
-//
-//		entity.setRoles(null);
-		
-		
 		user2Repository.save(entity);
 		
 		// update detail table
@@ -299,18 +281,16 @@ public class UserServiceImpl implements UserServices{
 		detailEntity.setFullAccess(newUser.getFullaccess());
 		detailEntity.setIsContractor(newUser.getIscontractor());
 		detailEntity.setEmail(newUser.getEmail());		
-		detailRepository.save(detailEntity);		// TODO Auto-generated method stub
+		detailRepository.save(detailEntity);
 		
-		
-		
-		// update use roles
+		// update use roles, get the roles first
 		Set<UserRoleEntity2>  roleEntityset = entity.getRoles();
 		Set<String> existingRoles = new HashSet<String>();
 		for(UserRoleEntity2 roleEntity : roleEntityset){
 			existingRoles.add(roleEntity.getRole());
 		}
 		
-		// remove 
+		// remove deleted
 		for(String role : existingRoles){
 			if(!newUser.getRoleSet().contains(role)){
 				// remove form db

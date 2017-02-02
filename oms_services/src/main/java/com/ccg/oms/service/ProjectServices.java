@@ -25,5 +25,6 @@ public interface ProjectServices {
 	
 	List<DocType> getDocTypes();
 	void saveDoctype(DocType docType);
+	void deleteDoctype(String docTpeId);
 	
 }
