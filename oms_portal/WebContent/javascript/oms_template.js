@@ -152,13 +152,36 @@ oms.admin.TTEditPanel=Ext.create('Ext.window.Window',{
 			labelWidth: 150,
 			bodyPadding: 10,
 			},items:[
-	{ fieldLabel: 'Task Template ID', name: 'id'},
+	{ fieldLabel: 'Task Template ID', name: 'id', xtype: 'hidden', readOnly: true},
 	{ fieldLabel: 'Template Name', name: 'name'},
 	{ fieldLabel: 'Description', name: 'description'},
 	{ fieldLabel: 'Status',name:'status'}]}
 	],
 	buttons: [{
-		text: 'Save'
+			text: 'Save',
+			handler: function(){
+				var formdata = Ext.getCmp('tteditform').getForm().getValues();
+				console.log(formdata);
+				Ext.Ajax.request({
+					url : "api/project/taskTemplate",
+					method : 'POST',
+					jsonData : JSON.stringify(formdata),
+					success : function(response, option) {
+						console.log(response);
+						var respObj = Ext.decode(response.responseText);
+						Ext.Msg.alert(respObj.status, respObj.message);
+						if (respObj.status === 'success') {
+							oms.admin.TTEditPanel.hide();
+						}
+					},
+					failure : function(response, option) {
+						console.log(response);
+						Ext.Msg.alert('Error', response.responseText);
+					}
+				});
+				
+				
+			}
 		}
 		]
 	});
@@ -184,7 +207,7 @@ oms.admin.PTEditPanel=Ext.create('Ext.window.Window',{
 			labelWidth: 150,
 			bodyPadding: 10,
 			},items:[
-	{ fieldLabel: 'Project Template ID', name: 'id'},
+	{ fieldLabel: 'Project Template ID', name: 'id', xtype: 'hidden'},
 	{ fieldLabel: 'Template Name', name: 'name'},
 	{ fieldLabel: 'Description', name: 'description'},
 	{ fieldLabel: 'Status',name:'status'}]}
@@ -198,10 +221,31 @@ oms.admin.PTEditPanel=Ext.create('Ext.window.Window',{
 					
 				}
 			}
+		},
+		handler: function(){
+			var formdata = Ext.getCmp('pteditform').getForm().getValues();
+			console.log(formdata);
+			Ext.Ajax.request({
+				url : "api/project/projectTemplate",
+				method : 'POST',
+				jsonData : JSON.stringify(formdata),
+				success : function(response, option) {
+					console.log(response);
+					var respObj = Ext.decode(response.responseText);
+					Ext.Msg.alert(respObj.status, respObj.message);
+					if (respObj.status === 'success') {
+						oms.admin.PTEditPanel.hide();
+					}
+				},
+				failure : function(response, option) {
+					console.log(response);
+					Ext.Msg.alert('Error', response.responseText);
+				}
+			});
+			
 		}
-		}
-		]
-	});
+	}]
+});
 
 oms.admin.createTLPanel=function(){
 	var panel=Ext.create('Ext.panel.Panel',{
@@ -216,6 +260,7 @@ oms.admin.createTLPanel=function(){
 					{
 						element:'el',
 						fn:function(){
+							Ext.getCmp('tteditform').getForm().reset();
 							oms.admin.TTEditPanel.show();
 						}
 					}
@@ -456,6 +501,7 @@ oms.admin.createPLPanel=function(){
 					element:'el',
 					fn:function()
 					{
+						Ext.getCmp('pteditform').getForm().reset();
 						oms.admin.PTEditPanel.show();
 					}
 				}

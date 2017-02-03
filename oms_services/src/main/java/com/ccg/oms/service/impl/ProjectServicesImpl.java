@@ -83,6 +83,12 @@ public class ProjectServicesImpl implements ProjectServices{
 			userRoleRepository.save(record);
 		}
 	}
+	
+	@Override
+	public void deleteProjectUserRoleType(String roleTypeId) {
+		ProjectUserRoleTypeEntity record = userRoleRepository.findOne(roleTypeId);
+		userRoleRepository.delete(record);	
+	}
 
 
 	public List<ProjectTemplate> getProjectTemplate() {
@@ -209,5 +215,8 @@ public class ProjectServicesImpl implements ProjectServices{
 			throw new RuntimeException("Doc type: " + docTypeId + " is not found");
 		}
 	}
+
+
+
 
 }

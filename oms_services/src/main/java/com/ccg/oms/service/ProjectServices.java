@@ -12,6 +12,7 @@ public interface ProjectServices {
 	
 	List<ProjectUserRoleType> getProjectUserRoleTypes();
 	void saveProjectUserRoleType(ProjectUserRoleType roleType);
+	void deleteProjectUserRoleType(String roleTpeId);
 	
 	List<ProjectTemplate> getProjectTemplate();
 	ProjectTemplate getProjectTemplateById(Integer id);

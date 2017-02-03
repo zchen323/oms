@@ -41,12 +41,33 @@ public class ProjectController {
 		resp.setResult(list);
 		return resp;
 	}
-
 	
-	@RequestMapping(value="projectUsreRoleType", method=RequestMethod.POST)
+	@RequestMapping(value="projectUserRoleType/{userRoleType}", method=RequestMethod.DELETE)
+	public @ResponseBody RestResponse deleteProjectUserRoleTypes(@PathVariable String userRoleType){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			service.deleteProjectUserRoleType(userRoleType);
+			resp.setMessage("User role type: " + userRoleType + " has been deleted");
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();		
+		}
+		return resp;
+	}
+	
+	@RequestMapping(value="projectUserRoleType", method=RequestMethod.POST)
 	public @ResponseBody RestResponse saveProjectUserRoleType(@RequestBody ProjectUserRoleType roleType){
-		service.saveProjectUserRoleType(roleType);
-		return RestResponse.getSuccessResponse();
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			service.saveProjectUserRoleType(roleType);
+			resp.setMessage("Role type: " + roleType.getRoletype() + ", is saved");
+		}catch(Exception e){
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+			e.printStackTrace();
+		}
+		return resp;
 	}
 	
 	
@@ -70,8 +91,16 @@ public class ProjectController {
 
 	@RequestMapping(value="projectTemplate", method=RequestMethod.POST)
 	public @ResponseBody RestResponse saveProjectTemaplate(@RequestBody ProjectTemplate input){
-		service.saveProjectTemplate(input);;
-		return RestResponse.getSuccessResponse();
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			service.saveProjectTemplate(input);
+			resp.setMessage("Done!");
+		}catch(Exception e){
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+			e.printStackTrace();
+		}
+		return resp;
 	}
 	
 	@RequestMapping(value="projectTemplate", method=RequestMethod.DELETE)
@@ -100,8 +129,16 @@ public class ProjectController {
 
 	@RequestMapping(value="taskTemplate", method=RequestMethod.POST)
 	public @ResponseBody RestResponse saveTaskTemaplate(@RequestBody TaskTemplate input){
-		service.saveTaskTemplate(input);;
-		return RestResponse.getSuccessResponse();
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			service.saveTaskTemplate(input);
+			resp.setMessage("Done!");
+		}catch(Exception e){
+			e.printStackTrace();
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+		}
+		return resp;
 	}
 	
 	@RequestMapping(value="taskTemplate", method=RequestMethod.DELETE)

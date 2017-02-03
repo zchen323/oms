@@ -502,6 +502,24 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 				handler: function(){
 					var formdata = Ext.getCmp("projroleEditForm").getForm().getValues();
 					console.log(formdata);
+					Ext.Ajax.request({
+						url : "api/project/projectUserRoleType",
+						method : 'POST',
+						jsonData : JSON.stringify(formdata),
+						success : function(response, option) {
+							console.log(response);
+							var respObj = Ext.decode(response.responseText);
+							Ext.Msg.alert(respObj.status, respObj.message);
+							if (respObj.status === 'success') {
+								oms.admin.ProjectRoleEditPanel.hide();
+							}
+						},
+						failure : function(response, option) {
+							console.log(response);
+							Ext.Msg.alert('Error', response.responseText);
+						}
+					});
+					
 				}
 			},
 			{
@@ -510,6 +528,22 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 				handler: function(){
 					var formdata = Ext.getCmp("projroleEditForm").getForm().getValues();
 					console.log(formdata);
+					Ext.Ajax.request({
+						url : "api/project/projectUserRoleType/" + formdata['roletype'],
+						method : 'DELETE',
+						success : function(response, option) {
+							console.log(response);
+							var respObj = Ext.decode(response.responseText);
+							Ext.Msg.alert(respObj.status, respObj.message);
+							if (respObj.status === 'success') {
+								oms.admin.ProjectRoleEditPanel.hide();
+							}
+						},
+						failure : function(response, option) {
+							console.log(response);
+							Ext.Msg.alert('Error', response.responseText);
+						}
+					});
 					
 				}
 			}
@@ -542,6 +576,7 @@ oms.admin.createProjectRoleTypeAdminPanel=function()
 						
 						Ext.getCmp('btprsave').setVisible(true);
 						Ext.getCmp('btprdelete').setVisible(false);
+						Ext.getCmp("projroleEditForm").getForm().reset();
 						oms.admin.ProjectRoleEditPanel.show();
 					}
 				}
