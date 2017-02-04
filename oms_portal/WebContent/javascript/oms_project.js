@@ -16,6 +16,7 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 	items:[
 		{
 		xtype:'form',
+		id: 'createNewProject',
 		border:0,
 		defaultType:'textfield',
 		layout:'vbox', 
@@ -145,7 +146,14 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 		}
 		],
 	buttons:[
-		{text:"Create New Project"}
+		{
+			text:"Create New Project",
+			handler: function(){
+				var formdata = Ext.getCmp('createNewProject').getForm().getValues();
+				                   //Ext.getCmp("userEditform").getForm().getValues();
+				console.log(formdata);
+			}
+		}
 	]
 });
 

@@ -163,7 +163,7 @@ oms.admin.TTEditPanel=Ext.create('Ext.window.Window',{
 				var formdata = Ext.getCmp('tteditform').getForm().getValues();
 				console.log(formdata);
 				Ext.Ajax.request({
-					url : "api/project/taskTemplate",
+					url : "api/projectadmin/taskTemplate",
 					method : 'POST',
 					jsonData : JSON.stringify(formdata),
 					success : function(response, option) {
@@ -226,7 +226,7 @@ oms.admin.PTEditPanel=Ext.create('Ext.window.Window',{
 			var formdata = Ext.getCmp('pteditform').getForm().getValues();
 			console.log(formdata);
 			Ext.Ajax.request({
-				url : "api/project/projectTemplate",
+				url : "api/projectadmin/projectTemplate",
 				method : 'POST',
 				jsonData : JSON.stringify(formdata),
 				success : function(response, option) {
@@ -403,10 +403,34 @@ oms.admin.createTTItemPanel=function(task){
 										var res=[];
 										for(var i=0;i<recs.length;i++)
 										{
-											 res[i]={doctype:recs[i].data.doctype};
+											res[i]={doctype:recs[i].data.doctype};
+											//res[i]=recs[i].data.doctype;
 										}
-										console.log(res);
-										Ext.Msg.alert("saving config data",Ext.encode(res));
+										//console.log(res);
+										//console.log(task);
+										var taskConfig = {};
+										taskConfig.docs=res;
+										//taskConfig.docTypes = res;
+										//taskConfig.taskTemplateId = task.id;
+										console.log(taskConfig);
+										//Ext.Msg.alert("saving config data",Ext.encode(res));
+										Ext.Ajax.request({
+											url : "api/projectadmin/taskTemplate/config/" + task.id,
+											method : 'POST',
+											jsonData : JSON.stringify(taskConfig),
+											success : function(response, option) {
+												console.log(response);
+												var respObj = Ext.decode(response.responseText);
+												Ext.Msg.alert(respObj.status, respObj.message);
+												if (respObj.status === 'success') {
+													oms.admin.PTEditPanel.hide();
+												}
+											},
+											failure : function(response, option) {
+												console.log(response);
+												Ext.Msg.alert('Error', response.responseText);
+											}
+										});
 									}
 								}
 							}	
@@ -463,7 +487,7 @@ oms.admin.createTTItemPanel=function(task){
 									element:'el',
 									fn:function(){
 										//console.log(Ext.getCmp('tteditform').getForm());
-										console.log(task);
+										//console.log(task);
 										Ext.getCmp('tteditform').getForm().loadRecord({getData:function(){return task;}});
 										oms.admin.TTEditPanel.show();
 									}
@@ -513,6 +537,10 @@ oms.admin.createPLPanel=function(){
 };
 
 oms.admin.buildPLDetails=function(data){
+	
+	//console.log("====buidPLDetails ===")
+	//console.log(data);
+	
 	var panel=Ext.getCmp("projtmpltadmin");
 	panel.removeAll();
 	for(var i=0;i<data.length;i++)
@@ -525,6 +553,8 @@ oms.admin.buildPLDetails=function(data){
 };
 oms.admin.createPTItemPanel=function(proj)
 {
+	//console.log("=====createPTItemPanel=======");
+	//console.log(proj);
 
 	var ustore=Ext.create('Ext.data.JsonStore', {
 		// store configs
@@ -535,7 +565,7 @@ oms.admin.createPTItemPanel=function(proj)
 			]
 	});
 	// now loaddata
-//	proj.config="{tasks:[{id:1,name:'task 1'},{id:2,name:'task 2'}]}";
+	//proj.config="{tasks:[{id:1,name:'task 1'},{id:2,name:'task 2'}]}";
 	if(proj.config)
 	{
 		//task.config ="{docs:[{doctype:'type1'},{doctype:'type2'},{doctype:'NDR'},{doctype:'RFP Draft'},{doctype:'RFP Final'}]}";
@@ -686,6 +716,8 @@ oms.admin.createPTItemPanel=function(proj)
 									{
 										var store=Ext.getCmp('ttcombo').getStore();
 										store.setData(oms.admin.cachedata.taskTemplates);
+										console.log("== taskTemplates");
+										console.log(oms.admin.cachedata.taskTemplates);
 										oms.admin.PTAddTTPanel.mygrid=grid;
 										oms.admin.PTAddTTPanel.show();
 									}
@@ -707,8 +739,25 @@ oms.admin.createPTItemPanel=function(proj)
 											//console.log(recs[i]);
 											res[i]=recs[i].data;
 										}
+										console.log("====Saving Config data");
+										console.log(proj);
 										
-										Ext.Msg.alert("Saving Config data",Ext.encode({tasks:res}));
+										//Ext.Msg.alert("Saving Config data",Ext.encode({tasks:res}));
+										Ext.Ajax.request({
+											url : "api/projectadmin/projectTemplate/config/" + proj.id,
+											method : 'POST',
+											jsonData : JSON.stringify({tasks:res}),
+											success : function(response, option) {
+												console.log(response);
+												var respObj = Ext.decode(response.responseText);
+												Ext.Msg.alert(respObj.status, respObj.message);
+											},
+											failure : function(response, option) {
+												console.log(response);
+												Ext.Msg.alert('Error', response.responseText);
+											}
+										});
+										
 									}
 								}
 							}	

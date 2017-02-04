@@ -74,9 +74,19 @@ create table userdetail(
 	primary key(`username`) 
 );
 
-create table task_documents(
-	
+create table tasktemplatedoctype(
+	`id` int not null auto_increment,
+	`taskTemplateId` int not null,
+	`doctype` varchar(100),
+	primary key(`id`)
 )
+
+create table tasktemplatedoctype(
+	id int not null auto_increment,
+	taskTemplateId int not null,
+	docType varchar(50),
+	primary key (id)
+);
 
 
 

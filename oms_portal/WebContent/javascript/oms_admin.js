@@ -354,7 +354,7 @@ oms.admin.DoctypeEditPanel=Ext.create('Ext.window.Window',{
 				var formdata = Ext.getCmp("doctypeEditForm").getForm().getValues();
 				console.log(formdata);
 				Ext.Ajax.request({
-					url : "api/project/docType",
+					url : "api/projectadmin/docType",
 					method : 'POST',
 					jsonData : JSON.stringify(formdata),
 					success : function(response, option) {
@@ -379,7 +379,7 @@ oms.admin.DoctypeEditPanel=Ext.create('Ext.window.Window',{
 				var formdata = Ext.getCmp("doctypeEditForm").getForm().getValues();
 				console.log(formdata);
 				Ext.Ajax.request({
-					url : "api/project/docType/" + formdata['doctype'],
+					url : "api/projectadmin/docType/" + formdata['doctype'],
 					method : 'DELETE',
 					jsonData : JSON.stringify(formdata),
 					success : function(response, option) {
@@ -503,7 +503,7 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 					var formdata = Ext.getCmp("projroleEditForm").getForm().getValues();
 					console.log(formdata);
 					Ext.Ajax.request({
-						url : "api/project/projectUserRoleType",
+						url : "api/projectadmin/projectUserRoleType",
 						method : 'POST',
 						jsonData : JSON.stringify(formdata),
 						success : function(response, option) {
@@ -529,7 +529,7 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 					var formdata = Ext.getCmp("projroleEditForm").getForm().getValues();
 					console.log(formdata);
 					Ext.Ajax.request({
-						url : "api/project/projectUserRoleType/" + formdata['roletype'],
+						url : "api/projectadmin/projectUserRoleType/" + formdata['roletype'],
 						method : 'DELETE',
 						success : function(response, option) {
 							console.log(response);

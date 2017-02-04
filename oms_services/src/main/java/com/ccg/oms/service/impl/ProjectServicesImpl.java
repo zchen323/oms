@@ -13,16 +13,19 @@ import com.ccg.oms.common.data.document.DocType;
 import com.ccg.oms.common.data.project.ProjectTemplate;
 import com.ccg.oms.common.data.project.ProjectUserRoleType;
 import com.ccg.oms.common.data.project.TaskTemplate;
+import com.ccg.oms.common.data.project.TaskTemplateConfig;
 import com.ccg.oms.dao.entiry.document.DocTypeEntity;
 import com.ccg.oms.dao.entiry.project.ProjectEntity;
 import com.ccg.oms.dao.entiry.project.ProjectTemplateEntity;
 import com.ccg.oms.dao.entiry.project.ProjectUserEntity;
 import com.ccg.oms.dao.entiry.project.ProjectUserRoleTypeEntity;
+import com.ccg.oms.dao.entiry.project.TaskTemplateDocTypeEntity;
 import com.ccg.oms.dao.entiry.project.TaskTemplateEntity;
 import com.ccg.oms.dao.repository.document.DocTypeRepository;
 import com.ccg.oms.dao.repository.project.ProjectRepository;
 import com.ccg.oms.dao.repository.project.ProjectTemplateRepository;
 import com.ccg.oms.dao.repository.project.ProjectUserRoleTypeRepository;
+import com.ccg.oms.dao.repository.project.TaskTemplateDocTypeRepository;
 import com.ccg.oms.dao.repository.project.TaskTemplateRepository;
 import com.ccg.oms.service.ProjectServices;
 import com.ccg.oms.service.mapper.BeanAndEntityMapper;
@@ -44,6 +47,9 @@ public class ProjectServicesImpl implements ProjectServices{
 	
 	@Autowired
 	DocTypeRepository docTypeRepository;
+	
+	@Autowired
+	TaskTemplateDocTypeRepository taskTemplateDocTypeRepository;
 	
 	//ProjectUserRoleTypeEntityMapper mapper = ProjectUserRoleTypeEntityMapper.INSTANCE;
 	
@@ -214,6 +220,32 @@ public class ProjectServicesImpl implements ProjectServices{
 		}else{
 			throw new RuntimeException("Doc type: " + docTypeId + " is not found");
 		}
+	}
+
+
+
+	@Override
+	public void saveProjectTtemplateConfig(Integer id, String configString) {
+		ProjectTemplateEntity entity = projectTemplateReposiroty.findOne(id);
+		if(entity != null){
+			entity.setConfig(configString);
+			projectTemplateReposiroty.save(entity);
+		}else{
+			throw new RuntimeException("ProjectTemplate with ID: " + id + " does not exist");
+		}
+	}
+
+
+	@Override
+	public void saveTaskTtemplateConfig(Integer id, String configString) {
+		TaskTemplateEntity entity = taskTemplateRepository.findOne(id);
+		if(entity != null){
+			entity.setConfig(configString);
+			taskTemplateRepository.save(entity);
+		}else{
+			throw new RuntimeException("TaskTemplate with ID: " + id + " does not exist");
+		}
+		
 	}
 
 
