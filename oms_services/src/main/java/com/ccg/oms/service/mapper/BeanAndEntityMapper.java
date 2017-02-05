@@ -34,8 +34,8 @@ public interface BeanAndEntityMapper {
 	TaskTemplate entityToBean(TaskTemplateEntity entity);
 	TaskTemplateEntity beanToEntity(TaskTemplate bean);
 	
-	Project entityToBean(ProjectEntity entity);
-	ProjectEntity beanToEntity(Project bean);
+//	Project entityToBean(ProjectEntity entity);
+//	ProjectEntity beanToEntity(Project bean);
 	
 	// user
 	User entityToBean(UserEntity entity);

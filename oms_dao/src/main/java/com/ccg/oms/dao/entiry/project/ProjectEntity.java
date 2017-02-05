@@ -25,15 +25,18 @@ public class ProjectEntity {
 	private String primeName;
 	private String primeContactInfo;
 	
+	private String location;
+	private String organization;
+	private String agency;
+	
+	
 	private String createdBy;
 	
+	private Timestamp startDate;
 	private Timestamp createdDate;
 	private Timestamp dueDate;
 	private Timestamp completedDate;
 	private Timestamp lastUpdateDate;
-	
-	private List<ProjectUserEntity> users;
-
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,7 +70,7 @@ public class ProjectEntity {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Boolean isPrime() {
+	public Boolean getPrime() {
 		return prime;
 	}
 	public void setPrime(Boolean prime) {
@@ -85,11 +88,35 @@ public class ProjectEntity {
 	public void setPrimeContactInfo(String primeContactInfo) {
 		this.primeContactInfo = primeContactInfo;
 	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getOrganization() {
+		return organization;
+	}
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
+	public String getAgency() {
+		return agency;
+	}
+	public void setAgency(String agency) {
+		this.agency = agency;
+	}
 	public String getCreatedBy() {
 		return createdBy;
 	}
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+	public Timestamp getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Timestamp startDate) {
+		this.startDate = startDate;
 	}
 	public Timestamp getCreatedDate() {
 		return createdDate;
@@ -116,13 +143,8 @@ public class ProjectEntity {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 	
-	@OneToMany(mappedBy="project", cascade=CascadeType.ALL)
-	public List<ProjectUserEntity> getUsers() {
-		return users;
-	}
-	public void setUsers(List<ProjectUserEntity> users) {
-		this.users = users;
-	}
+
+	
 	
 }
 

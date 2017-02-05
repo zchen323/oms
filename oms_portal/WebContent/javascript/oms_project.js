@@ -69,8 +69,11 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 					{
 
 					name:'isPrimeProject',
-					fieldLabel:'Through Prime',
+					fieldLabel:'Through Prime7',
 					xtype:'checkbox',
+					value:0,
+					inputValue:true,
+					uncheckValue:false,
 					margin: '0 2 2 15',
 					labelCls:'omslabelstyle',
 					fieldCls:'omsfieldstyle'
@@ -94,6 +97,7 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 						xtype:'combobox',
 						margin: '0 2 2 15',
 						id:'ptcombo',
+						name: 'projTempId',
 						valueField:'id',
 						displayField:'name',
 						queryMode: 'local',
@@ -152,6 +156,25 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 				var formdata = Ext.getCmp('createNewProject').getForm().getValues();
 				                   //Ext.getCmp("userEditform").getForm().getValues();
 				console.log(formdata);
+				Ext.Ajax.request({
+					url : "api/project/newProject",
+					method : 'POST',
+					jsonData : JSON.stringify(formdata),
+					success : function(response, option) {
+						console.log(response);
+						var respObj = Ext.decode(response.responseText);
+						Ext.Msg.alert(respObj.status, respObj.message);
+						if (respObj.status === 'success') {
+							oms.admin.DoctypeEditPanel.hide();
+						}
+					},
+					failure : function(response, option) {
+						console.log(response);
+						Ext.Msg.alert('Error', response.responseText);
+					}
+				});
+				
+				
 			}
 		}
 	]

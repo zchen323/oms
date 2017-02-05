@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.dao.repository.project.ProjectRepository;
 import com.ccg.oms.service.OmsService;
+import com.ccg.oms.service.mapper.ProjectMapper;
 
 @Service
 public class OmsServiceImpl implements OmsService{
@@ -15,12 +16,10 @@ public class OmsServiceImpl implements OmsService{
 
 	public Project getProjectById(int id) {
 		
-		com.ccg.oms.dao.entiry.project.ProjectEntity proj = projectRepository.findOne(id);
+		com.ccg.oms.dao.entiry.project.ProjectEntity entity = projectRepository.findOne(id);
 		
-		Project project = new Project();		
-		project.setDescription(proj.getDescription());
-		project.setId(id);
-		project.setName(proj.getName());
+			
+		Project project = ProjectMapper.fromEntity(entity);
 		
 		return project;
 	}

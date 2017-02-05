@@ -15,14 +15,23 @@ create table project(
 	`prime` tinyint(1),
 	`primeName` varchar(100),
 	`primeContactInfo` varchar(200),
+	`location` varchar(100),
+	`organization` varchar(100),
+	`agency` varchar(100),
 	`createdDate` datetime,
 	`createdBy` varchar(45),
+	`startDate` datetime,
 	`dueDate` datetime,
 	`completedDate` datetime,
 	`lastUpdateDate` datetime,
 	primary key (`id`)
 );
 
+
+	private Timestamp startDate;
+	private Timestamp createdDate;
+	private Timestamp dueDate;
+	private Timestamp completedDate;
 
 create table task(
 	`id` int(11) not null auto_increment,
@@ -32,6 +41,8 @@ create table task(
 	`description` varchar(200),
 	`status` varchar(20),
 	`createdDate` datetime,
+	`startDate` datetime,
+	`completedDate` datetime,
 	`dueDate` datetime,
 	primary key (`id`)
 );

@@ -17,16 +17,14 @@ import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.ProjectTemplate;
 import com.ccg.oms.common.data.project.ProjectUserRoleType;
 import com.ccg.oms.common.data.project.TaskTemplate;
-import com.ccg.oms.common.data.project.TaskTemplateConfig;
-import com.ccg.oms.service.ProjectServices;
-import com.ccg.util.JSON;
+import com.ccg.oms.service.ProjectAdminServices;
 
 @Controller
 @RequestMapping("/projectadmin")
 public class ProjectAdminController {
 	
 	@Autowired
-	private ProjectServices service;
+	private ProjectAdminServices service;
 	
 
 	@RequestMapping(value="name", method=RequestMethod.GET)

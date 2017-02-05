@@ -133,35 +133,35 @@ public class BeanAndEntityMapperImpl implements BeanAndEntityMapper {
         return taskTemplateEntity;
     }
 
-    @Override
-    public Project entityToBean(ProjectEntity entity) {
-        if ( entity == null ) {
-            return null;
-        }
+//    @Override
+//    public Project entityToBean(ProjectEntity entity) {
+//        if ( entity == null ) {
+//            return null;
+//        }
+//
+//        Project project = new Project();
+//
+//        project.setId( entity.getId() );
+//        project.setName( entity.getName() );
+//        project.setDescription( entity.getDescription() );
+//
+//        return project;
+//    }
 
-        Project project = new Project();
-
-        project.setId( entity.getId() );
-        project.setName( entity.getName() );
-        project.setDescription( entity.getDescription() );
-
-        return project;
-    }
-
-    @Override
-    public ProjectEntity beanToEntity(Project bean) {
-        if ( bean == null ) {
-            return null;
-        }
-
-        ProjectEntity projectEntity = new ProjectEntity();
-
-        projectEntity.setId( bean.getId() );
-        projectEntity.setName( bean.getName() );
-        projectEntity.setDescription( bean.getDescription() );
-
-        return projectEntity;
-    }
+//    @Override
+//    public ProjectEntity beanToEntity(Project bean) {
+//        if ( bean == null ) {
+//            return null;
+//        }
+//
+//        ProjectEntity projectEntity = new ProjectEntity();
+//
+//        projectEntity.setId( bean.getId() );
+//        projectEntity.setName( bean.getName() );
+//        projectEntity.setDescription( bean.getDescription() );
+//
+//        return projectEntity;
+//    }
 
     @Override
     public User entityToBean(UserEntity entity) {

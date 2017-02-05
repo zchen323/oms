@@ -213,9 +213,8 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 				value:0,
 				inputValue:true,
 				uncheckValue:false,
-				
 				name:'iscontractor'
-				},
+			},
 				{
 					fieldLabel:'Role',
 					name:'role'

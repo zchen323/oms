@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service;
 
 import com.ccg.oms.common.data.admin.Admin;
 import com.ccg.oms.service.AdminServices;
-import com.ccg.oms.service.ProjectServices;
+import com.ccg.oms.service.ProjectAdminServices;
 import com.ccg.oms.service.UserServices;
 
 @Service
 public class AdminServiceImpl implements AdminServices {
 
 	@Autowired
-	ProjectServices projectService;
+	ProjectAdminServices projectService;
 	
 	@Autowired
 	UserServices userServices;
