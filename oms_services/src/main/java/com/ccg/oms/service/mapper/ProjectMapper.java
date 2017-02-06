@@ -37,7 +37,7 @@ public class ProjectMapper {
 		//entity.setId(id);
 		entity.setLastUpdateDate(new Timestamp(System.currentTimeMillis()));
 		entity.setLocation(project.getProjloc());
-		entity.setName(project.getPrimeName());
+		entity.setName(project.getProjName());
 		entity.setOrganization(project.getProjOrg());
 		entity.setPrime(project.getIsPrimeProject());
 		entity.setPrimeContactInfo(project.getContactoffice());
