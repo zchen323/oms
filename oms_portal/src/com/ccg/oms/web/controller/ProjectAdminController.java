@@ -26,6 +26,13 @@ public class ProjectAdminController {
 	@Autowired
 	private ProjectAdminServices service;
 	
+
+	@RequestMapping(value="name", method=RequestMethod.GET)
+	public @ResponseBody Project getShop(){
+		service.findProjectById(1);
+		return null;
+	}
+	
 	// project user role
 	@RequestMapping(value="projectUserRoleType/all", method=RequestMethod.GET)
 	public @ResponseBody RestResponse getProjectUserRoleTypes(){
