@@ -6,10 +6,8 @@ import com.ccg.oms.common.data.document.DocType;
 import com.ccg.oms.common.data.project.ProjectTemplate;
 import com.ccg.oms.common.data.project.ProjectUserRoleType;
 import com.ccg.oms.common.data.project.TaskTemplate;
-import com.ccg.oms.common.data.project.TaskTemplateConfig;
 
 public interface ProjectAdminServices {
-	void findProjectById(int id);
 	
 	List<ProjectUserRoleType> getProjectUserRoleTypes();
 	void saveProjectUserRoleType(ProjectUserRoleType roleType);

@@ -7,16 +7,13 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ccg.oms.common.data.document.DocType;
 import com.ccg.oms.common.data.project.ProjectTemplate;
 import com.ccg.oms.common.data.project.ProjectUserRoleType;
 import com.ccg.oms.common.data.project.TaskTemplate;
 import com.ccg.oms.dao.entiry.document.DocTypeEntity;
-import com.ccg.oms.dao.entiry.project.ProjectEntity;
 import com.ccg.oms.dao.entiry.project.ProjectTemplateEntity;
-import com.ccg.oms.dao.entiry.project.ProjectUserEntity;
 import com.ccg.oms.dao.entiry.project.ProjectUserRoleTypeEntity;
 import com.ccg.oms.dao.entiry.project.TaskTemplateEntity;
 import com.ccg.oms.dao.repository.document.DocTypeRepository;
@@ -51,17 +48,7 @@ public class ProjectAdminServicesImpl implements ProjectAdminServices{
 	
 	//ProjectUserRoleTypeEntityMapper mapper = ProjectUserRoleTypeEntityMapper.INSTANCE;
 	
-	@Transactional
-	public void findProjectById(int id) {
-		
-		ProjectEntity proj = projectRepository.findOne(1);
-		
-		System.out.println(proj.getName());
-		List<ProjectUserEntity> users = proj.getUsers();
-		for(ProjectUserEntity user : users){
-			System.out.println(user.getUsername());
-		}
-	}
+
 
 
 	public List<ProjectUserRoleType> getProjectUserRoleTypes() {
@@ -245,8 +232,4 @@ public class ProjectAdminServicesImpl implements ProjectAdminServices{
 		}
 		
 	}
-
-
-
-
 }

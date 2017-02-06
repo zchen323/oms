@@ -11,7 +11,7 @@ public class ProjectMapper {
 		Project project = new Project();
 		project.setContactoffice(entity.getPrimeContactInfo());
 		project.setDueDate(entity.getDueDate());
-		project.setIsPrimeProject(entity.isPrime());
+		project.setIsPrimeProject(entity.getPrime());
 		project.setPrimeName(entity.getPrimeName());
 		project.setProjAgency(entity.getAgency());
 		project.setProjcategory(entity.getCategory());
