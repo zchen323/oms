@@ -1,3 +1,25 @@
+oms.admin.lookupTaskDetails=function(taskID)
+{
+	if(oms.admin.cachedata.taskTemplates)
+	{
+		for(var i=0;i<oms.admin.cachedata.taskTemplates.length;i++)
+		{
+			var data=oms.admin.cachedata.taskTemplates[i];
+			if(data.id==taskID)
+				{
+					// find a match
+					var res=data;
+					if(data.config)
+					{
+						res.docs=Ext.decode(data.config).docs;
+					}
+					return data;
+				}
+		}
+	}
+	return null;
+
+};
 oms.admin.refreshData=function()
 {
 	Ext.Ajax.request({

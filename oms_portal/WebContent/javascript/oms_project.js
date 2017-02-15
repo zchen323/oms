@@ -28,18 +28,21 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 				value:'New Project',
 				margin: '0 2 2 15',
 				labelCls:'omslabelstyle',
-				fieldCls:'omsfieldstyle'
+				fieldCls:'omsfieldstyle',
+				allowBlank:false
 			},
 			{
 				name:'projAgency', 
 				fieldLabel:'Project Agency:',  
 				margin: '0 2 2 15',
 				labelCls:'omslabelstyle',
+				allowBlank:false,
 				fieldCls:'omsfieldstyle'
 			},
 			{
 				name:'projOrg', 
 				fieldLabel:"Organization:",
+				allowBlank:false,
 				margin: '0 2 2 15',
 				labelCls:'omslabelstyle',
 				fieldCls:'omsfieldstyle'
@@ -47,12 +50,14 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 				{ 
 					name:'projloc',
 					fieldLabel:'Project Location',
+					allowBlank:false,
 					margin: '0 2 2 15',
 					labelCls:'omslabelstyle',
 					fieldCls:'omsfieldstyle' 
 					},
 					{
 					name:'contactoffice', 
+					allowBlank:false,
 					fieldLabel:'Contact Office',
 					margin: '0 2 2 15',
 					labelCls:'omslabelstyle',
@@ -64,6 +69,7 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 					fieldLabel:'Category',
 					margin: '0 2 2 15',
 					labelCls:'omslabelstyle',
+					allowBlank:false,
 					fieldCls:'omsfieldstyle'
 					},
 					{
@@ -91,7 +97,9 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 					margin: '0 2 2 15',
 					xtype:'datefield',
 					labelCls:'omslabelstyle',
+					allowBlank:false,
 					fieldCls:'omsfieldstyle'
+						
 					},
 					{
 						xtype:'combobox',
@@ -102,6 +110,7 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 						displayField:'name',
 						queryMode: 'local',
 			            typeAhead: true,
+			            allowBlank:false,
 						fieldLabel:'Project Template',
 						labelCls:'omslabelstyle',
 						fieldCls:'omsfieldstyle',
@@ -153,9 +162,32 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 		{
 			text:"Create New Project",
 			handler: function(){
-				var formdata = Ext.getCmp('createNewProject').getForm().getValues();
-				                   //Ext.getCmp("userEditform").getForm().getValues();
-				console.log(formdata);
+				var form=Ext.getCmp('createNewProject').getForm();
+				if(form.isValid())
+					{
+						var formdata = form.getValues();
+	                   //Ext.getCmp("userEditform").getForm().getValues();
+						console.log(formdata);
+						// now get the grid task template ID data
+						var grid=Ext.getCmp('createProjTasksGrid');
+						var l=grid.getSelectionModel().getSelection();
+						var tasks=[];
+						if(l!=null&&l.length>0)
+						{
+							for(var i=0;i<l.length;i++)
+							{
+								var task=oms.admin.lookupTaskDetails(l[i].data.id);
+								if(task!=null)
+									{
+										tasks[tasks.length]=task;
+									}
+							}
+						}
+						var projjson={"projectInfo":formdata,"tasks":tasks};
+						console.log(projjson);
+					}
+				
+				/*
 				Ext.Ajax.request({
 					url : "api/project/newProject",
 					method : 'POST',
@@ -173,6 +205,7 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 						Ext.Msg.alert('Error', response.responseText);
 					}
 				});
+				*/
 				
 				
 			}
