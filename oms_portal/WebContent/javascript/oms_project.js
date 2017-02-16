@@ -185,6 +185,24 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 						}
 						var projjson={"projectInfo":formdata,"tasks":tasks};
 						console.log(projjson);
+						
+						Ext.Ajax.request({
+							url : "api/project/newProject",
+							method : 'POST',
+							jsonData : JSON.stringify(projjson),
+							success : function(response, option) {
+								console.log(response);
+								var respObj = Ext.decode(response.responseText);
+								Ext.Msg.alert(respObj.status, respObj.message);
+								if (respObj.status === 'success') {
+									oms.admin.DoctypeEditPanel.hide();
+								}
+							},
+							failure : function(response, option) {
+								console.log(response);
+								Ext.Msg.alert('Error', response.responseText);
+							}
+						});
 					}
 				
 				/*

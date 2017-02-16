@@ -99,6 +99,13 @@ create table tasktemplatedoctype(
 	primary key (id)
 );
 
+create table taskdoc(
+	id int not null auto_increment,
+	taskId int not null,
+	docType varchar(50),
+	primary key(id)
+);
+
 
 
 

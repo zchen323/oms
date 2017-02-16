@@ -5,6 +5,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class Project {
 	
 	//{"projName":"New Project","projAgency":"aaaa","projOrg":"aaaa","projloc":"aa","contactoffice":"aa","projcategory":"aaa","isPrimeProject":"on","primeName":"aaa","projduedate":"02/11/2017","projTempId":8}
@@ -33,6 +37,8 @@ public class Project {
 	private String projduedate;
 	private Timestamp dueDate;
 	private Integer projTempId;
+	//private List<Task> tasks;
+	
 	public Integer getProjId() {
 		return projId;
 	}
@@ -119,7 +125,9 @@ public class Project {
 	public void setProjTempId(Integer projTempId) {
 		this.projTempId = projTempId;
 	}
-	
 
+	public void setProjduedate(String projduedate) {
+		this.projduedate = projduedate;
+	}
 
 }

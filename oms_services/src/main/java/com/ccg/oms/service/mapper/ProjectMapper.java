@@ -3,7 +3,11 @@ package com.ccg.oms.service.mapper;
 import java.sql.Timestamp;
 
 import com.ccg.oms.common.data.project.Project;
+import com.ccg.oms.common.data.project.Task;
+import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.dao.entiry.project.ProjectEntity;
+import com.ccg.oms.dao.entiry.project.TaskDocEntity;
+import com.ccg.oms.dao.entiry.project.TaskEntity;
 
 public class ProjectMapper {
 	
@@ -45,9 +49,39 @@ public class ProjectMapper {
 		//entity.setStartDate(project.getp);
 		//entity.setStatus(status);
 		//entity.setUsers(users);
-		
-		
-		
 		return entity;
 	}
+	
+	public static TaskEntity toEntity(Task task){
+		TaskEntity entity = new TaskEntity();
+		entity.setId(task.getId());
+		entity.setName(task.getName());
+		entity.setDescription(task.getDescription());
+		entity.setStatus(task.getStatus());	
+		return entity;
+	}
+	
+	public static Task fromEntity(TaskEntity entity){
+		Task task = new Task();
+		task.setDescription(entity.getDescription());
+		task.setName(entity.getName());
+		task.setStatus(entity.getStatus());
+		task.setId(entity.getId());
+		return task;
+	}
+	
+	public static TaskDocEntity toEntity(TaskDoc taskDoc){
+		TaskDocEntity entity = new TaskDocEntity();
+		entity.setDocType(taskDoc.getDoctype());
+		entity.setId(taskDoc.getId());
+		return entity;
+	}
+	
+	public static TaskDoc fromEntity(TaskDocEntity entity){
+		TaskDoc taskDoc = new TaskDoc();
+		taskDoc.setId(entity.getId());
+		taskDoc.setDoctype(entity.getDocType());
+		return taskDoc;
+	}
+	
 }
