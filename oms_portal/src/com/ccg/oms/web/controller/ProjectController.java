@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccg.oms.common.data.RestResponse;
@@ -77,12 +78,13 @@ public class ProjectController {
 		return resp;
 	}
 	
-	@RequestMapping(value="search/{name}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse searchProjectByName(@PathVariable String name){
+	@RequestMapping(value="search", method=RequestMethod.GET)
+	public @ResponseBody RestResponse searchProjectByName(@RequestParam(value="pname") String name){
 		RestResponse resp = RestResponse.getSuccessResponse();
 		try{
-			List<Project> projects = service.searchByName(name);
-			resp.setResult(projects);
+				System.out.println("pname value..."+name);
+				List<Project> projects = service.searchByName(name);
+				resp.setResult(projects);
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);
 			resp.setMessage(e.getMessage());

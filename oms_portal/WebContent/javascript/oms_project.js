@@ -2,6 +2,61 @@
 oms.project={}; // project builder
 // this will return a fieldSets
 
+// open project model and store
+
+oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Searching Project',
+	bodyPadding: 10,
+	width:420,
+	scrollable:true,
+	closeAction: 'hide',
+	layout:'vbox',
+	height:180,
+	items:[{
+			xtype:'displayfield',			
+			margin: '0 2 2 15',
+			value:'Please enter project name'
+		},
+		{
+			xtype:'combobox',
+			width:'90%',
+			margin: '0 2 2 15',
+			id:'projsearchkey',
+			valueField:'projId',
+			displayField:'projName',
+			minChars: 1,
+            queryParam: 'pname',
+            queryMode: 'remote',
+            typeAhead: true,
+            allowBlank:false,
+            store:Ext.create('Ext.data.JsonStore', {
+				fields: [
+					{name: 'projId' },
+					{name: 'projName'}
+					],
+				proxy: {
+				        type: 'ajax',
+				        url: 'api/project/search',
+				        reader: {
+				            type: 'json',
+				            rootProperty: 'result'
+				        }
+				    }
+
+			})
+		}
+	],
+	buttons:[
+		{
+			text:"Open Project",
+			handler: function(){
+			}
+		}
+		]
+});
 // panel for create new project
 oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 	frame: true,
