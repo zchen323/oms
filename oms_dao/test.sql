@@ -106,7 +106,15 @@ create table taskdoc(
 	primary key(id)
 );
 
-
+create table tasknote(
+	id int not null auto_increment,
+	taskId int not null,
+	title varchar(50),
+	content varchar(256),
+	createdBy varchar(40),
+	createdTime timestamp,
+	primary key(id)
+);
 
 
 

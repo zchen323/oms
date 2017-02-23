@@ -22,6 +22,7 @@ public class TaskEntity {
 	private Timestamp createdDate;
 	private Timestamp dueDate;
 	private Timestamp completedDate;
+	private String owner;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,6 +85,12 @@ public class TaskEntity {
 	}
 	public void setCompletedDate(Timestamp completedDate) {
 		this.completedDate = completedDate;
+	}
+	public String getOwner() {
+		return owner;
+	}
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 	
 	

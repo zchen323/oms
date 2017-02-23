@@ -1,5 +1,7 @@
 package com.ccg.oms.dao.entiry.project;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +15,9 @@ public class TaskDocEntity {
 	private Integer id;
 	private Integer taskId;
 	private String docType;
+	private String name;
+	private String user;
+	private Timestamp uploadDate;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,8 +43,22 @@ public class TaskDocEntity {
 	public void setDocType(String docType) {
 		this.docType = docType;
 	}
-
-
-
-	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public Timestamp getUploadDate() {
+		return uploadDate;
+	}
+	public void setUploadDate(Timestamp uploadDate) {
+		this.uploadDate = uploadDate;
+	}	
 }

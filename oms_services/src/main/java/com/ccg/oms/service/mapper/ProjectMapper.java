@@ -5,9 +5,11 @@ import java.sql.Timestamp;
 import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.Task;
 import com.ccg.oms.common.data.project.TaskDoc;
+import com.ccg.oms.common.data.project.TaskNote;
 import com.ccg.oms.dao.entiry.project.ProjectEntity;
 import com.ccg.oms.dao.entiry.project.TaskDocEntity;
 import com.ccg.oms.dao.entiry.project.TaskEntity;
+import com.ccg.oms.dao.entiry.project.TaskNoteEntity;
 
 public class ProjectMapper {
 	
@@ -23,6 +25,8 @@ public class ProjectMapper {
 		project.setProjloc(entity.getLocation());
 		project.setProjName(entity.getName());
 		project.setProjOrg(entity.getOrganization());
+		project.setProjStatus(entity.getStatus());
+		project.setProjManager(entity.getManager());
 		//project.setProjTempId(projTempId);
 		
 		
@@ -47,7 +51,8 @@ public class ProjectMapper {
 		entity.setPrimeContactInfo(project.getContactoffice());
 		entity.setPrimeName(project.getPrimeName());
 		//entity.setStartDate(project.getp);
-		//entity.setStatus(status);
+		entity.setStatus(project.getProjStatus());
+		entity.setManager(project.getProjManager());
 		//entity.setUsers(users);
 		return entity;
 	}
@@ -58,6 +63,8 @@ public class ProjectMapper {
 		entity.setName(task.getName());
 		entity.setDescription(task.getDescription());
 		entity.setStatus(task.getStatus());	
+		entity.setOwner(task.getOwner());
+		entity.setDueDate(task.getTargetTimestamp());
 		return entity;
 	}
 	
@@ -67,6 +74,9 @@ public class ProjectMapper {
 		task.setName(entity.getName());
 		task.setStatus(entity.getStatus());
 		task.setId(entity.getId());
+		task.setOwner(entity.getOwner());
+		task.setTargetTimestamp(entity.getDueDate());
+		task.setProjectId(entity.getProjectId());
 		return task;
 	}
 	
@@ -74,6 +84,10 @@ public class ProjectMapper {
 		TaskDocEntity entity = new TaskDocEntity();
 		entity.setDocType(taskDoc.getDoctype());
 		entity.setId(taskDoc.getId());
+		entity.setName(taskDoc.getName());
+		entity.setUploadDate(taskDoc.getUploadTimestamp());
+		entity.setUser(taskDoc.getUser());
+		
 		return entity;
 	}
 	
@@ -81,7 +95,32 @@ public class ProjectMapper {
 		TaskDoc taskDoc = new TaskDoc();
 		taskDoc.setId(entity.getId());
 		taskDoc.setDoctype(entity.getDocType());
+		taskDoc.setUploadTimestamp(entity.getUploadDate());
+		taskDoc.setUser(entity.getUser());
+		taskDoc.setName(entity.getName());
+		taskDoc.setTaskId(entity.getTaskId());
 		return taskDoc;
+	}
+	
+	public static TaskNote fromEntity(TaskNoteEntity entity){
+		TaskNote note = new TaskNote();
+		note.setContent(entity.getContent());
+		note.setTimestamp(entity.getCreatedTime());
+		note.setId(entity.getId());
+		note.setTaskId(entity.getTaskId());
+		note.setUser(entity.getCreatedBy());
+		
+		return note;
+	}
+	
+	public static TaskNoteEntity toEntity(TaskNote note){
+		TaskNoteEntity entity = new TaskNoteEntity();
+		entity.setContent(note.getContent());
+		entity.setCreatedBy(note.getUser());
+		entity.setCreatedTime(note.getTimestamp());
+		entity.setTaskId(note.getTaskId());
+		entity.setTitle(note.getTitle());
+		return entity;
 	}
 	
 }

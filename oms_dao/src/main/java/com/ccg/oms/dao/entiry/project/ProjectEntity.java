@@ -38,6 +38,8 @@ public class ProjectEntity {
 	private Timestamp completedDate;
 	private Timestamp lastUpdateDate;
 	
+	private String manager;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
@@ -142,10 +144,12 @@ public class ProjectEntity {
 	public void setLastUpdateDate(Timestamp lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
-	
-
-	
-	
+	public String getManager() {
+		return manager;
+	}
+	public void setManager(String manager) {
+		this.manager = manager;
+	}
 }
 
 /*

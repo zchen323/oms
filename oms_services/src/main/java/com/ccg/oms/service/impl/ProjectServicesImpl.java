@@ -12,11 +12,14 @@ import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.ProjectInfo;
 import com.ccg.oms.common.data.project.Task;
 import com.ccg.oms.common.data.project.TaskDoc;
+import com.ccg.oms.common.data.project.TaskNote;
 import com.ccg.oms.dao.entiry.project.ProjectEntity;
 import com.ccg.oms.dao.entiry.project.TaskDocEntity;
 import com.ccg.oms.dao.entiry.project.TaskEntity;
+import com.ccg.oms.dao.entiry.project.TaskNoteEntity;
 import com.ccg.oms.dao.repository.project.ProjectRepository;
 import com.ccg.oms.dao.repository.project.TaskDocRepository;
+import com.ccg.oms.dao.repository.project.TaskNoteRepository;
 import com.ccg.oms.dao.repository.project.TaskRepository;
 import com.ccg.oms.service.ProjectAdminServices;
 import com.ccg.oms.service.ProjectServices;
@@ -37,11 +40,18 @@ public class ProjectServicesImpl implements ProjectServices{
 	@Autowired
 	TaskDocRepository taskDocRepository;
 	
+	@Autowired
+	TaskNoteRepository taskNoteRepository;
+	
 	@Override
 	@Transactional
 	public void createNewProject(ProjectInfo projectInfo) {
 		Project project = projectInfo.getProjectInfo();
 		ProjectEntity entity = ProjectMapper.toEntity(project);
+		if(entity.getStatus() == null);
+		{
+			entity.setStatus("new");
+		}
 		projectRepository.save(entity);
 		
 		System.out.println(entity.getId());
@@ -91,11 +101,18 @@ public class ProjectServicesImpl implements ProjectServices{
 		for(TaskEntity taskEntity : taskEntities){
 			Task task = ProjectMapper.fromEntity(taskEntity);
 			tasks.add(task);
-			List<TaskDocEntity> taskDocEntities = taskDocRepository.findByTaskId(task.getId());
+			
+			List<TaskDocEntity> taskDocEntities = taskDocRepository.findByTaskIdOrderByIdDesc(task.getId());
 			for(TaskDocEntity taskDocEntity : taskDocEntities){
 				TaskDoc taskDoc = ProjectMapper.fromEntity(taskDocEntity);
 				task.getDocs().add(taskDoc);
 			}
+			
+			List<TaskNoteEntity> taskNoteEntities = taskNoteRepository.findByTaskIdOrderByIdDesc(task.getId());
+			for(TaskNoteEntity taskNoteEntity : taskNoteEntities){
+				TaskNote taskNote = ProjectMapper.fromEntity(taskNoteEntity);
+				task.getNotes().add(taskNote);
+			}			
 		}
 		
 		projInfo.setProjectInfo(project);
@@ -125,4 +142,8 @@ public class ProjectServicesImpl implements ProjectServices{
 		}
 		return projects;
 	}
+	
+	
+	
+	
 }

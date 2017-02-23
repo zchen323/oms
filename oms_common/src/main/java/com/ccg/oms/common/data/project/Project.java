@@ -37,6 +37,9 @@ public class Project {
 	private String projduedate;
 	private Timestamp dueDate;
 	private Integer projTempId;
+	private String projManager;
+	private String projStatus;
+	
 	//private List<Task> tasks;
 	
 	public Integer getProjId() {
@@ -128,6 +131,18 @@ public class Project {
 
 	public void setProjduedate(String projduedate) {
 		this.projduedate = projduedate;
+	}
+	public String getProjManager() {
+		return projManager;
+	}
+	public void setProjManager(String projManager) {
+		this.projManager = projManager;
+	}
+	public String getProjStatus() {
+		return projStatus;
+	}
+	public void setProjStatus(String projStatus) {
+		this.projStatus = projStatus;
 	}
 
 }
