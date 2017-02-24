@@ -1,4 +1,4 @@
-oms.task={};   // project builder
+oms.task={};   // project builder
 // this will return a fieldSets
 oms.task.createTaskInfoPanel=function(tinfo) // json object of the project info
 {
@@ -7,136 +7,136 @@ oms.task.createTaskInfoPanel=function(tinfo) // json object of the project info
 		width:'99%',
 		margin:'2 2 2 2',
 		buttons:[
-		         {text:"Save"},
-		         {
-		          text:"Update Status"
-		         }
-		         ],
+		         {text:"Save"},
+		         {
+		          text:"Update Status"
+		         }
+		         ],
 		items:[
-		       {
-		    	   xtype:'fieldset',
-		    	   title:'Basic Info',
-		    	   margin:'2 2 2 2',
-		    	   layout:'hbox',		   
-		    	   items:[
-		    	          	{		    	       
-		    	          		xtype:'textfield',
-		    	          		name:'taskname',
-		    	          		labelWidth:110,
-		    	          		fieldLabel:'Task',
-		    	          		margin:'0 15 0 5',
-		    	          		value:'Review Proposal Draft'
-		    	          	},
-		    	          {
-		    	        	  xtype:'displayfield',
-		    	        	  name:'pname',
-		    	        	  fieldLabel:'Project',
-		    	        	  labelWidth:80,
-		    	        	  margin:'0 5 0 5',
-		    	        	  value: '<font color=#336699>SVT Tracking System</font>'		    	        	  
-		    	          },
-		    	          
-		    	          {
-		    	        	  xtype:'button',
-		    	        	  text:'View Project'
-		    	          }
-		    	         ]		    		   
-		       }, 
-		       {
-		    	   xtype:'fieldset',
-		    	   title:'Status and Owner',
-		    	   margin:'2 2 2 2',
-		    	   layout:'hbox',		   
-		    	   items:[
-		    	          {
-		    	        	  xtype:'displayfield',
-		    	        	  name:'projstatus',
-		    	        	  fieldLabel:' Status',
-		    	        	  labelWidth:110,
-		    	        	  margin:'0 60 0 5',
-		    	        	  value:'<span style="color:green; ">In Progress</span>'		    	        	  
-		    	          },
-		    	          {
-		    	        	  xtype:'textfield',
-		    	        	  name:'owner',
-		    	        	  labelWidth:110,
-		    	        	  fieldLabel:'Task Owner',
-		    	        	  margin:'0 10 0 5',
-		    	        	  value:'Alice'
-		    	          },
-		    	          {
-		    	        	 xtype:'button',
-		    	        	 text:'Assign'
-		    	          }		    	          
-		    	   ]		    		   
-		       },   		    	
-		      {
-		    	  xtype:'fieldset',
-		    	  layout:'hbox',
-		    	  title:'Dates Info', 		   
-		    	  margin:'2 2 5 5',
-		    	  defaultType:'datefield',		    	      
-		    	  items:[{
-		    	    	 name:'projduedate',
-		    	    	 fieldLabel:'Target Dilvery Date',	
-		    	    	 labelWidth:120,
-		    	    	 margin:'0 5 0 5'
-		    	      },		    
-		    	      {		    	    	 
-		    	    	 name:'projstartdate',
-		    	    	 fieldLabel:'Start Date',
-		    	    	 labelWidth:110,
-		    	    	 margin:'0 5 0 5'
-		    	      },
-		    	      {			    	    	 
-			    	    	 name:'projcompletedate',
-			    	    	 fieldLabel:'Complete Date',
-			    	    	 labelWidth:110,
-			    	    	 margin:'0 0 5 5'
-			    	   }		    	      
-		    	  ]		    	  
-		      },
-		      {
-		    	  xtype:'fieldset',
-		    	  layout:'hbox',
-		    	  title:'Review Info', 		   
-		    	  margin:'2 2 5 5',
-		    	  defaultType:'textfield',		    	      
-		    	  items:[{
-		    	    	 name:'reviewFlag',
-		    	    	 xtype:'checkbox',
-		    	    	 fieldLabel:'Required Review',	
-		    	    	 labelWidth:110,
-		    	    	 margin:'0 5 0 5'
-		    	      },		    
-		    	      {		    	    	 
-		    	    	 name:'reviewer',
-		    	    	 fieldLabel:'Reviewer',		    	    	 
-		    	    	 margin:'0 5 0 5',
-		    	    	 labelWidth:80,
-		    	    	 disabled:true
-		    	      },
-		    	      {
-		    	    	  xtype:'button',
-		    	    	  text:'Assign',
-		    	    	  margin:'0 5 0 15',
-		    	    	  disabled:true
-		    	      },
-		    	      {
-		    	    	  xtype:'button',
-		    	    	  text:'Reject With Comments',
-		    	    	  margin:'0 5 0 15',
-		    	    	  disabled:true		    	    		  
-		    	      },
-		    	      {
-		    	    	  xtype:'button',
-		    	    	  text:'Accept',
-		    	    	  margin:'0 5 5 15',
-		    	    	  disabled:true
-		    	      }
-		    	      
-		    	  ]	
-		      }
+		       {
+		    	   xtype:'fieldset',
+		    	   title:'Basic Info',
+		    	   margin:'2 2 2 2',
+		    	   layout:'hbox',		   
+		    	   items:[
+		    	          	{		    	       
+		    	          		xtype:'textfield',
+		    	          		name:'taskname',
+		    	          		labelWidth:110,
+		    	          		fieldLabel:'Task',
+		    	          		margin:'0 15 0 5',
+		    	          		value:'Review Proposal Draft'
+		    	          	},
+		    	          {
+		    	        	  xtype:'displayfield',
+		    	        	  name:'pname',
+		    	        	  fieldLabel:'Project',
+		    	        	  labelWidth:80,
+		    	        	  margin:'0 5 0 5',
+		    	        	  value: '<font color=#336699>SVT Tracking System</font>'		    	        	  
+		    	          },
+		    	          
+		    	          {
+		    	        	  xtype:'button',
+		    	        	  text:'View Project'
+		    	          }
+		    	         ]		    		   
+		       }, 
+		       {
+		    	   xtype:'fieldset',
+		    	   title:'Status and Owner',
+		    	   margin:'2 2 2 2',
+		    	   layout:'hbox',		   
+		    	   items:[
+		    	          {
+		    	        	  xtype:'displayfield',
+		    	        	  name:'projstatus',
+		    	        	  fieldLabel:' Status',
+		    	        	  labelWidth:110,
+		    	        	  margin:'0 60 0 5',
+		    	        	  value:'<span style="color:green; ">In Progress</span>'		    	        	  
+		    	          },
+		    	          {
+		    	        	  xtype:'textfield',
+		    	        	  name:'owner',
+		    	        	  labelWidth:110,
+		    	        	  fieldLabel:'Task Owner',
+		    	        	  margin:'0 10 0 5',
+		    	        	  value:'Alice'
+		    	          },
+		    	          {
+		    	        	 xtype:'button',
+		    	        	 text:'Assign'
+		    	          }		    	          
+		    	   ]		    		   
+		       },   		    	
+		      {
+		    	  xtype:'fieldset',
+		    	  layout:'hbox',
+		    	  title:'Dates Info', 		   
+		    	  margin:'2 2 5 5',
+		    	  defaultType:'datefield',		    	      
+		    	  items:[{
+		    	    	 name:'projduedate',
+		    	    	 fieldLabel:'Target Dilvery Date',	
+		    	    	 labelWidth:120,
+		    	    	 margin:'0 5 0 5'
+		    	      },		    
+		    	      {		    	    	 
+		    	    	 name:'projstartdate',
+		    	    	 fieldLabel:'Start Date',
+		    	    	 labelWidth:110,
+		    	    	 margin:'0 5 0 5'
+		    	      },
+		    	      {			    	    	 
+			    	    	 name:'projcompletedate',
+			    	    	 fieldLabel:'Complete Date',
+			    	    	 labelWidth:110,
+			    	    	 margin:'0 0 5 5'
+			    	   }		    	      
+		    	  ]		    	  
+		      },
+		      {
+		    	  xtype:'fieldset',
+		    	  layout:'hbox',
+		    	  title:'Review Info', 		   
+		    	  margin:'2 2 5 5',
+		    	  defaultType:'textfield',		    	      
+		    	  items:[{
+		    	    	 name:'reviewFlag',
+		    	    	 xtype:'checkbox',
+		    	    	 fieldLabel:'Required Review',	
+		    	    	 labelWidth:110,
+		    	    	 margin:'0 5 0 5'
+		    	      },		    
+		    	      {		    	    	 
+		    	    	 name:'reviewer',
+		    	    	 fieldLabel:'Reviewer',		    	    	 
+		    	    	 margin:'0 5 0 5',
+		    	    	 labelWidth:80,
+		    	    	 disabled:true
+		    	      },
+		    	      {
+		    	    	  xtype:'button',
+		    	    	  text:'Assign',
+		    	    	  margin:'0 5 0 15',
+		    	    	  disabled:true
+		    	      },
+		    	      {
+		    	    	  xtype:'button',
+		    	    	  text:'Reject With Comments',
+		    	    	  margin:'0 5 0 15',
+		    	    	  disabled:true		    	    		  
+		    	      },
+		    	      {
+		    	    	  xtype:'button',
+		    	    	  text:'Accept',
+		    	    	  margin:'0 5 5 15',
+		    	    	  disabled:true
+		    	      }
+		    	      
+		    	  ]	
+		      }
 		]
 	});
 	return panel;
@@ -146,16 +146,16 @@ oms.task.createTaskCommentPanel=function(task,id)
 {
 	// first load the store
 	var clstore=Ext.create('Ext.data.JsonStore', {
-	    // store configs
-	    storeId: 'clStore'+id,
-	    fields: [
-	             {name: 'id'},
-	             {name: 'user' },	             
-	             {name: 'date', type: 'date'},
-	             {name: 'title'},
-	             {name: 'content'}
-	         ],
-	    
+	    // store configs
+	    storeId: 'clStore'+id,
+	    fields: [
+	             {name: 'id'},
+	             {name: 'user' },	             
+	             {name: 'date', type: 'date'},
+	             {name: 'title'},
+	             {name: 'content'}
+	         ],
+	    
 	});
 	clstore.setData(task.notes);
 	var grid=Ext.create('Ext.grid.Panel',{
@@ -163,40 +163,40 @@ oms.task.createTaskCommentPanel=function(task,id)
 		store:clstore,		
 		scrollable:true,
 		tbar:[
-		      {		text:"Add Comment",
+		      {		text:"Add Comment",
 		 			handler:function()
 		 			{
 		 				Ext.getCmp('addtaskcommentpanel').getForm().loadRecord({getData:function(){return task;}});
 		 				oms.task.addCommentPanel.show();
-		 			} 
+		 			} 
 		 		
 		 }
-		      ],
-	    columns: [
-	              {text: "#",  dataIndex: 'id'},
-	              {text: "Title",flex:1, dataIndex: 'title'},
-	              {text: "User", flex:2, dataIndex: 'user',width:160},
-	              {text: "Date", dataIndex: 'date',formatter: 'date("m/d/Y")'},
-	              {
-	            	  text:"",dataIndex:"id",
-	            	  renderer:function(val)
-		               {
-		            	   var html='<img src="css/images/shared/icons/fam/user_edit.png">';
-		            	   return html;
-		            		 
-		               } 
-	              }
-	          ],
-	     columnLines: true,    
-	     title:'Notes',
-	     plugins: [{
-	         ptype: 'rowexpander',
-	         rowBodyTpl : new Ext.XTemplate(
-	        	
-	             '<font color=#336699><h3>Content</h3><p></font><hr>',	             
-	             '<font color=green>{content}</font>'
-	         )
-	     }],
+		      ],
+	    columns: [
+	              {text: "#",  dataIndex: 'id'},
+	              {text: "Title",flex:1, dataIndex: 'title'},
+	              {text: "User", flex:2, dataIndex: 'user',width:160},
+	              {text: "Date", dataIndex: 'date',formatter: 'date("m/d/Y")'},
+	              {
+	            	  text:"",dataIndex:"id",
+	            	  renderer:function(val)
+		               {
+		            	   var html='<img src="css/images/shared/icons/fam/user_edit.png">';
+		            	   return html;
+		            		 
+		               } 
+	              }
+	          ],
+	     columnLines: true,    
+	     title:'Notes',
+	     plugins: [{
+	         ptype: 'rowexpander',
+	         rowBodyTpl : new Ext.XTemplate(
+	        	
+	             '<font color=#336699><h3>Content</h3><p></font><hr>',	             
+	             '<font color=green>{content}</font>'
+	         )
+	     }],
 	});
 	return grid;
 };
@@ -204,18 +204,18 @@ oms.task.createTaskCommentPanel=function(task,id)
 oms.task.createTaskDocumentPanel=function(task,id)
 {
 	var dlstore=Ext.create('Ext.data.JsonStore', {
-	    // store configs
-	    storeId: 'taskdlStore'+id,
-	    fields: [
-	             {name: 'seq'},	
-	             {name: 'docid'},
-	             {name: 'name'},
-	             {name: 'doctype'},	             	        
-	             {name: 'user'},
-	             {name: 'uploadDate', type: 'date'},
-	             {name: 'required'},
-	             {name: 'restricted',type:'boolean'}
-	         ],
+	    // store configs
+	    storeId: 'taskdlStore'+id,
+	    fields: [
+	             {name: 'seq'},	
+	             {name: 'docid'},
+	             {name: 'name'},
+	             {name: 'doctype'},	             	        
+	             {name: 'user'},
+	             {name: 'uploadDate', type: 'date'},
+	             {name: 'required'},
+	             {name: 'restricted',type:'boolean'}
+	         ],
 	});
 	console.log("create docs for task"+id);
 	console.log(task.docs);
@@ -225,63 +225,63 @@ oms.task.createTaskDocumentPanel=function(task,id)
 		store:dlstore,		
 		scrollable:true,
 		tbar:[
-		      {
-		    	text:"Add New Document",
+		      {
+		    	text:"Add New Document",
 		 		handler:function()
 		 		{
 		 			Ext.getCmp('addtaskdocumentpanel').getForm().loadRecord({getData:function(){return task;}});
 		 			oms.task.addDocumentPanel.show();
-		 		} 
-		      }],
+		 		} 
+		      }],
 		
-	    columns: [
-	              {text:"",dataIndex:'restricted', width:40,
-	               renderer:function(val)
-	               {
-	            	 if(val==true)
-	            	 {
-	            		 return "<img src='css/images/sec.jpg' width=20 />"; 
-	            	 }
-	            	 return "";
-	               }	            	  
-	              },
-	              {text: "Name", flex:2,dataIndex: 'name',
-	               renderer:function(val)
-	               {
-	            	   if(val==null)
-	            		 {
-	            		   return "<a href='#'>Upload Now</a>";
-	            		 }
-	            	   else{
-	            		   return val;
-	            	   }
-	      
-	               }
-	              },
-	              {text: "type",  dataIndex: 'doctype',width:180},	         
-	              {text: "Upload Date", dataIndex: 'uploadDate',formatter: 'date("m/d/Y")'},
-	              {text: "User",  dataIndex: 'user',width:160},	
-	              {text: "Req.",dataIndex:"required",width:50,
-	            	renderer:function(val)
-	            	{
-	            		if(val=="Y")
-	            			{
-	            			  return '<font color=red>'+val+'</font>';
-	            			}
-	            		return val;
-	            	}
-	               },
-	              {text: "Action",dataIndex:"taskID",width:60,
-	               renderer:function(val)
-	               {
-	            	   var html='<img src="css/images/shared/icons/fam/information.png"><img src="css/images/upload.png" width=20>';
-	            	   return html;
-	            		 
-	               }
-	              }
-	          ],
-	     columnLines: true,    
-	     title:' Documents '	    
+	    columns: [
+	              {text:"",dataIndex:'restricted', width:40,
+	               renderer:function(val)
+	               {
+	            	 if(val==true)
+	            	 {
+	            		 return "<img src='css/images/sec.jpg' width=20 />"; 
+	            	 }
+	            	 return "";
+	               }	            	  
+	              },
+	              {text: "Name", flex:2,dataIndex: 'name',
+	               renderer:function(val)
+	               {
+	            	   if(val==null)
+	            		 {
+	            		   return "<a href='#'>Upload Now</a>";
+	            		 }
+	            	   else{
+	            		   return val;
+	            	   }
+	      
+	               }
+	              },
+	              {text: "type",  dataIndex: 'doctype',width:180},	         
+	              {text: "Upload Date", dataIndex: 'uploadDate',formatter: 'date("m/d/Y")'},
+	              {text: "User",  dataIndex: 'user',width:160},	
+	              {text: "Req.",dataIndex:"required",width:50,
+	            	renderer:function(val)
+	            	{
+	            		if(val=="Y")
+	            			{
+	            			  return '<font color=red>'+val+'</font>';
+	            			}
+	            		return val;
+	            	}
+	               },
+	              {text: "Action",dataIndex:"taskID",width:60,
+	               renderer:function(val)
+	               {
+	            	   var html='<img src="css/images/shared/icons/fam/information.png"><img src="css/images/upload.png" width=20>';
+	            	   return html;
+	            		 
+	               }
+	              }
+	          ],
+	     columnLines: true,    
+	     title:' Documents '	    
 	});
 	return grid;
 };
@@ -325,6 +325,7 @@ oms.task.addCommentPanel=Ext.create('Ext.window.Window',{
 					{
 			            xtype: 'textareafield',
 			            fieldLabel:'Content',
+			            name:'content',
 			           // hideLabel: true,
 			            margin: '0 2 5 15',
 			            	labelCls:'omslabelstyle',
@@ -335,6 +336,35 @@ oms.task.addCommentPanel=Ext.create('Ext.window.Window',{
 					{
 						text:"Save",
 						handler: function(){
+							var formdata = Ext.getCmp("addtaskcommentpanel").getForm().getValues();
+							console.log(formdata);
+							//Object {id: "8", ctitle: "qwewqe", content: "qwewqeqwe"}
+							// change to {taskId: "8", title "title". content: "content"}
+							formdata.taskId = formdata.id;
+							formdata.title = formdata.ctitle;
+							delete formdata.id;
+							delete formdata.ctitle;
+							
+				
+							console.log(formdata);
+							
+							Ext.Ajax.request({
+								url : "api/project/task/comment",
+								method : 'POST',
+								jsonData : JSON.stringify(formdata),
+								success : function(response, option) {
+									console.log(response);
+									var respObj = Ext.decode(response.responseText);
+									Ext.Msg.alert(respObj.status, respObj.message);
+									if (respObj.status === 'success') {
+										oms.task.addCommentPanel.hide();
+									}
+								},
+								failure : function(response, option) {
+									console.log(response);
+									Ext.Msg.alert('Error', response.responseText);
+								}
+							});
 						}
 					}]
 			}]
@@ -461,7 +491,7 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 			}
 		}]}]
 });
-oms.task.createTaskMainPanel=function(task)  // proj is the json data for the project
+oms.task.createTaskMainPanel=function(task)  // proj is the json data for the project
 {
 	var infop=oms.task.createTaskInfoPanel(task.taskinfo) ;
 	var clgrid=oms.task.createTaskCommentPanel(task.commentlist,1);
@@ -471,27 +501,27 @@ oms.task.createTaskMainPanel=function(task)  // proj is the json data for the p
 	var mainpanel=Ext.create('Ext.panel.Panel',{
 		id:"taskPanel"+task.taskID,
 		layout:'vbox',
-		title:"TASK : --  ["+task.taskname+"]",
+		title:"TASK : --  ["+task.taskname+"]",
 		border:true,
 		items:[
-		     infop,
-		     {
-		    	 xtype:'tabpanel',
-		    	 id:'taskDetails',
-		    	 width:'99%',
-		    	 margin:'2 2 2 2',
-		    	 flex:1,		    	
-		    	 defaults:{
-		    		 bodypadding:10,
-		    		 scrollable:true,
-		    		 border:true
-		    	 },
-		    	 tabPosition: 'right',			    	
-		    	 items:[
-		    	  clgrid,
-		    	   dlgrid
-		    	 ]
-		     }
+		     infop,
+		     {
+		    	 xtype:'tabpanel',
+		    	 id:'taskDetails',
+		    	 width:'99%',
+		    	 margin:'2 2 2 2',
+		    	 flex:1,		    	
+		    	 defaults:{
+		    		 bodypadding:10,
+		    		 scrollable:true,
+		    		 border:true
+		    	 },
+		    	 tabPosition: 'right',			    	
+		    	 items:[
+		    	  clgrid,
+		    	   dlgrid
+		    	 ]
+		     }
 		]
 		
 	});

@@ -1,7 +1,8 @@
 package com.ccg.oms.web.controller;
 
-import java.util.LinkedList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.ProjectInfo;
+import com.ccg.oms.common.data.project.TaskNote;
 import com.ccg.oms.service.ProjectServices;
 import com.ccg.util.JSON;
 
@@ -85,6 +87,21 @@ public class ProjectController {
 				System.out.println("pname value..."+name);
 				List<Project> projects = service.searchByName(name);
 				resp.setResult(projects);
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+	}
+	
+	@RequestMapping(value="task/comment", method=RequestMethod.POST)
+	public @ResponseBody RestResponse addTaskComment(@RequestBody TaskNote taskNote, HttpServletRequest request){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+				String loginUser = request.getRemoteUser();
+				taskNote.setUser(loginUser);
+				service.addTaskComment(taskNote);
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);
 			resp.setMessage(e.getMessage());

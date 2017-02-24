@@ -142,6 +142,12 @@ public class ProjectServicesImpl implements ProjectServices{
 		}
 		return projects;
 	}
+
+	@Override
+	public void addTaskComment(TaskNote taskNote) {
+		TaskNoteEntity entity = ProjectMapper.toEntity(taskNote);
+		taskNoteRepository.save(entity);		
+	}
 	
 	
 	
