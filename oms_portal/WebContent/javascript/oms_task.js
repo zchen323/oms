@@ -142,35 +142,43 @@ oms.task.createTaskInfoPanel=function(tinfo) // json object of the project info
 	return panel;
 };
 
-oms.task.createTaskCommentPanel=function(comments,id)
+oms.task.createTaskCommentPanel=function(task,id)
 {
 	// first load the store
-	var clstore=Ext.create('Ext.data.ArrayStore', {
+	var clstore=Ext.create('Ext.data.JsonStore', {
 	    // store configs
-	    storeId: 'clStore',
+	    storeId: 'clStore'+id,
 	    fields: [
-	             {name: 'seq'},
+	             {name: 'id'},
 	             {name: 'user' },	             
-	             {name: 'commentdate', type: 'date'},
-	             {name: 'commenttitle'},
-	             {name: 'commentcontent'}
+	             {name: 'date', type: 'date'},
+	             {name: 'title'},
+	             {name: 'content'}
 	         ],
-	     data:oms.task.commentlist
+	    
 	});
+	clstore.setData(task.notes);
 	var grid=Ext.create('Ext.grid.Panel',{
 		id:'commentgrid'+id,
 		store:clstore,		
 		scrollable:true,
 		tbar:[
-		      {text:"Add Comment"}
+		      {		text:"Add Comment",
+		 			handler:function()
+		 			{
+		 				Ext.getCmp('addtaskcommentpanel').getForm().loadRecord({getData:function(){return task;}});
+		 				oms.task.addCommentPanel.show();
+		 			} 
+		 		
+		 }
 		      ],
 	    columns: [
-	              {text: "#",  dataIndex: 'seq'},
-	              {text: "Title",flex:1, dataIndex: 'commenttitle'},
+	              {text: "#",  dataIndex: 'id'},
+	              {text: "Title",flex:1, dataIndex: 'title'},
 	              {text: "User", flex:2, dataIndex: 'user',width:160},
-	              {text: "Date", dataIndex: 'commentdate',formatter: 'date("m/d/Y")'},
+	              {text: "Date", dataIndex: 'date',formatter: 'date("m/d/Y")'},
 	              {
-	            	  text:"",dataIndex:"seq",
+	            	  text:"",dataIndex:"id",
 	            	  renderer:function(val)
 		               {
 		            	   var html='<img src="css/images/shared/icons/fam/user_edit.png">';
@@ -186,37 +194,44 @@ oms.task.createTaskCommentPanel=function(comments,id)
 	         rowBodyTpl : new Ext.XTemplate(
 	        	
 	             '<font color=#336699><h3>Content</h3><p></font><hr>',	             
-	             '<font color=green>{commentcontent}</font>'
+	             '<font color=green>{content}</font>'
 	         )
 	     }],
 	});
 	return grid;
 };
 
-oms.task.createTaskDocumentPanel=function(docList,id)
+oms.task.createTaskDocumentPanel=function(task,id)
 {
-	var dlstore=Ext.create('Ext.data.ArrayStore', {
+	var dlstore=Ext.create('Ext.data.JsonStore', {
 	    // store configs
 	    storeId: 'taskdlStore'+id,
 	    fields: [
 	             {name: 'seq'},	
 	             {name: 'docid'},
-	             {name: 'docname'},
+	             {name: 'name'},
 	             {name: 'doctype'},	             	        
 	             {name: 'user'},
-	             {name: 'uploaddate', type: 'date'},
+	             {name: 'uploadDate', type: 'date'},
 	             {name: 'required'},
 	             {name: 'restricted',type:'boolean'}
 	         ],
-	     data:oms.task.doclistsample
 	});
+	console.log("create docs for task"+id);
+	console.log(task.docs);
+	dlstore.setData(task.docs);
 	var grid=Ext.create('Ext.grid.Panel',{
 		id:'taskdoclistgrid'+id,
 		store:dlstore,		
 		scrollable:true,
 		tbar:[
 		      {
-		    	text:"Add New Document"  
+		    	text:"Add New Document",
+		 		handler:function()
+		 		{
+		 			Ext.getCmp('addtaskdocumentpanel').getForm().loadRecord({getData:function(){return task;}});
+		 			oms.task.addDocumentPanel.show();
+		 		} 
 		      }],
 		
 	    columns: [
@@ -230,7 +245,7 @@ oms.task.createTaskDocumentPanel=function(docList,id)
 	            	 return "";
 	               }	            	  
 	              },
-	              {text: "Name", flex:2,dataIndex: 'docname',
+	              {text: "Name", flex:2,dataIndex: 'name',
 	               renderer:function(val)
 	               {
 	            	   if(val==null)
@@ -244,7 +259,7 @@ oms.task.createTaskDocumentPanel=function(docList,id)
 	               }
 	              },
 	              {text: "type",  dataIndex: 'doctype',width:180},	         
-	              {text: "Upload Date", dataIndex: 'uploaddate',formatter: 'date("m/d/Y")'},
+	              {text: "Upload Date", dataIndex: 'uploadDate',formatter: 'date("m/d/Y")'},
 	              {text: "User",  dataIndex: 'user',width:160},	
 	              {text: "Req.",dataIndex:"required",width:50,
 	            	renderer:function(val)
@@ -271,7 +286,181 @@ oms.task.createTaskDocumentPanel=function(docList,id)
 	return grid;
 };
 
-
+oms.task.addCommentPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Add New Comment',
+	bodyPadding: 10,
+	width:380,
+	scrollable:true,
+	closeAction: 'hide',
+	layout:'vbox',
+	items:[
+			{
+				xtype:'form',
+				id: 'addtaskcommentpanel',
+				border:0,
+				defaultType:'textfield',
+				layout:'vbox', 
+				width:'95%',
+				bodypadding:'10 10 10 10',
+				items:[
+					{
+						xtype:'textfield',
+						name:'id', 
+						fieldLabel:'Task ID:', 
+						margin: '0 2 5 15',
+						labelCls:'omslabelstyle',
+						fieldCls:'omsfieldstyle'
+					},
+					{
+						xtype:'textfield',
+						name:'ctitle', 
+						fieldLabel:'Title', 
+						margin: '0 2 5 15',
+						labelCls:'omslabelstyle',
+						fieldCls:'omsfieldstyle'
+					},
+					{
+			            xtype: 'textareafield',
+			            fieldLabel:'Content',
+			           // hideLabel: true,
+			            margin: '0 2 5 15',
+			            	labelCls:'omslabelstyle',
+							fieldCls:'omsfieldstyle'
+			        }
+				],
+				buttons:[
+					{
+						text:"Save",
+						handler: function(){
+						}
+					}]
+			}]
+});
+oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Add New Document',
+	bodyPadding: 10,
+	width:380,
+	scrollable:true,
+	closeAction: 'hide',
+	layout:'vbox',
+	items:[
+			{
+				xtype:'form',
+				id: 'addtaskdocumentpanel',
+				border:0,
+				defaultType:'textfield',
+				layout:'vbox', 
+				width:'95%',
+				bodypadding:'10 10 10 10',
+				items:[
+					{
+						xtype:'textfield',
+						name:'id', 
+						fieldLabel:'Task ID:', 
+						margin: '0 2 5 15',
+						labelCls:'omslabelstyle',
+						fieldCls:'omsfieldstyle'
+					},
+					{
+						xtype:'textfield',
+						name:'docname', 
+						fieldLabel:'Document Name', 
+						margin: '0 2 5 15',
+						labelCls:'omslabelstyle',
+						fieldCls:'omsfieldstyle'
+					},
+					{
+			            xtype: 'filefield',
+			            fieldLabel:'File',
+			           // hideLabel: true,
+			            reference: 'basicFile',
+			            margin: '0 2 5 15',
+			            	labelCls:'omslabelstyle',
+							fieldCls:'omsfieldstyle'
+			        }
+				],
+				buttons:[
+					{
+						text:"Save",
+						handler: function(){
+						}
+					}]
+			}]
+});
+oms.task.showTaskInfoEdit=function(taskID)
+{
+	var tp=Ext.getCmp("taskitem_"+taskID);
+	console.log(tp.task);
+	Ext.getCmp('edittaskinfopanel').getForm().loadRecord({getData:function(){return tp.task;}});
+	oms.task.EditTaskInfoPanel.show();
+};
+oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Edit Task Info',
+	bodyPadding: 10,
+	width:360,
+	scrollable:true,
+	closeAction: 'hide',
+	layout:'vbox',
+	items:[
+		{
+			xtype:'form',
+			id: 'edittaskinfopanel',
+			border:0,
+			defaultType:'textfield',
+			layout:'vbox', 
+			bodypadding:'10 10 10 10',
+			
+		items:[
+		{
+			xtype:'textfield',
+			name:'id', 
+			fieldLabel:'Task ID:', 
+			margin: '0 2 5 15',
+			labelCls:'omslabelstyle',
+			fieldCls:'omsfieldstyle'
+		},
+		{
+			name:'status', 
+			xtype:'textfield',
+			fieldLabel:'Status:',
+			margin: '0 2 5 15',
+			labelCls:'omslabelstyle',
+			fieldCls:'omsfieldstyle'
+		},
+		{
+			name:'owner', 
+			xtype:'textfield',
+			fieldLabel:'Task Owner:', 
+			margin: '0 2 5 15',
+			labelCls:'omslabelstyle',
+			fieldCls:'omsfieldstyle'
+		},
+		{
+			name:'targetDate',
+			fieldLabel:'Target Date', 
+			margin: '0 2 5 15',
+			xtype:'datefield',
+			labelCls:'omslabelstyle',
+			allowBlank:false,
+			fieldCls:'omsfieldstyle'
+			},
+	],
+	buttons:[
+		{
+			text:"Update Task",
+			handler: function(){
+			}
+		}]}]
+});
 oms.task.createTaskMainPanel=function(task)  // proj is the json data for the project
 {
 	var infop=oms.task.createTaskInfoPanel(task.taskinfo) ;

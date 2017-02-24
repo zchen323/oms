@@ -58,7 +58,6 @@ oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
 				      '[ID:{projId} ] --{projName}',
 				       '</tpl>'
 					)
-
 		}
 	],
 	buttons:[
@@ -87,7 +86,6 @@ oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
 							Ext.getCmp('centerViewPort').add(p_proj);
 							Ext.getCmp('centerViewPort').setActiveTab(p_proj);
 						}
-						
 					},
 					failure:function(response)
 					{
@@ -195,7 +193,6 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 					labelCls:'omslabelstyle',
 					allowBlank:false,
 					fieldCls:'omsfieldstyle'
-						
 					},
 					{
 						xtype:'combobox',
@@ -486,13 +483,14 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 oms.project.createTaskItemPanel=function(task,seq)
 {
 	// build header
+	seq=seq+1;
 	var h_html='<table width=100% style="background-color:#eeeeff;font-size:8pt"><tr>';
 	h_html=h_html+"<td width=30>#"+seq+"</td>";
 	h_html=h_html+"<td><b>Task:</b><font color=green>"+task.name+"</font></td>";
-	h_html=h_html+"<td width=15%><b>Owner:</b><font color=#336699>"+task.onwer+"</font></td>"; 
+	h_html=h_html+"<td width=15%><b>Owner:</b><font color=#336699>"+task.owner+"</font></td>"; 
 	h_html=h_html+"<td width=15%><b>Status:</b><font color=green>"+task.status+"</font></td>";
-	h_html=h_html+"<td width=20%><b>Target Date:</b><font color=green>"+task.duedate+"</font></td>";
-	h_html=h_html+'<td width=10%><img src="css/images/shared/icons/fam/add.png"><img src="css/images/shared/icons/fam/delete.gif"></td>';
+	h_html=h_html+"<td width=20%><b>Target Date:</b><font color=green>"+task.targetDate+"</font></td>";
+	h_html=h_html+'<td width=10%><a href="" onclick="oms.task.showTaskInfoEdit('+task.id+');return false;"><img src="css/images/shared/icons/fam/cog_edit.png"></a></td>';
 	h_html=h_html+"</tr></table>";
 	var taskid=task.id;
 	// now build commend and document panel
@@ -533,7 +531,7 @@ oms.project.createTaskItemPanel=function(task,seq)
 				}
 			]
 	});
-
+	taskpanel.task=task;
 	return taskpanel;
 };
 
@@ -562,25 +560,47 @@ oms.project.createTaskListPanel=function(taskList,projID)
 	return pc;
 };
 
-oms.project.createDocumentPanel=function(docList,projID)
+oms.project.createDocumentPanel=function(proj,projID)
 {
-	var dlstore=Ext.create('Ext.data.ArrayStore', {
+	var dlstore=Ext.create('Ext.data.JsonStore', {
 		// store configs
 		storeId: 'dlStore'+projID,
 		fields: [
 			{name: 'docid'}, 
 			{name: 'docname'},
 			{name: 'doctype'}, 
-			{name: 'task' },
+			{name: 'taskname' },
 			{name: 'user'},
-			{name: 'uploaddate', type: 'date'},
+			{name: 'uploadDate', type: 'date'},
 			{name: 'required'},
 			{name: 'restricted',type:'boolean'}
 			],
-			data:oms.project.doclistsample
-});
+	});
+	// append all docs to a bigger list
+	//console.log(proj);
+	var tasklist=proj.tasks;
+	var pdocs=[];
+	if(tasklist!=null)
+	{
+		for(var i=0;i<tasklist.length;i++)
+		{
+			var docs=tasklist[i].docs;
+			if(docs!=null)
+			{
+				for(var j=0;j<docs.length;j++)
+				{
+					docs[j].taskname=tasklist[i].name;
+				//	console.log(docs[j]);
+					pdocs[pdocs.length]=docs[j];
+				}
+				//pdocs.concat(docs);
+			}
+		}
+	}
+
+	dlstore.setData(pdocs);
 	var grid=Ext.create('Ext.grid.Panel',{
-		id:'docgrid'+projID,
+		id:'projdocgrid'+projID,
 		store:dlstore, 
 		scrollable:true,
 		columns: [
@@ -595,9 +615,21 @@ oms.project.createDocumentPanel=function(docList,projID)
 				} 
 			},
 			{text: "type", dataIndex: 'doctype',width:180},
-			{text: "Name", flex:2,dataIndex: 'docname'}, 
-			{text: "Task", flex:1,dataIndex: 'task'},
-			{text: "Upload Date", dataIndex: 'uploaddate',formatter: 'date("m/d/Y")'},
+			 {text: "Name", flex:2,dataIndex: 'name',
+				               renderer:function(val)
+				               {
+				            	   if(val==null)
+				            		 {
+				            		   return "<a href='#'>Upload Now</a>";
+				            		 }
+				            	   else{
+				            		   return val;
+				            	   }
+				      
+				               }
+			 },
+			{text: "Task", flex:1,dataIndex: 'taskname'},
+			{text: "Upload Date", dataIndex: 'uploadDate',formatter: 'date("m/d/Y")'},
 			{text: "User", dataIndex: 'user',width:160}, 
 			{text: "Req.",dataIndex:"required",width:50,
 				renderer:function(val)
@@ -677,13 +709,13 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 	var sample=oms.project.sample1;
 	var infop=oms.project.createProjInfoPanel(proj.projectInfo) ;
 	var tlgrid=oms.project.createTaskListPanel(proj.tasks,proj.projectInfo.projId);
-	var dlgrid=oms.project.createDocumentPanel(sample.doclist,proj.projectInfo.projId);
+	var dlgrid=oms.project.createDocumentPanel(proj,proj.projectInfo.projId);
 	var ulgrid=oms.project.createUserPanel(sample.userlist,proj.projectInfo.projId);
 	//console.log(infop);
 	var mainpanel=Ext.create('Ext.panel.Panel',{
 		id:"projectPanel"+proj.projectInfo.projId,
 		layout:'hbox',
-		title:"PROJECT : -- ["+proj.projectInfo.projName+"]",
+		title:"[PROJECT"+proj.projectInfo.projId+"]: -- ["+proj.projectInfo.projName+"]",
 		padding:'5 5 5 5',
 		border:true,
 		items:[
@@ -728,6 +760,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 							xtype:'tabpanel',
 							id:'projectDetails'+proj.projectInfo.projId,
 							width:'99%',
+							minHeight:400,
 							margin:'2 2 2 2',
 							flex:1, 
 							defaults:
@@ -810,3 +843,4 @@ oms.project.userlistsample=
 	[5,"YaoGuai 1","User",false],
 	[6,"YaoGuai 2","Contractor",false]
 ];
+
