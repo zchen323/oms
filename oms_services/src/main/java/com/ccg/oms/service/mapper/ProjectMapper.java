@@ -87,6 +87,8 @@ public class ProjectMapper {
 		entity.setName(taskDoc.getName());
 		entity.setUploadDate(taskDoc.getUploadTimestamp());
 		entity.setUser(taskDoc.getUser());
+		entity.setDocumentId(taskDoc.getDocumentId());
+		entity.setTaskId(taskDoc.getTaskId());
 		
 		return entity;
 	}
@@ -99,6 +101,7 @@ public class ProjectMapper {
 		taskDoc.setUser(entity.getUser());
 		taskDoc.setName(entity.getName());
 		taskDoc.setTaskId(entity.getTaskId());
+		taskDoc.setDocumentId(entity.getDocumentId());
 		return taskDoc;
 	}
 	

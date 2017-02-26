@@ -18,6 +18,7 @@ public class TaskDocEntity {
 	private String name;
 	private String user;
 	private Timestamp uploadDate;
+	private Integer documentId;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +61,13 @@ public class TaskDocEntity {
 	}
 	public void setUploadDate(Timestamp uploadDate) {
 		this.uploadDate = uploadDate;
+	}
+	public Integer getDocumentId() {
+		return documentId;
+	}
+	public void setDocumentId(Integer documentId) {
+		this.documentId = documentId;
 	}	
+	
+	
 }

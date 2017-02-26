@@ -398,6 +398,10 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 						fieldCls:'omsfieldstyle'
 					},
 					{
+						xtype:'hiddenfield',
+						name:'projectId'
+					},
+					{
 						xtype:'textfield',
 						name:'docname', 
 						fieldLabel:'Document Name', 
@@ -408,6 +412,7 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 					{
 			            xtype: 'filefield',
 			            fieldLabel:'File',
+			            name: 'file',
 			           // hideLabel: true,
 			            reference: 'basicFile',
 			            margin: '0 2 5 15',
@@ -419,6 +424,37 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 					{
 						text:"Save",
 						handler: function(){
+							var form = Ext.getCmp("addtaskdocumentpanel").getForm();
+							
+							if(form.isValid()){
+								console.log(form);
+								form.submit({
+									url: 'api/document/upload',
+									waitMsg: 'Uploading file...',
+									success: function(form, action){
+										console.log(action);
+									},
+									failure: function(form, action){
+										console.log(action);
+									}
+								});
+							}else{
+								console.log("form is not valid");
+								console.log(this);
+								var fieldNames = [];                
+				                var fields = this.up("window");
+				                console.log(fields.getInvalidFields());
+				                console.log(fields);
+				                for(var i=0; i <  fields.length; i++){
+				                    field = fields[i];
+				                    fieldNames.push(field.getName());
+				                 }
+				                console.debug(fieldNames);
+				                Ext.MessageBox.alert('Invalid Fields', 'The following fields are invalid: ' + fieldNames.join(', '));
+							
+							}
+							
+							
 						}
 					}]
 			}]
@@ -487,7 +523,25 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 	buttons:[
 		{
 			text:"Update Task",
-			handler: function(){
+			handler: function(){		
+				var formdata = Ext.getCmp("edittaskinfopanel").getForm().getValues();
+				Ext.Ajax.request({
+					url : "api/project/task",
+					method : 'PUT',
+					jsonData : JSON.stringify(formdata),
+					success : function(response, option) {
+						console.log(response);
+						var respObj = Ext.decode(response.responseText);
+						Ext.Msg.alert(respObj.status, respObj.message);
+						if (respObj.status === 'success') {
+							oms.task.EditTaskInfoPanel.hide();
+						}
+					},
+					failure : function(response, option) {
+						console.log(response);
+						Ext.Msg.alert('Error', response.responseText);
+					}
+				});	
 			}
 		}]}]
 });

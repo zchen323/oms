@@ -17,6 +17,7 @@ import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.ProjectInfo;
+import com.ccg.oms.common.data.project.Task;
 import com.ccg.oms.common.data.project.TaskNote;
 import com.ccg.oms.service.ProjectServices;
 import com.ccg.util.JSON;
@@ -110,4 +111,16 @@ public class ProjectController {
 		return resp;
 	}
 
+	@RequestMapping(value="task", method=RequestMethod.PUT)
+	public @ResponseBody RestResponse updateTask(@RequestBody Task task){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+				service.updateTask(task);
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+	}
 }

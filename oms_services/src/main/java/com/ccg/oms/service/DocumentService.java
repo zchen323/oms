@@ -1,5 +1,16 @@
 package com.ccg.oms.service;
 
-public interface DocumentService {
+import java.util.List;
 
+import com.ccg.oms.common.data.document.Document;
+import com.ccg.oms.common.data.project.TaskDoc;
+
+public interface DocumentService {
+	Integer saveDocument(Document doc);
+	void saveProjectTaskDocument(Integer documentId, Integer projectId, Integer taskId);
+	List<Document> findDocumentByProjectId(Integer projectId);
+	List<Document> findDocumentByTaskId(Integer taskId);
+	Document findDocumentById(Integer documentId);
+	
+	void saveTaskDoc(TaskDoc taskDoc);
 }

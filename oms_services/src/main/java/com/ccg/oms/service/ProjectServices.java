@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.ProjectInfo;
+import com.ccg.oms.common.data.project.Task;
 import com.ccg.oms.common.data.project.TaskNote;
 
 public interface ProjectServices {
@@ -12,4 +13,5 @@ public interface ProjectServices {
 	List<ProjectInfo> findAllProjectInfo();
 	List<Project> searchByName(String nameContains);
 	void addTaskComment(TaskNote taskNote);
+	void updateTask(Task task);
 }

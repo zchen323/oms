@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 public class TaskDoc {
 	private Integer id;
 	private Integer taskId;
+	private Integer documentId;
 	private String doctype;
 	private String name;
 	private String uploadDate;
@@ -82,4 +83,13 @@ public class TaskDoc {
 	public void setUser(String user) {
 		this.user = user;
 	}
+
+	public Integer getDocumentId() {
+		return documentId;
+	}
+
+	public void setDocumentId(Integer documentId) {
+		this.documentId = documentId;
+	}
+	
 }

@@ -116,6 +116,31 @@ create table tasknote(
 	primary key(id)
 );
 
+CREATE TABLE document (
+	id INT NOT NULL AUTO_INCREMENT,
+	name VARCHAR(256) NOT NULL,
+	type VARCHAR(30) NOT NULL,
+	size INT NOT NULL,
+	content MEDIUMBLOB NOT NULL,
+	hasMore tinyint(1),
+	PRIMARY KEY(id)
+);
+
+create table document_additional(
+	id int not null auto_increment,
+	documentId int not null,
+	content MEDIUMBLOB,
+	primary key(id)
+);
+
+create table projecttaskdocument(
+	id int not null auto_increment,
+	documentId int,
+	projectId int,
+	taskId int,
+	primary key(id)
+);
+
 
 
 

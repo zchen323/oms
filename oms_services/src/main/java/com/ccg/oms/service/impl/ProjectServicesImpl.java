@@ -135,7 +135,7 @@ public class ProjectServicesImpl implements ProjectServices{
 	public List<Project> searchByName(String nameContains) {
 		List<Project> projects = new LinkedList<Project>();
 		
-		List<ProjectEntity> entities = projectRepository.findByNameContaining(nameContains);
+		List<ProjectEntity> entities = projectRepository.findByNameContainingOrderByIdDesc(nameContains);
 		for(ProjectEntity entity : entities){
 			Project project = ProjectMapper.fromEntity(entity);
 			projects.add(project);
@@ -148,8 +148,15 @@ public class ProjectServicesImpl implements ProjectServices{
 		TaskNoteEntity entity = ProjectMapper.toEntity(taskNote);
 		taskNoteRepository.save(entity);		
 	}
-	
-	
-	
-	
+
+	@Override
+	public void updateTask(Task task) {	
+		TaskEntity entity = taskRepository.findOne(task.getId());
+		if(entity != null){
+			entity.setOwner(task.getOwner());
+			entity.setStatus(task.getStatus());
+			entity.setDueDate(task.getTargetTimestamp());
+			taskRepository.save(entity);
+		}
+	}
 }
