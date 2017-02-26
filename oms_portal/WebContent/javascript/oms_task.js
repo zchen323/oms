@@ -425,36 +425,23 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 						text:"Save",
 						handler: function(){
 							var form = Ext.getCmp("addtaskdocumentpanel").getForm();
-							
-							if(form.isValid()){
-								console.log(form);
-								form.submit({
-									url: 'api/document/upload',
-									waitMsg: 'Uploading file...',
-									success: function(form, action){
-										console.log(action);
-									},
-									failure: function(form, action){
-										console.log(action);
-									}
-								});
-							}else{
-								console.log("form is not valid");
-								console.log(this);
-								var fieldNames = [];                
-				                var fields = this.up("window");
-				                console.log(fields.getInvalidFields());
-				                console.log(fields);
-				                for(var i=0; i <  fields.length; i++){
-				                    field = fields[i];
-				                    fieldNames.push(field.getName());
-				                 }
-				                console.debug(fieldNames);
-				                Ext.MessageBox.alert('Invalid Fields', 'The following fields are invalid: ' + fieldNames.join(', '));
-							
-							}
-							
-							
+							console.log(form);
+							form.submit({
+								url: 'api/document/upload',
+								waitMsg: 'Uploading file...',
+								success : function(response, option) {
+									console.log(response);
+									//var respObj = Ext.decode(response.responseText);
+									Ext.Msg.alert("Success", option.result.file);
+									//if (respObj.status === 'success') {
+										oms.task.addDocumentPanel.hide();
+									//}
+								},
+								failure : function(response, option) {
+									console.log(response);
+									Ext.Msg.alert('Error', option.result.file);
+								}
+							});
 						}
 					}]
 			}]

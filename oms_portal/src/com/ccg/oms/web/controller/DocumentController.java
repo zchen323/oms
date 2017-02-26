@@ -59,12 +59,15 @@ public class DocumentController {
 	
 
 	@RequestMapping(value="upload", method=RequestMethod.POST)
-	public @ResponseBody RestResponse upload(HttpServletRequest request){
+	public @ResponseBody String upload(HttpServletRequest request){
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-		RestResponse resp = RestResponse.getSuccessResponse();
+		//RestResponse resp = RestResponse.getSuccessResponse();
+		String responseMessage = "{}";//"{ 'success': false, 'file': 'filename' }";
+
 		if(!isMultipart){
-			resp.setStatus(RestResponseConstants.FAIL);
-			resp.setMessage("Not a multipart");
+			//resp.setStatus(RestResponseConstants.FAIL);
+			//resp.setMessage("Not a multipart");
+			responseMessage = "{ 'success': false, 'file': 'Not a mutipart' }";
 		}
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
@@ -115,12 +118,15 @@ public class DocumentController {
 					taskDoc.getTaskId()
 				);
 			
+			responseMessage = "{ 'success': true, 'file':'" + doc.getName() + "'}";
+			
 		} catch (FileUploadException e) {
-			resp.setMessage(e.getMessage());
-			resp.setStatus(RestResponseConstants.FAIL);
+			responseMessage = "{ 'success': false, 'file': '" + e.getMessage() + "' }";
 			e.printStackTrace();
 		}
-		return resp;
+		//{ "success": true, "file": "filename" }
+
+		return responseMessage;
 	}
 	
 }

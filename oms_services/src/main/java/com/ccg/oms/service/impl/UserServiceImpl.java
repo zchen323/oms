@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +27,7 @@ import com.ccg.oms.dao.repository.user.UserDetailRepository;
 import com.ccg.oms.dao.repository.user.UserRepository;
 import com.ccg.oms.dao.repository.user.UserRoleRepository;
 import com.ccg.oms.service.UserServices;
+import com.ccg.oms.service.mapper.UserMapper;
 
 @Service
 public class UserServiceImpl implements UserServices{
@@ -307,6 +309,17 @@ public class UserServiceImpl implements UserServices{
 				roleRepository.save(roleEntity);
 			}
 		}
+	}
+
+	@Override
+	public List<UserInfo> searchUserByName(String nameContains) {
+		
+		List<UserInfo> result = new LinkedList<UserInfo>();
+		List<UserDetailEntity> entities = detailRepository.findByNameContainingOrderByName(nameContains);
+		for(UserDetailEntity entity : entities){
+			result.add(UserMapper.fromEntity(entity));
+		}
+		return result;
 	}
 	
 

@@ -1,5 +1,7 @@
 package com.ccg.oms.web.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +15,9 @@ import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.user.NewUser;
 import com.ccg.oms.common.data.user.User;
 import com.ccg.oms.common.data.user.UserChangePassword;
+import com.ccg.oms.common.data.user.UserInfo;
 import com.ccg.oms.common.data.user.UserWithPassword;
 import com.ccg.oms.service.UserServices;
-import com.ccg.util.JSON;
 
 @Controller
 @RequestMapping("/user")
@@ -139,5 +141,19 @@ public class UserController {
 			result.setMessage(e.getMessage());
 		}
 		return result;
+	}
+	
+	@RequestMapping(value="search/{username}", method=RequestMethod.GET)
+	public @ResponseBody RestResponse searchUserByName(@PathVariable String username ){
+		RestResponse response = new RestResponse();
+		try{
+			List<UserInfo> userInfos = services.searchUserByName(username);
+			response.setResult(userInfos);
+			
+		}catch(Exception e){
+			response.setStatus(RestResponseConstants.FAIL);
+			response.setMessage(e.getMessage());
+		}
+		return response;
 	}
 }
