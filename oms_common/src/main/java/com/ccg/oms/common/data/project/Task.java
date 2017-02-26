@@ -75,7 +75,7 @@ public class Task {
 		this.targetDate = targetDate;
 	}
 	public Timestamp getTargetTimestamp() {
-		if(targetTimestamp == null || targetDate != null){
+		if(targetTimestamp == null && targetDate != null){
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			try {
 				targetTimestamp = new Timestamp(df.parse(targetDate).getTime());
