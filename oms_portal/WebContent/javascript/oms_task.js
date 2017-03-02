@@ -200,13 +200,31 @@ oms.task.createTaskCommentPanel=function(task,id)
 	});
 	return grid;
 };
-
+oms.task.openLoadDocuemnt=function(id,rowindex)
+{
+	//	Ext.getCmp('addtaskdocumentpanel').getForm().loadRecord({getData:function(){return task;}});
+			var store=Ext.getStore('dtStore');
+		//console.log(store);
+			if(store!=null)
+			{
+				Ext.getCmp('dtcombo1').setStore(store);
+			}
+			var store=Ext.getStore( 'taskdlStore'+id);
+			var rec=store.getAt(rowindex);
+			console.log(rec);
+			rec.data.taskdocid=rec.data.id
+			Ext.getCmp('addtaskdocumentpanel').getForm().reset();
+			Ext.getCmp('addtaskdocumentpanel').getForm().loadRecord(rec);
+			Ext.getCmp('addtaskdocumentpanel').getForm().loadRecord({getData:function(){return {"id":id};}});
+			oms.task.addDocumentPanel.show();
+};
 oms.task.createTaskDocumentPanel=function(task,id)
 {
 	var dlstore=Ext.create('Ext.data.JsonStore', {
 	    // store configs
 	    storeId: 'taskdlStore'+id,
 	    fields: [
+	    		 {name:'id'},
 	             {name: 'seq'},	
 	             {name: 'docid'},
 	             {name: 'name'},
@@ -229,7 +247,14 @@ oms.task.createTaskDocumentPanel=function(task,id)
 		    	text:"Add New Document",
 		 		handler:function()
 		 		{
+		 			Ext.getCmp('addtaskdocumentpanel').getForm().reset();
 		 			Ext.getCmp('addtaskdocumentpanel').getForm().loadRecord({getData:function(){return task;}});
+		 			var store=Ext.getStore('dtStore');
+					//console.log(store);
+						if(store!=null)
+						{
+							Ext.getCmp('dtcombo1').setStore(store);
+						}
 		 			oms.task.addDocumentPanel.show();
 		 		} 
 		      }],
@@ -246,11 +271,11 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	               }	            	  
 	              },
 	              {text: "Name", flex:2,dataIndex: 'name',
-	               renderer:function(val)
+	               renderer:function(val, meta, rec, rowIdx)
 	               {
 	            	   if(val==null)
 	            		 {
-	            		   return "<a href='#'>Upload Now</a>";
+	            		   return "<a href='#' onclick='oms.task.openLoadDocuemnt("+id+","+rowIdx+");return false;'>Upload Now</a>";
 	            		 }
 	            	   else{
 	            		   return val;
@@ -391,6 +416,14 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 				items:[
 					{
 						xtype:'textfield',
+						name:'taskdocid', 
+						fieldLabel:'Task Document ID:', 
+						margin: '0 2 5 15',
+						labelCls:'omslabelstyle',
+						fieldCls:'omsfieldstyle'
+					},
+					{
+						xtype:'textfield',
 						name:'id', 
 						fieldLabel:'Task ID:', 
 						margin: '0 2 5 15',
@@ -408,6 +441,18 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 						margin: '0 2 5 15',
 						labelCls:'omslabelstyle',
 						fieldCls:'omsfieldstyle'
+					},
+					{
+						xtype:'combobox',
+						margin: '0 2 5 15',
+						id:'dtcombo1',
+						name:'doctype',
+						valueField:'doctype',
+						displayField:'doctype',
+						queryMode: 'local',
+	            		typeAhead: true,
+						fieldLabel:'Document Types',
+				
 					},
 					{
 			            xtype: 'filefield',

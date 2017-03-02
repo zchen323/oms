@@ -486,10 +486,10 @@ oms.project.createTaskItemPanel=function(task,seq)
 	seq=seq+1;
 	var h_html='<table width=100% style="background-color:#eeeeff;font-size:8pt"><tr>';
 	h_html=h_html+"<td width=30>#"+seq+"</td>";
-	h_html=h_html+"<td><b>Task:</b><font color=green>"+task.name+"</font></td>";
-	h_html=h_html+"<td width=15%><b>Owner:</b><font color=#336699>"+task.owner+"</font></td>"; 
-	h_html=h_html+"<td width=15%><b>Status:</b><font color=green>"+task.status+"</font></td>";
-	h_html=h_html+"<td width=20%><b>Target Date:</b><font color=green>"+task.targetDate+"</font></td>";
+	h_html=h_html+"<td><font color=green>"+task.name+"</font></td>";
+	h_html=h_html+"<td width=15%><font color=#336699>"+task.owner+"</font></td>"; 
+	h_html=h_html+"<td width=15%><font color=green>"+task.status+"</font></td>";
+	h_html=h_html+"<td width=20%><font color=green>"+task.targetDate+"</font></td>";
 	h_html=h_html+'<td width=10%><a href="" onclick="oms.task.showTaskInfoEdit('+task.id+');return false;"><img src="css/images/shared/icons/fam/cog_edit.png"></a></td>';
 	h_html=h_html+"</tr></table>";
 	var taskid=task.id;
