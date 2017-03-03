@@ -12,17 +12,18 @@ import javax.persistence.Table;
 @Table(name="project_users")
 public class ProjectUserEntity {
 	
-	private int id;
+	private Integer id;
+	private String userId;
 	private String username;
 	private String role;
-	private ProjectEntity project;
+	private Integer projectId;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getUsername() {
@@ -37,14 +38,17 @@ public class ProjectUserEntity {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	@ManyToOne
-	@JoinColumn(name="projectId")
-	public ProjectEntity getProject() {
-		return project;
+	public Integer getProjectId() {
+		return projectId;
 	}
-	public void setProject(ProjectEntity project) {
-		this.project = project;
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 	

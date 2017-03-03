@@ -108,15 +108,10 @@ public class DocumentController {
 			taskDoc.setTaskId(Integer.parseInt(params.get("id")));
 			taskDoc.setUser(request.getRemoteUser());
 			taskDoc.setUploadTimestamp(new Timestamp(System.currentTimeMillis()));
+			taskDoc.setId(Integer.parseInt(params.get("taskdocid")));
+			
 			System.out.println(JSON.toJson(taskDoc));
 			docService.saveTaskDoc(taskDoc);
-			
-			// update project-task-document
-			docService.saveProjectTaskDocument(
-					doc.getId(), 
-					Integer.parseInt(params.get("projectId")), 
-					taskDoc.getTaskId()
-				);
 			
 			responseMessage = "{ 'success': true, 'file':'" + doc.getName() + "'}";
 			

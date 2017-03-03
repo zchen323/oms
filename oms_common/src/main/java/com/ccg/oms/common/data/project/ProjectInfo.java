@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class ProjectInfo {
 	private Project projectInfo;
 	private List<Task> tasks;
+	private List<ProjectUser> projectUsers;
 	
 	public Project getProjectInfo() {
 		return projectInfo;
@@ -22,5 +23,10 @@ public class ProjectInfo {
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
-	
+	public List<ProjectUser> getProjectUsers() {
+		return projectUsers;
+	}
+	public void setProjectUsers(List<ProjectUser> projectUsers) {
+		this.projectUsers = projectUsers;
+	}
 }

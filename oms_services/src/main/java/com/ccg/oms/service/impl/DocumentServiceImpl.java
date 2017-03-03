@@ -13,10 +13,12 @@ import com.ccg.oms.dao.entiry.document.DocumentAdditionalEntity;
 import com.ccg.oms.dao.entiry.document.DocumentEntity;
 import com.ccg.oms.dao.entiry.document.ProjectTaskDocumentEntity;
 import com.ccg.oms.dao.entiry.project.TaskDocEntity;
+import com.ccg.oms.dao.entiry.project.TaskEntity;
 import com.ccg.oms.dao.repository.document.DocumentAdditionalRepository;
 import com.ccg.oms.dao.repository.document.DocumentRepository;
 import com.ccg.oms.dao.repository.document.ProjectTaskDocumentRepository;
 import com.ccg.oms.dao.repository.project.TaskDocRepository;
+import com.ccg.oms.dao.repository.project.TaskRepository;
 import com.ccg.oms.service.DocumentService;
 import com.ccg.oms.service.mapper.DocumentMapper;
 import com.ccg.oms.service.mapper.ProjectMapper;
@@ -35,6 +37,9 @@ public class DocumentServiceImpl implements DocumentService{
 	
 	@Autowired
 	TaskDocRepository taskDocRepository;
+	
+	@Autowired
+	TaskRepository taskRepository;
 	
 	static final int max = 1000000;
 	
@@ -134,9 +139,22 @@ public class DocumentServiceImpl implements DocumentService{
 
 	@Override
 	public void saveTaskDoc(TaskDoc taskDoc) {
-		TaskDocEntity entity = ProjectMapper.toEntity(taskDoc);
-		taskDocRepository.save(entity);
 		
+		TaskEntity taskEntity = taskRepository.findOne(taskDoc.getTaskId());
+		saveProjectTaskDocument(taskDoc.getDocumentId(), taskEntity.getProjectId(), taskDoc.getTaskId());
+		
+		if(taskDoc.getId() == null){
+			TaskDocEntity entity = ProjectMapper.toEntity(taskDoc);
+			taskDocRepository.save(entity);
+		}else{
+			TaskDocEntity entity = taskDocRepository.findOne(taskDoc.getId());
+			entity.setDocumentId(taskDoc.getDocumentId());
+			entity.setTaskId(taskDoc.getTaskId());
+			entity.setUploadDate(taskDoc.getUploadTimestamp());
+			entity.setUser(taskDoc.getUser());
+			entity.setName(taskDoc.getName());
+			taskDocRepository.save(entity);			
+		}
 	}
 
 	@Override
