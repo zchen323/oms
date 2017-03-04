@@ -655,18 +655,20 @@ oms.project.createDocumentPanel=function(proj,projID)
 	return grid;
 };
 
+
 oms.project.createUserPanel=function(userlist,projID)
 {
-	var ulstore=Ext.create('Ext.data.ArrayStore', {
+	var ulstore=Ext.create('Ext.data.JsonStore', {
 		// store configs
 		storeId: 'ulStore'+projID,
 		fields: [
 		{name: 'userid'}, 
 		{name: 'username'},
-		{name: 'role'},
+		{name: 'projectId'},
+		{name:'projectUserRole'},
 		{name: 'restricted',type:'boolean'}
 		],
-		data:oms.project.userlistsample
+		data:userlist
 	});
 	var grid=Ext.create('Ext.grid.Panel',{
 		id:'usergrid'+projID,
@@ -684,25 +686,157 @@ oms.project.createUserPanel=function(userlist,projID)
 				} 
 		},
 			{text: "Name",flex:2, dataIndex: 'username'}, 
-			{text: "Role", flex:1, dataIndex: 'role'}, 
-			{text: "Action",dataIndex:"taskID",width:120,
-				renderer:function(val)
-				{
-					var html='<img src="css/images/shared/icons/fam/delete.gif"><img src="css/images/shared/icons/fam/user_edit.png">';
-					return html;
-		
-				}
+			{text: "Role", flex:1, dataIndex: 'projectUserRole'}, 
+			{ 	xtype:'actioncolumn',
+	            width:30,
+	            items: [
+	            	{
+	            		icon: 'css/images/shared/icons/fam/delete.gif', 
+	            		handler: function(grid, rowIndex, colIndex)
+	            		{    
+	    					Ext.getCmp('btnaddprojuser').hide();
+	    					Ext.getCmp('btnremoveprojuser').show();
+	    					Ext.getCmp('idprojectUserRole').getStore().setData(oms.admin.cachedata.projectUserRoleTypes)
+	    					Ext.getCmp('idprojuserprojID').setValue(projID);
+	    					var rec=grid.getStore().getAt(rowIndex);
+	    					console.log(rec);
+	    					Ext.getCmp('projusereditform').getForm().loadRecord(rec);
+	    					oms.project.AssignNewUserPanel.show();
+	            		}	                
+					}
+				]
 			}
 		],
 		columnLines: true, 
 		title:' Team Members ',
 		
 		tbar: [
-			{ text:'Add User' } 
+			{ 
+				text:'Add User',
+				handler: function(){
+					Ext.getCmp('btnaddprojuser').show();
+					Ext.getCmp('btnremoveprojuser').hide();
+					Ext.getCmp('idprojectUserRole').getStore().setData(oms.admin.cachedata.projectUserRoleTypes)
+					Ext.getCmp('idprojuserprojID').setValue(projID);
+					oms.project.AssignNewUserPanel.show();
+				}
+			} 
 		]
 		});
 	return grid;
 };
+
+
+oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Project User Assignment',
+	bodyPadding: 10,
+	scrollable:true,
+	closeAction: 'hide',
+	width: 500,
+	MinHeight:220,
+	//modal: false,
+
+	items:[
+				{
+					xtype:'form',	
+				id:'projusereditform',
+				width:'99%',
+				defaultType: 'textfield',
+				fieldDefaults: {
+					labelAlign: 'right',
+					labelWidth: 150,
+					bodyPadding: 10,
+				},
+				items:[
+						{
+							xtype:'textfield',
+							name:'projId', 
+							id:'idprojuserprojID',
+							fieldLabel:'Project ID:', 
+							margin: '0 2 5 15',
+							labelCls:'omslabelstyle',
+							fieldCls:'omsfieldstyle'
+						},
+						{
+							xtype:'combobox',
+							margin: '0 2 2 15',
+							id:'projusersearchkey',
+							valueField:'username',
+							displayField:'name',
+							minChars: 1,
+				            queryParam: 'uname',
+				            queryMode: 'remote',
+				            typeAhead: true,
+				            multiSelect: false,
+				            triggerAction: 'all',
+				            fieldLabel:'Enter User Name',
+				            labelCls:'omslabelstyle',
+							fieldCls:'omsfieldstyle',
+				            allowBlank:false,
+				            store:Ext.create('Ext.data.JsonStore', {
+								fields: [
+									{name: 'username' },
+									{name: 'name'}
+									],
+								proxy: {
+								        type: 'ajax',
+								        url: 'api/user/search',
+								        reader: {
+								            type: 'json',
+								            rootProperty: 'result'
+								        }
+								    }
+
+							})
+						},
+						{
+							xtype:'combobox',
+							margin: '0 2 5 15',
+							id:'idprojectUserRole',
+							name:'roletype',
+							valueField:'roletype',
+							displayField:'roletype',
+							queryMode: 'local',
+		            		typeAhead: true,
+		        			store:Ext.create('Ext.data.JsonStore', {
+								fields: [
+									{name: 'roletype' }
+									]
+							}),
+				            labelCls:'omslabelstyle',
+							fieldCls:'omsfieldstyle',
+							fieldLabel:'Role'
+						},	
+						{
+							xtype:'checkbox',
+							margin: '0 2 5 15',
+							name:'Restricted',
+							valueField:'Restricted',
+				            labelCls:'omslabelstyle',
+							fieldCls:'omsfieldstyle',
+							displayField:'Restricted',
+							fieldLabel:'Restricted Access'
+						}
+					],
+					buttons: 
+						[
+								{
+									text: 'Add Project User',
+									id:'btnaddprojuser',
+									handler: function(){}
+								},
+								{
+									text: 'Remove Project User',
+									id:'btnremoveprojuser',
+									handler: function(){}
+								},
+						]
+			}]
+});
+
 
 oms.project.createProjectPanel=function(proj) // proj is the json data for the project
 {
@@ -710,7 +844,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 	var infop=oms.project.createProjInfoPanel(proj.projectInfo) ;
 	var tlgrid=oms.project.createTaskListPanel(proj.tasks,proj.projectInfo.projId);
 	var dlgrid=oms.project.createDocumentPanel(proj,proj.projectInfo.projId);
-	var ulgrid=oms.project.createUserPanel(sample.userlist,proj.projectInfo.projId);
+	var ulgrid=oms.project.createUserPanel(proj.projectUsers,proj.projectInfo.projId);
 	//console.log(infop);
 	var mainpanel=Ext.create('Ext.panel.Panel',{
 		id:"projectPanel"+proj.projectInfo.projId,

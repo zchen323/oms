@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccg.oms.common.data.RestResponse;
@@ -143,8 +144,8 @@ public class UserController {
 		return result;
 	}
 	
-	@RequestMapping(value="search/{username}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse searchUserByName(@PathVariable String username ){
+	@RequestMapping(value="search", method=RequestMethod.GET)
+	public @ResponseBody RestResponse searchUserByName(@RequestParam(value="uname") String username ){
 		RestResponse response = new RestResponse();
 		try{
 			List<UserInfo> userInfos = services.searchUserByName(username);

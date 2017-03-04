@@ -214,14 +214,6 @@ oms.admin.PTEditPanel=Ext.create('Ext.window.Window',{
 	],
 	buttons: [{
 		text: 'Save',
-		listeners:{
-			click:{
-				element:'el',
-				fn:function(){
-					
-				}
-			}
-		},
 		handler: function(){
 			var formdata = Ext.getCmp('pteditform').getForm().getValues();
 			console.log(formdata);
