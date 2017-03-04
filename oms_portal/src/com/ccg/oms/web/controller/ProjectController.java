@@ -17,6 +17,7 @@ import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.ProjectInfo;
+import com.ccg.oms.common.data.project.ProjectUser;
 import com.ccg.oms.common.data.project.Task;
 import com.ccg.oms.common.data.project.TaskNote;
 import com.ccg.oms.service.ProjectServices;
@@ -125,4 +126,35 @@ public class ProjectController {
 		}
 		return resp;
 	}
+	
+	@RequestMapping(value="user", method=RequestMethod.POST)
+	public @ResponseBody RestResponse addProjecUser(@RequestBody ProjectUser projectUser){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+				service.addProjectUser(projectUser);
+				
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+	}	
+	@RequestMapping(value="user", method=RequestMethod.DELETE)
+	public @ResponseBody RestResponse addProjecUser(
+			@RequestParam(value="projectId") Integer projectId, 
+			@RequestParam(value="userId") String userId,
+			@RequestParam(value="projectUserRole") String role){
+		
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+				service.removeUserFromProject(projectId, userId, role);
+				
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+	}		
 }

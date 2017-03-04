@@ -753,7 +753,7 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 				items:[
 						{
 							xtype:'textfield',
-							name:'projId', 
+							name:'projectId', 
 							id:'idprojuserprojID',
 							fieldLabel:'Project ID:', 
 							margin: '0 2 5 15',
@@ -766,6 +766,7 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 							id:'projusersearchkey',
 							valueField:'username',
 							displayField:'name',
+							name:"userId",
 							minChars: 1,
 				            queryParam: 'uname',
 				            queryMode: 'remote',
@@ -796,7 +797,7 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 							xtype:'combobox',
 							margin: '0 2 5 15',
 							id:'idprojectUserRole',
-							name:'roletype',
+							name:'projectUserRole',
 							valueField:'roletype',
 							displayField:'roletype',
 							queryMode: 'local',
@@ -813,12 +814,15 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 						{
 							xtype:'checkbox',
 							margin: '0 2 5 15',
-							name:'Restricted',
+							name:'restricted',
 							valueField:'Restricted',
 				            labelCls:'omslabelstyle',
 							fieldCls:'omsfieldstyle',
 							displayField:'Restricted',
-							fieldLabel:'Restricted Access'
+							fieldLabel:'Restricted Access',
+							value:0,
+							inputValue:true,
+							uncheckValue:false
 						}
 					],
 					buttons: 
@@ -826,12 +830,57 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 								{
 									text: 'Add Project User',
 									id:'btnaddprojuser',
-									handler: function(){}
+									handler: function(){
+										console.log("add project user");
+										var formData = Ext.getCmp("projusereditform").getForm().getValues();
+										console.log(formData);
+										Ext.Ajax.request({
+											url : "api/project/user",
+											method : 'POST',
+											jsonData : JSON.stringify(formData),
+											success : function(response, option) {
+												console.log(response);
+												var respObj = Ext.decode(response.responseText);
+												Ext.Msg.alert(respObj.status, respObj.message);
+												if (respObj.status === 'success') {
+													oms.project.AssignNewUserPanel.hide();
+												}
+											},
+											failure : function(response, option) {
+												console.log(response);
+												Ext.Msg.alert('Error', response.responseText);
+											}
+										});
+									}
 								},
 								{
 									text: 'Remove Project User',
 									id:'btnremoveprojuser',
-									handler: function(){}
+									handler: function(){
+										// delete from project user
+										var formData = Ext.getCmp("projusereditform").getForm().getValues();
+										console.log("remove user from project")
+										console.log(formData);
+										
+										Ext.Ajax.request({
+											url : "api/project/user?projectId=" + formData.projectId + "&userId=" + formData.userId + "&projectUserRole=" + formData.projectUserRole,
+											method : 'DELETE',
+											//jsonData : JSON.stringify(formData),
+											success : function(response, option) {
+												console.log(response);
+												var respObj = Ext.decode(response.responseText);
+												Ext.Msg.alert(respObj.status, respObj.message);
+												if (respObj.status === 'success') {
+													oms.project.AssignNewUserPanel.hide();
+												}
+											},
+											failure : function(response, option) {
+												console.log(response);
+												Ext.Msg.alert('Error', response.responseText);
+											}
+										});
+										
+									}
 								},
 						]
 			}]

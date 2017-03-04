@@ -9,4 +9,5 @@ import com.ccg.oms.dao.entiry.project.ProjectUserEntity;
 
 public interface ProjectUserRepository extends CrudRepository<ProjectUserEntity, Integer>{
 	List<ProjectUserEntity> findByProjectId(Integer projectId);
+	List<ProjectUserEntity> findByProjectIdAndUserIdAndRole(Integer projectId, String userId, String role);
 }

@@ -20,11 +20,13 @@ import com.ccg.oms.dao.entiry.project.ProjectUserEntity;
 import com.ccg.oms.dao.entiry.project.TaskDocEntity;
 import com.ccg.oms.dao.entiry.project.TaskEntity;
 import com.ccg.oms.dao.entiry.project.TaskNoteEntity;
+import com.ccg.oms.dao.entiry.user.UserDetailEntity;
 import com.ccg.oms.dao.repository.project.ProjectRepository;
 import com.ccg.oms.dao.repository.project.ProjectUserRepository;
 import com.ccg.oms.dao.repository.project.TaskDocRepository;
 import com.ccg.oms.dao.repository.project.TaskNoteRepository;
 import com.ccg.oms.dao.repository.project.TaskRepository;
+import com.ccg.oms.dao.repository.user.UserDetailRepository;
 import com.ccg.oms.service.ProjectAdminServices;
 import com.ccg.oms.service.ProjectServices;
 import com.ccg.oms.service.mapper.ProjectMapper;
@@ -50,6 +52,9 @@ public class ProjectServicesImpl implements ProjectServices{
 	
 	@Autowired
 	ProjectUserRepository projectUserRepository;
+	
+	@Autowired
+	UserDetailRepository userDetailRepository;
 	
 	@Override
 	@Transactional
@@ -178,5 +183,22 @@ public class ProjectServicesImpl implements ProjectServices{
 			entity.setDueDate(task.getTargetTimestamp());
 			taskRepository.save(entity);
 		}
+	}
+
+	@Override
+	public void addProjectUser(ProjectUser user) {
+		ProjectUserEntity entity = UserMapper.toEntity(user);
+		if(entity.getUsername() == null){
+			String userId = entity.getUserId();
+			UserDetailEntity userEntity = userDetailRepository.findOne(userId);
+			entity.setUsername(userEntity.getName());
+		}
+		projectUserRepository.save(entity);		
+	}
+
+	@Override
+	public void removeUserFromProject(Integer projectId, String userId, String role) {
+		List<ProjectUserEntity> entities = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, role);
+		projectUserRepository.delete(entities);	
 	}
 }

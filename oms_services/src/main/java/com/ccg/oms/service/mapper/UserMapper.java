@@ -22,7 +22,8 @@ public class UserMapper {
 		user.setProjectId(entity.getProjectId());
 		user.setProjectUserRole(entity.getRole());
 		user.setUserId(entity.getUserId());
-		user.setUsername(entity.getUsername());		
+		user.setUsername(entity.getUsername());	
+		user.setRestricted(entity.getRestricted());
 		return user;
 	}
 	
@@ -31,7 +32,8 @@ public class UserMapper {
 		entity.setProjectId(user.getProjectId());
 		entity.setRole(user.getProjectUserRole());
 		entity.setUserId(user.getUserId());
-		entity.setUsername(user.getUsername());		
+		entity.setUsername(user.getUsername());
+		entity.setRestricted(user.getRestricted());
 		return entity;
 	}
 	

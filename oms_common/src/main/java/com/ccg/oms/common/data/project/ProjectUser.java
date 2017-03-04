@@ -6,6 +6,7 @@ public class ProjectUser {
 	private String username;
 	private Integer projectId;
 	private String projectUserRole;
+	private Boolean restricted;
 	
 	public String getUserId() {
 		return userId;
@@ -31,6 +32,12 @@ public class ProjectUser {
 	public void setProjectUserRole(String projectUserRole) {
 		this.projectUserRole = projectUserRole;
 	}
-	
+	public Boolean getRestricted() {
+		return restricted;
+	}
+	public void setRestricted(Boolean restricted) {
+		this.restricted = restricted;
+	}
+
 	
 }

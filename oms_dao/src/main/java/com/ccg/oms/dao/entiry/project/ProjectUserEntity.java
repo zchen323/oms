@@ -17,6 +17,8 @@ public class ProjectUserEntity {
 	private String username;
 	private String role;
 	private Integer projectId;
+	private Boolean restricted;
+	               
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +52,10 @@ public class ProjectUserEntity {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
-	
+	public Boolean getRestricted() {
+		return restricted;
+	}
+	public void setRestricted(Boolean restricted) {
+		this.restricted = restricted;
+	}
 }

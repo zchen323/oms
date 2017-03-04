@@ -16,4 +16,6 @@ public interface ProjectServices {
 	void addTaskComment(TaskNote taskNote);
 	void updateTask(Task task);
 	List<ProjectUser> findProjectUserByProjectId(Integer projectId);
+	void addProjectUser(ProjectUser user);
+	void removeUserFromProject(Integer projectId, String userId, String role);
 }
