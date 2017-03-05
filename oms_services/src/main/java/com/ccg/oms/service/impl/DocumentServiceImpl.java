@@ -204,7 +204,7 @@ public class DocumentServiceImpl implements DocumentService{
 		
 		docInfo.setName(docEntity.getName());
 		docInfo.setDocumentId(documentId);
-		docInfo.setUrl("api/document/" + documentId);
+		docInfo.setUrl("api/document/download/" + documentId);
 		
 		return docInfo;
 	}	
