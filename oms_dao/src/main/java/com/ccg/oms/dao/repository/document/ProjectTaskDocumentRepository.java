@@ -9,4 +9,5 @@ import com.ccg.oms.dao.entiry.document.ProjectTaskDocumentEntity;
 public interface ProjectTaskDocumentRepository extends CrudRepository<ProjectTaskDocumentEntity, Integer> {
 	List<ProjectTaskDocumentEntity> findByProjectId(Integer projectId);
 	List<ProjectTaskDocumentEntity> findByTaskId(Integer taskId);
+	List<ProjectTaskDocumentEntity> findByDocumentId(Integer documentId);
 }

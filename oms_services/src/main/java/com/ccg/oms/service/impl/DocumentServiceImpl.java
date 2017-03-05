@@ -1,17 +1,21 @@
 package com.ccg.oms.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ccg.oms.common.data.document.Document;
+import com.ccg.oms.common.data.document.DocumentInfo;
 import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.dao.entiry.document.DocumentAdditionalEntity;
 import com.ccg.oms.dao.entiry.document.DocumentEntity;
 import com.ccg.oms.dao.entiry.document.ProjectTaskDocumentEntity;
+import com.ccg.oms.dao.entiry.project.ProjectEntity;
 import com.ccg.oms.dao.entiry.project.TaskDocEntity;
 import com.ccg.oms.dao.entiry.project.TaskEntity;
 import com.ccg.oms.dao.repository.document.DocumentAdditionalRepository;
@@ -20,6 +24,7 @@ import com.ccg.oms.dao.repository.document.ProjectTaskDocumentRepository;
 import com.ccg.oms.dao.repository.project.TaskDocRepository;
 import com.ccg.oms.dao.repository.project.TaskRepository;
 import com.ccg.oms.service.DocumentService;
+import com.ccg.oms.service.ProjectServices;
 import com.ccg.oms.service.mapper.DocumentMapper;
 import com.ccg.oms.service.mapper.ProjectMapper;
 
@@ -40,6 +45,9 @@ public class DocumentServiceImpl implements DocumentService{
 	
 	@Autowired
 	TaskRepository taskRepository;
+	
+	@Autowired
+	ProjectServices projectService;
 	
 	static final int max = 1000000;
 	
@@ -178,5 +186,26 @@ public class DocumentServiceImpl implements DocumentService{
 		
 		Document doc = DocumentMapper.fromEntity(entity);
 		return doc;
+	}
+
+	@Override
+	public DocumentInfo findDocumentInfoById(Integer documentId) {
+		DocumentInfo docInfo = new DocumentInfo();
+		
+		DocumentEntity docEntity = docRepository.findOne(documentId);
+		List<ProjectTaskDocumentEntity> ptdEntities = ptdRepository.findByDocumentId(documentId);
+		Set<Integer> projectIds = new HashSet<Integer>();
+		for(ProjectTaskDocumentEntity entity : ptdEntities){
+			projectIds.add(entity.getProjectId());
+		}
+		for(Integer projectId : projectIds){
+			docInfo.getProject().add(projectService.findProjectInfo(projectId));
+		}
+		
+		docInfo.setName(docEntity.getName());
+		docInfo.setDocumentId(documentId);
+		docInfo.setUrl("api/document/" + documentId);
+		
+		return docInfo;
 	}	
 }

@@ -57,6 +57,19 @@ public class DocumentController {
 		os.flush();
 	}
 	
+	@RequestMapping(value="{documentId}", method=RequestMethod.GET)
+	public @ResponseBody RestResponse getDocumentInfo(@PathVariable(name="documentId") Integer documentId){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			resp.setResult(docService.findDocumentInfoById(documentId));
+		}catch(Exception e){
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+		}
+	
+		return resp;
+	}
+	
 
 	@RequestMapping(value="upload", method=RequestMethod.POST)
 	public @ResponseBody String upload(HttpServletRequest request){
