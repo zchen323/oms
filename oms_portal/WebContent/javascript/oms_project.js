@@ -504,7 +504,7 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 	return panel;
 };
 
-oms.project.createTaskItemPanel=function(task,seq)
+oms.project.createTaskItemPanel=function(task,seq,porj)
 {
 	// build header
 	seq=seq+1;
@@ -919,6 +919,8 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 	var dlgrid=oms.project.createDocumentPanel(proj,proj.projectInfo.projId);
 	var ulgrid=oms.project.createUserPanel(proj.projectUsers,proj.projectInfo.projId);
 	//console.log(infop);
+	// update projectuser
+	Ext.getCmp('taskownercombo').getStore().setData(proj.projectUsers);
 	var mainpanel=Ext.create('Ext.panel.Panel',{
 		id:"projectPanel"+proj.projectInfo.projId,
 		layout:'hbox',

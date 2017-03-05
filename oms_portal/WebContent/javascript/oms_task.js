@@ -496,6 +496,7 @@ oms.task.showTaskInfoEdit=function(taskID)
 {
 	var tp=Ext.getCmp("taskitem_"+taskID);
 	console.log(tp.task);
+	Ext.getCmp('taskstatuscombo').getStore().setData(oms.task.statuslist);
 	Ext.getCmp('edittaskinfopanel').getForm().loadRecord({getData:function(){return tp.task;}});
 	oms.task.EditTaskInfoPanel.show();
 };
@@ -528,16 +529,28 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 			fieldCls:'omsfieldstyle'
 		},
 		{
+			xtype:'combobox',
 			name:'status', 
-			xtype:'textfield',
-			fieldLabel:'Status:',
+			id:'taskstatuscombo',
+			valueField:'status',
+			displayField:'status',
+			queryMode: 'local',
+            typeAhead: true,
+    		fieldLabel:'Task Status:',
 			margin: '0 2 5 15',
+			store:Ext.create('Ext.data.ArrayStore', {fields: [{name: 'status' }]}),
 			labelCls:'omslabelstyle',
 			fieldCls:'omsfieldstyle'
 		},
 		{
 			name:'owner', 
-			xtype:'textfield',
+			xtype:'combobox',
+			id:'taskownercombo',
+			valueField:'userId',
+			displayField:'username',
+			queryMode: 'local',
+            typeAhead: true,
+			store:Ext.create('Ext.data.JsonStore', {fields: [{name: 'userId' },{name:'username'}]}),
 			fieldLabel:'Task Owner:', 
 			margin: '0 2 5 15',
 			labelCls:'omslabelstyle',
@@ -638,7 +651,7 @@ oms.task.doclistsample=
 	 [38,11,"Aemndment 1","RFP Amendment","Su Wukong","12/20/2016","O",false],
 	];
 
-
+oms.task.statuslist=[['Not Started'],['In Progress'],['Completed'],['Withdraw'],['Pending'],['Review']];
 oms.task.commentlist=
 	[
 	 [1,"Seng Tang","03/20/2016","comment title 1","comment text 1, blar blar blar"],
