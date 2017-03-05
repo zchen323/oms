@@ -379,6 +379,30 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 
 		items:[
 			{
+				name:'projName', 
+				fieldLabel:'Project Name:', 
+				value:"", 
+				margin: '0 2 0 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
+				name:'projManager', 
+				fieldLabel:'Project Manager:', 
+				value:"", 
+				margin: '0 2 0 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
+				name:'projStatus', 
+				fieldLabel:'Project Status:', 
+				value:"", 
+				margin: '0 2 0 15',
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
 				name:'projAgency', 
 				fieldLabel:'Project Agency:', 
 				value:"", 
@@ -511,12 +535,12 @@ oms.project.createTaskItemPanel=function(task,seq)
 			{
 				xtype:'tabpanel',
 				id:'taskDetails'+taskid,
-				width:'90%',
+				width:'96%',
 				// tabPosition: 'left',
-				margin:'2 2 2 22', 
+				margin:'2 2 2 5', 
 				flex:1, 
 				defaults:{
-					bodypadding:10,
+					bodypadding:3,
 					scrollable:true,
 					border:true
 				}, 
@@ -903,43 +927,6 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 		border:true,
 		items:[
 				{
-					layout:'vbox',
-					width:'68%',
-					items:[
-						{
-							xtype:'fieldset',
-							// title:'Status and Manager',
-							border:0,
-							margin:'2 2 2 2',
-							layout:'hbox', 
-							height:30,
-							items:
-							[
-								{
-									xtype:'displayfield',
-									name:'projstatus',
-									fieldLabel:'Project Status',
-									labelWidth:110, 
-									margin:'2 60 0 5',
-									value:'<span style="color:green; ">In Progress</span>' 
-								},
-								{
-									xtype:'displayfield',
-									name:'projmanager',
-									labelWidth:110,
-									fieldLabel:'Project Manager',
-									margin:'2 5 0 5',
-									value:'<font color="green">Alpha Delta</font>'
-								},
-								{
-									xtype:'button',
-									margin:'2 5 0 5',
-									scale:'small',
-									text:'Assign'
-								}
-							] 
-						},
-						{
 							xtype:'tabpanel',
 							id:'projectDetails'+proj.projectInfo.projId,
 							width:'99%',
@@ -958,7 +945,6 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 									dlgrid,
 									ulgrid
 								]
-						}]
 				},
 				{
 					xtype:'container',

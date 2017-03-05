@@ -66,7 +66,7 @@ oms.ui={
 		},
 		getAdminHtml:function()
 		{
-			return '<a href=""><img src="css/images/shared/icons/fam/cog_edit.png"/> Launch Admin Panel </a>';
+			return '<a href="#" onclick="oms.openAdmin();return false;"><img src="css/images/shared/icons/fam/cog_edit.png"/> Launch Admin Panel </a>';
 		},
 		getSearchHtml:function()
 		{

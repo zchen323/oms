@@ -241,6 +241,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	var grid=Ext.create('Ext.grid.Panel',{
 		id:'taskdoclistgrid'+id,
 		store:dlstore,		
+		width:'99%',
 		scrollable:true,
 		tbar:[
 		      {

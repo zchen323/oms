@@ -84,9 +84,6 @@ Ext.onReady(function(){
 					{title:'My Documents',
 						html:oms.ui.getUserDocumentHtml(12)
 					},
-					{title:'Reports',
-						html:oms.ui.getReportHtml()
-					},
 					{title:'Admin',
 						html:oms.ui.getAdminHtml()
 					}
@@ -119,12 +116,12 @@ Ext.onReady(function(){
 	//var ppanel=oms.project.createProjectPanel(oms.project.sample1);
 	//var tpanel=oms.task.createTaskMainPanel(oms.task.sample1);
 	var dpanel=oms.doc.createDocMainPanel(oms.doc.sample1);
-	var adminpanel=oms.admin.createAdminPanel();
+	oms.adminpanel=oms.admin.createAdminPanel();
 	var viewport=Ext.getCmp('centerViewPort');
 	//viewport.add(ppanel);
 	//viewport.add(tpanel);
 	viewport.add(dpanel);
-	viewport.add(adminpanel);
+//	viewport.add(adminpanel);
 	viewport.doLayout();
 	viewport.setActiveTab(2);
 	//viewport.add(oms.project.createNewProjPanel);

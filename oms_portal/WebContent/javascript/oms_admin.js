@@ -1,6 +1,26 @@
 // this is the admin js
 // Doctype Editing / Search type Editing / User Role editing /
 // Task Template Editing
+
+oms.openAdmin=function()
+{
+	var tabs=Ext.getCmp('centerViewPort');
+	if (tabs.getComponent(oms.adminpanel)!=null&&oms.adminpanel!=null)
+	{
+		tabs.setActiveTab(oms.adminpanel);
+		oms.admin.refreshData();
+	}
+	else{
+		if(oms.adminpanel.isDestroyed)
+		{
+			oms.adminpanel=oms.admin.createAdminPanel();
+			oms.admin.refreshData();
+		}
+		console.log(oms.adminpanel);
+		tabs.add(oms.adminpanel);
+		tabs.setActiveTab(oms.adminpanel);
+	}
+};
 oms.admin.createUserAdminPanel=function()
 {
 	var ustore=Ext.create('Ext.data.JsonStore', {
@@ -123,6 +143,7 @@ oms.admin.createAdminPanel=function()
 		id:"adminMain",
 		layout:'vbox',
 		title:"OMS Admin",
+		closeAction: 'hide',
 		border:true,
 		items:[
 			{
