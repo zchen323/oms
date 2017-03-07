@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -200,5 +202,22 @@ public class ProjectServicesImpl implements ProjectServices{
 	public void removeUserFromProject(Integer projectId, String userId, String role) {
 		List<ProjectUserEntity> entities = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, role);
 		projectUserRepository.delete(entities);	
+	}
+
+	@Override
+	public List<Project> findFirst10() {
+		
+//		final PageRequest page = new PageRequest(
+//				0, 20, Direction.DESC, "id");
+//		
+//		List<Project> projects = new ArrayList<Project>();
+//		Iterable<ProjectEntity> projectRepository.findAll(page);
+//		
+//		ProjectEntity entities = projectRepository.findFirstByName();
+//		//for(ProjectEntity entity : entities){
+//			projects.add(ProjectMapper.fromEntity(entities));
+//		//}
+//		return projects;
+		return null;
 	}
 }

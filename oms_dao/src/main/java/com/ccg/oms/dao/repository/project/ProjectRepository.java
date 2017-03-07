@@ -2,12 +2,15 @@ package com.ccg.oms.dao.repository.project;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.ccg.oms.dao.entiry.project.ProjectEntity;
 
-public interface ProjectRepository extends CrudRepository<ProjectEntity, Integer>{
+
+public interface ProjectRepository extends PagingAndSortingRepository<ProjectEntity, Integer>{
 	List<ProjectEntity> findByNameContainingOrderByIdDesc(String nameContains);
+	//ProjectEntity findFirstByName();
+
 }
 
 

@@ -18,4 +18,5 @@ public interface ProjectServices {
 	List<ProjectUser> findProjectUserByProjectId(Integer projectId);
 	void addProjectUser(ProjectUser user);
 	void removeUserFromProject(Integer projectId, String userId, String role);
+	List<Project> findFirst10();
 }

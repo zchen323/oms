@@ -83,6 +83,20 @@ public class ProjectController {
 		}
 		return resp;
 	}
+	@RequestMapping(value="first10", method=RequestMethod.GET)
+	public @ResponseBody RestResponse findFirst10Project(){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			resp.setResult(service.findFirst10());
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+	}
+	
+	
 	
 	@RequestMapping(value="search", method=RequestMethod.GET)
 	public @ResponseBody RestResponse searchProjectByName(@RequestParam(value="pname") String name){
@@ -156,5 +170,7 @@ public class ProjectController {
 			e.printStackTrace();
 		}
 		return resp;
-	}		
+	}
+	
+	
 }
