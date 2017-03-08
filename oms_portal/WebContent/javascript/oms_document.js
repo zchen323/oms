@@ -175,13 +175,93 @@ oms.doc.createDocMainPanel=function(doc) // proj is the json data for the							
 	return mainpanel;
 };
 
-　
+oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Searching Document',
+	bodyPadding: 10,
+	width:420,
+	scrollable:true,
+	closeAction: 'hide',
+	layout:'vbox',
+	height:240,
+	items:[{
+			xtype:'displayfield',			
+			margin: '0 2 2 15',
+			value:'Please enter Document name'
+		},
+		{
+			xtype:'combobox',
+			width:'90%',
+			margin: '0 2 2 15',
+			id:'docsearchkey',
+			valueField:'docId',
+			displayField:'docName',
+			minChars: 1,
+            queryParam: 'dname',
+            queryMode: 'remote',
+            typeAhead: true,
+            multiSelect: false,
+            triggerAction: 'all',
+            allowBlank:false,
+            store:Ext.create('Ext.data.JsonStore', {
+				fields: [
+					{name: 'docId' },
+					{name: 'docName'}
+					],
+				proxy: {
+				        type: 'ajax',
+				        url: 'api/document/search',
+				        reader: {
+				            type: 'json',
+				            rootProperty: 'result'
+				        }
+				    }
+
+			}),
+			tpl: Ext.create('Ext.XTemplate','<tpl for=".">',
+					 	'<div class="x-boundlist-item" style="border-bottom:1px solid #f0f0f0;">',
+				      '<div>[Project ID: {docId} ] --<font size=+1 color=green>{docName}</font></div></div>',
+				       '</tpl>'
+					),
+			displayTpl:Ext.create('Ext.XTemplate','<tpl for=".">',
+				      '[ID:{docId} ] --{docName}',
+				       '</tpl>'
+					)
+		},{
+			xtype:'displayfield',			
+			margin: '0 2 2 15',
+			value:'Or Enter the Keywords'
+		},
+		{
+			xtype:'combobox',
+			width:'90%',
+			margin: '0 2 2 15',
+			id:'docsearchkey2',
+			valueField:'docId2',
+			displayField:'docName2'
+		}
+	],
+	buttons:[
+		{
+			text:"Open Document",
+			handler: function()
+			{
+				var rec=Ext.getCmp('docsearchkey').getSelection();
+				console.log(rec.data);
+				
+				
+			}
+		}
+		]
+});　
 oms.doc.sample1={
-projectID:1,
-taskID:15,
-docID:10,
-projectname:'SVT Tracking System',
-taskname:'Review Proposal Draft',
-docname:'Proposal Draft', 
-docinfo:{}
+		projectID:1,
+		taskID:15,
+		docID:10,
+		projectname:'SVT Tracking System',
+		taskname:'Review Proposal Draft',
+		docname:'Proposal Draft', 
+		docinfo:{}
 };

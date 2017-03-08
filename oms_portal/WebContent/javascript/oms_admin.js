@@ -276,6 +276,7 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 							Ext.Msg.alert(respObj.status, respObj.message);
 							if (respObj.status === 'success') {
 								oms.admin.userEditPanel.hide();
+								oms.admin.refreshData();
 							}
 						},
 						failure : function(response, option) {
@@ -301,6 +302,7 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 							Ext.Msg.alert(respObj.status, respObj.message);
 							if (respObj.status === 'success') {
 								oms.admin.userEditPanel.hide();
+								oms.admin.refreshData();
 							}
 						},
 						failure: function(response, option){
@@ -327,6 +329,7 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 							Ext.Msg.alert(respObj.status, respObj.message);
 							if (respObj.status === 'success') {
 								oms.admin.userEditPanel.hide();
+								oms.admin.refreshData();
 							}
 						},
 						failure : function(response, option) {
@@ -383,6 +386,7 @@ oms.admin.DoctypeEditPanel=Ext.create('Ext.window.Window',{
 						Ext.Msg.alert(respObj.status, respObj.message);
 						if (respObj.status === 'success') {
 							oms.admin.DoctypeEditPanel.hide();
+							oms.admin.refreshData();
 						}
 					},
 					failure : function(response, option) {
@@ -408,6 +412,7 @@ oms.admin.DoctypeEditPanel=Ext.create('Ext.window.Window',{
 						Ext.Msg.alert(respObj.status, respObj.message);
 						if (respObj.status === 'success') {
 							oms.admin.DoctypeEditPanel.hide();
+							oms.admin.refreshData();
 						}
 					},
 					failure : function(response, option) {
@@ -532,6 +537,7 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 							Ext.Msg.alert(respObj.status, respObj.message);
 							if (respObj.status === 'success') {
 								oms.admin.ProjectRoleEditPanel.hide();
+								oms.admin.refreshData();
 							}
 						},
 						failure : function(response, option) {
@@ -557,6 +563,7 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 							Ext.Msg.alert(respObj.status, respObj.message);
 							if (respObj.status === 'success') {
 								oms.admin.ProjectRoleEditPanel.hide();
+								oms.admin.refreshData();
 							}
 						},
 						failure : function(response, option) {
