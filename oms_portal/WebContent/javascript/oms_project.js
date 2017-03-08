@@ -665,13 +665,45 @@ oms.project.createDocumentPanel=function(proj,projID)
 					return val;
 				}
 			},
-			{text: "Action",dataIndex:"taskID",width:60,
-				renderer:function(val)
-				{
-					var html='<img src="css/images/shared/icons/fam/information.png">';
-					return html;
-				}
-			}
+            { 
+         	   xtype:'actioncolumn',
+		           width:100,
+		           items: [
+		        	   {
+		        		   icon: 'css/images/shared/icons/fam/information.png',
+		        	       handler: function(grid, rowIndex, colIndex) {
+			                    var rec = grid.getStore().getAt(rowIndex);
+			                    console.log(rec);
+			                    
+			                    if(Ext.getCmp('docPanel'+rec.data.documentId)!=null)
+			                    	{
+			                    		Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp('docPanel'+rec.data.documentId));
+			                    	}
+			                    else{
+			                    	// now need to ajax calls
+				                    	Ext.Ajax.request
+				                    	({
+				                    		url:'api/document/'+rec.data.documentId,
+				                    		success:function(response)
+				                    		{
+				                    			var obj=Ext.JSON.decode(response.responseText);
+				                    			console.log(obj);
+				                    			var doc=obj.result;
+				                    			var dpanel=oms.doc.createDocMainPanel(doc);
+				                    			Ext.getCmp('centerViewPort').add(dpanel);
+				                    			Ext.getCmp('centerViewPort').setActiveTab(dpanel);
+				                    		},
+				                    		failure: function(response) 
+				                    		        { 
+				                    		            console.log(response.responseText); 
+				                    		        } 
+	
+				                    	 });
+
+			                    		}
+		        	       	}
+		        	   	}]
+            }
 		],
 		columnLines: true, 
 		title:' Documents ' 
