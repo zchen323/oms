@@ -1,7 +1,6 @@
 
 oms.project={}; // project builder
 // this will return a fieldSets
-
 // open project model and store
 
 oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
@@ -511,9 +510,9 @@ oms.project.createTaskItemPanel=function(task,seq,porj)
 	var h_html='<table width=100% style="background-color:#eeeeff;font-size:8pt"><tr>';
 	h_html=h_html+"<td width=30>#"+seq+"</td>";
 	h_html=h_html+"<td><font color=green>"+task.name+"</font></td>";
-	h_html=h_html+"<td width=15%><font color=#336699>"+task.owner+"</font></td>"; 
-	h_html=h_html+"<td width=15%><font color=green>"+task.status+"</font></td>";
-	h_html=h_html+"<td width=20%><font color=green>"+task.targetDate+"</font></td>";
+	h_html=h_html+"<td width=15%><font color=#336699><div id='task_ownerlbl_"+task.id+"'>"+task.owner+"</div></font></td>"; 
+	h_html=h_html+"<td width=15%><font color=green><div id='task_statuslbl_"+task.id+"'>"+task.status+"</div></font></td>";
+	h_html=h_html+"<td width=20%><font color=green><div id='task_tgtdtlbl_"+task.id+"'>"+task.targetDate+"</div></font></td>";
 	h_html=h_html+'<td width=10%><a href="" onclick="oms.task.showTaskInfoEdit('+task.id+');return false;"><img src="css/images/shared/icons/fam/cog_edit.png"></a></td>';
 	h_html=h_html+"</tr></table>";
 	var taskid=task.id;

@@ -235,9 +235,10 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	             {name: 'restricted',type:'boolean'}
 	         ],
 	});
-	console.log("create docs for task"+id);
-	console.log(task.docs);
-	dlstore.setData(task.docs);
+			console.log("create docs for task"+id);
+			console.log(task.docs);
+			dlstore.setData(task.docs);
+
 	var grid=Ext.create('Ext.grid.Panel',{
 		id:'taskdoclistgrid'+id,
 		store:dlstore,		
@@ -340,6 +341,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	     columnLines: true,    
 	     title:' Documents '	    
 	});
+	console.log("document done");
 	return grid;
 };
 
@@ -531,6 +533,16 @@ oms.task.showTaskInfoEdit=function(taskID)
 	Ext.getCmp('edittaskinfopanel').getForm().loadRecord({getData:function(){return tp.task;}});
 	oms.task.EditTaskInfoPanel.show();
 };
+oms.task.updateTaskData=function(fdata,task)
+{
+	// first update task information
+	task.owner=fdata.owner;
+	task.status=fdata.status;
+	task.targetDate=fdata.targetDate;
+	Ext.get("task_ownerlbl_"+task.id).dom.innerText=task.owner;
+	Ext.get("task_statuslbl_"+task.id).dom.innerText=task.status;
+	Ext.get("task_tgtdtlbl_"+task.id).dom.innerText=task.targetDate;
+}
 oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 	frame: true,
 	float:true,
@@ -612,6 +624,10 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 						Ext.Msg.alert(respObj.status, respObj.message);
 						if (respObj.status === 'success') {
 							oms.task.EditTaskInfoPanel.hide();
+							var taskID=formdata.id;
+							var tp=Ext.getCmp("taskitem_"+taskID);
+							var task=tp.task;
+							oms.task.updateTaskData(formdata,task);
 						}
 					},
 					failure : function(response, option) {
