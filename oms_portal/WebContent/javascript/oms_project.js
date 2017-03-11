@@ -362,13 +362,23 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 		width:'98%',
 		margin:'0 0 0 4', 
 		collapsible:true,
+		projectInfo:pinfo,
 		header:{
 			baseCls:'omspanelheadercls',
-
 			items:[{xtype:'label',html:'<span style="font-size:10pt"><b>Project Info</b></span>',width:'85%'}]
 },
 	tools:[
-		{type:'gear'},
+		{
+			type:'gear',
+			handler:function()
+			{
+				oms.project.editProjInfoPanel.show();
+				Ext.getCmp('editprojinfopanel').getForm().loadRecord({
+					getData:function(){return pinfo;}
+				});
+			}
+			
+		},
 		{type:'refresh'} 
 		],
 		//buttonAlign:'left',
@@ -941,7 +951,173 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 			}]
 });
 
+oms.project.editProjInfoPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Edit Project Info',
+	bodyPadding: 10,
+	width:420,
+	scrollable:true,
+	closeAction: 'hide',
+	layout:'vbox',
+	items:[
+		{
+			xtype:'form',
+			id: 'editprojinfopanel',
+			border:0,
+			defaultType:'textfield',
+			layout:'vbox', 
+			bodypadding:'10 10 10 10',
+			items:[
+				{
+					name:'projId', 
+					fieldLabel:'Project ID:', 
+					value:"", 
+					margin: '0 2 3 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					name:'projName', 
+					fieldLabel:'Project Name:', 
+					value:"", 
+					margin: '0 2 3 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					name:'projManager', 
+					xtype:'combobox',
+					id:'projmgrcombo',
+					valueField:'userId',
+					displayField:'username',
+					queryMode: 'local',
+		            typeAhead: true,
+					store:Ext.create('Ext.data.JsonStore', {fields: [{name: 'userId' },{name:'username'}]}),
+					fieldLabel:'Project Manager:', 
+					margin: '0 2 5 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					xtype:'combobox',
+					name:'projStatus', 
+					id:'projstatuscombo',
+					valueField:'status',
+					displayField:'status',
+					queryMode: 'local',
+		            typeAhead: true,
+		    		fieldLabel:'Project Status:',
+					margin: '0 2 5 15',
+					store:Ext.create('Ext.data.ArrayStore', {fields: [{name: 'status' }]}),
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					name:'projAgency', 
+					fieldLabel:'Project Agency:', 
+					value:"", 
+					margin: '0 2 3 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					xtype:'combobox',
+					name:'projorg', 
+					id:'projorgcombo',
+					valueField:'org',
+					displayField:'org',
+					queryMode: 'local',
+		            typeAhead: true,
+		    		fieldLabel:'Organization:',
+					margin: '0 2 5 15',
+					store:Ext.create('Ext.data.ArrayStore', {fields: [{name: 'org' }]}),
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					name:'projSubOrg', 
+					fieldLabel:'Sub Org.:',
+					value:'Sub Org',
+					margin: '0 2 3 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
 
+				},
+				{ 
+					name:'projloc',
+					fieldLabel:'Project Location',
+					value:"",
+					margin: '0 2 3 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle' 
+				},
+				{
+					name:'contactoffice', 
+					fieldLabel:'Contact Office',
+					value:"",
+					margin: '0 2 3 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+
+				},
+				{
+					xtype:'combobox',
+					name:'projcategory', 
+					id:'projcategorycombo',
+					valueField:'cate',
+					displayField:'cate',
+					queryMode: 'local',
+		            typeAhead: true,
+		    		fieldLabel:'Category:',
+					margin: '0 2 5 15',
+					store:Ext.create('Ext.data.ArrayStore', {fields: [{name: 'cate' }]}),
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					name:'isPrimeProject',
+					fieldLabel:'Through Prime',
+					value:'',
+					margin: '0 2 3 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					name:'primeName',
+					fieldLabel:'Prime Name:',
+					value:"",
+					margin: '0 2 3 15',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+				},
+				{
+					name:'projduedate',
+					xtype:'datefield',
+					fieldLabel:'Target Date', 
+					margin: '0 2 3 15',
+					value:'',
+					labelCls:'omslabelstyle',
+					fieldCls:'omsfieldstyle'
+
+				}
+				],
+	buttons:[
+		{
+			text:"Update Project",
+			handler: function(){		
+			}
+		}]}]
+	
+});
+
+
+oms.project.projectUserUpdate=function(users)
+{
+	Ext.getCmp('taskownercombo').getStore().setData(users);
+	Ext.getCmp('projmgrcombo').getStore().setData(users);
+};
 oms.project.createProjectPanel=function(proj) // proj is the json data for the project
 {
 	var sample=oms.project.sample1;
@@ -951,9 +1127,10 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 	var ulgrid=oms.project.createUserPanel(proj.projectUsers,proj.projectInfo.projId);
 	//console.log(infop);
 	// update projectuser
-	Ext.getCmp('taskownercombo').getStore().setData(proj.projectUsers);
+	oms.project.projectUserUpdate(proj.projectUsers);
 	var mainpanel=Ext.create('Ext.panel.Panel',{
 		id:"projectPanel"+proj.projectInfo.projId,
+		project:proj,
 		layout:'hbox',
 		title:"[PROJECT"+proj.projectInfo.projId+"]: -- ["+proj.projectInfo.projName+"]",
 		padding:'5 5 5 5',
@@ -1045,4 +1222,9 @@ oms.project.userlistsample=
 	[5,"YaoGuai 1","User",false],
 	[6,"YaoGuai 2","Contractor",false]
 ];
-
+oms.project.statuslist=[['New'],['In Progress'],['Completed'],['Withdraw'],['Pending']];
+oms.project.orglist=[['DOD'],['Army'],['DOE'],['Bexar Country'],['DOT']];
+oms.project.categorylist=[['IT'],['ERP'],['Upgrade'],['Engineering'],['Security']];
+Ext.getCmp('projstatuscombo').getStore().setData(oms.project.statuslist);
+Ext.getCmp('projorgcombo').getStore().setData(oms.project.orglist);
+Ext.getCmp('projcategorycombo').getStore().setData(oms.project.categorylist);
