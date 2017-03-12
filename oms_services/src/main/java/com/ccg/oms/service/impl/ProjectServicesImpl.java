@@ -235,5 +235,16 @@ public class ProjectServicesImpl implements ProjectServices{
 		//return null;
 	}
 
+	@Override
+	public List<TaskDoc> findTaskDocByTaskId(Integer taskId) {
+		// TODO Auto-generated method stub
+		List<TaskDoc> result = new ArrayList<TaskDoc>();
+		List<TaskDocEntity> entities = taskDocRepository.findByTaskIdOrderByIdDesc(taskId);
+		for(TaskDocEntity entity : entities){
+			result.add(ProjectMapper.fromEntity(entity));
+		}
+		return result;
+	}
+
 
 }

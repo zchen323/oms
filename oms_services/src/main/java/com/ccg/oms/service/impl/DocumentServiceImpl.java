@@ -130,7 +130,7 @@ public class DocumentServiceImpl implements DocumentService{
 	public List<Document> findDocumentByTaskId(Integer taskId) {
 		List<Document> result = new ArrayList<Document>();
 		
-		List<ProjectTaskDocumentEntity> entities = ptdRepository.findByProjectId(taskId);
+		List<ProjectTaskDocumentEntity> entities = ptdRepository.findByTaskId(taskId);
 		List<Integer> documentIdList = new ArrayList<Integer>();
 		for(ProjectTaskDocumentEntity entity : entities){
 			documentIdList.add(entity.getDocumentId());

@@ -70,6 +70,35 @@ public class DocumentController {
 		return resp;
 	}
 	
+	@RequestMapping(value="project/{projectId}", method=RequestMethod.GET)
+	public @ResponseBody RestResponse getDocumentInfoByProjectId(@PathVariable(name="projectId") Integer projectId){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			//docService.findDocumentByProjectId(projectId)
+			resp.setResult(docService.findDocumentByProjectId(projectId));
+		}catch(Exception e){
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+		}
+	
+		return resp;
+	}
+	
+	@RequestMapping(value="task/{taskId}", method=RequestMethod.GET)
+	public @ResponseBody RestResponse getDocumentInfoByTaskId(@PathVariable(name="taskId") Integer taskId){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			resp.setResult(docService.findDocumentByTaskId(taskId));
+		}catch(Exception e){
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+		}
+	
+		return resp;
+	}
+	
+	
+	
 
 	@RequestMapping(value="upload", method=RequestMethod.POST)
 	public @ResponseBody String upload(HttpServletRequest request){

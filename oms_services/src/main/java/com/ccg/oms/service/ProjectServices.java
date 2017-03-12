@@ -6,6 +6,7 @@ import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.project.ProjectInfo;
 import com.ccg.oms.common.data.project.ProjectUser;
 import com.ccg.oms.common.data.project.Task;
+import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.common.data.project.TaskNote;
 
 public interface ProjectServices {
@@ -20,4 +21,5 @@ public interface ProjectServices {
 	void addProjectUser(ProjectUser user);
 	void removeUserFromProject(Integer projectId, String userId, String role);
 	List<Project> findFirst10();
+	List<TaskDoc> findTaskDocByTaskId(Integer taskId);
 }
