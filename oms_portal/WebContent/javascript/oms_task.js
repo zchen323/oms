@@ -174,18 +174,9 @@ oms.task.createTaskCommentPanel=function(task,id)
 		      ],
 	    columns: [
 	              {text: "#",  dataIndex: 'id'},
-	              {text: "Title",flex:1, dataIndex: 'title'},
-	              {text: "User", flex:2, dataIndex: 'user',width:160},
+	              {text: "Title",flex:2, dataIndex: 'title'},
+	              {text: "User", flex:1, dataIndex: 'user',width:160},
 	              {text: "Date", dataIndex: 'date',formatter: 'date("m/d/Y")'},
-	              {
-	            	  text:"",dataIndex:"id",
-	            	  renderer:function(val)
-		               {
-		            	   var html='<img src="css/images/shared/icons/fam/user_edit.png">';
-		            	   return html;
-		            		 
-		               } 
-	              }
 	          ],
 	     columnLines: true,    
 	     title:'Notes',
@@ -403,10 +394,7 @@ oms.task.addCommentPanel=Ext.create('Ext.window.Window',{
 							formdata.title = formdata.ctitle;
 							delete formdata.id;
 							delete formdata.ctitle;
-							
-				
-							console.log(formdata);
-							
+							console.log(formdata);			
 							Ext.Ajax.request({
 								url : "api/project/task/comment",
 								method : 'POST',
@@ -417,6 +405,10 @@ oms.task.addCommentPanel=Ext.create('Ext.window.Window',{
 									Ext.Msg.alert(respObj.status, respObj.message);
 									if (respObj.status === 'success') {
 										oms.task.addCommentPanel.hide();
+										// now refresh the task comment grid
+										var grid=Ext.getCmp("commentgrid"+formdata.taskId);
+										console.log(respObj);
+										grid.getStore().setData(respObj.result);
 									}
 								},
 								failure : function(response, option) {
