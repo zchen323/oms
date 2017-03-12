@@ -146,6 +146,9 @@ public class ProjectController {
 		RestResponse resp = RestResponse.getSuccessResponse();
 		try{
 				service.addProjectUser(projectUser);
+				// now attach users to response
+				List<ProjectUser>users=service.findProjectUserByProjectId(projectUser.getProjectId());
+				resp.setResult(users);
 				
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);
@@ -163,6 +166,8 @@ public class ProjectController {
 		RestResponse resp = RestResponse.getSuccessResponse();
 		try{
 				service.removeUserFromProject(projectId, userId, role);
+				List<ProjectUser>users=service.findProjectUserByProjectId(projectId);
+				resp.setResult(users);
 				
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);

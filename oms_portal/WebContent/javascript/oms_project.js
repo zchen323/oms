@@ -907,8 +907,11 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 												console.log(response);
 												var respObj = Ext.decode(response.responseText);
 												Ext.Msg.alert(respObj.status, respObj.message);
+												console.log(respObj);
 												if (respObj.status === 'success') {
 													oms.project.AssignNewUserPanel.hide();
+													var grid=Ext.getCmp("usergrid"+formData.projectId)
+													grid.getStore().setData(respObj.result);
 												}
 											},
 											failure : function(response, option) {
@@ -937,6 +940,8 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 												Ext.Msg.alert(respObj.status, respObj.message);
 												if (respObj.status === 'success') {
 													oms.project.AssignNewUserPanel.hide();
+													var grid=Ext.getCmp("usergrid"+formData.projectId)
+													grid.getStore().setData(respObj.result);
 												}
 											},
 											failure : function(response, option) {
