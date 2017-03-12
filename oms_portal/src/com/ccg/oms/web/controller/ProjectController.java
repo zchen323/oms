@@ -140,6 +140,19 @@ public class ProjectController {
 		}
 		return resp;
 	}
+
+	@RequestMapping(value="task", method=RequestMethod.POST)
+	public @ResponseBody RestResponse addTask(@RequestBody Task task){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+				service.addTask(task);
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+	}	
 	
 	@RequestMapping(value="user", method=RequestMethod.POST)
 	public @ResponseBody RestResponse addProjecUser(@RequestBody ProjectUser projectUser){

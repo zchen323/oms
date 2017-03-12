@@ -186,7 +186,22 @@ public class ProjectServicesImpl implements ProjectServices{
 			taskRepository.save(entity);
 		}
 	}
-
+	
+	@Override
+	public void addTask(Task task) {
+		TaskEntity entity = new TaskEntity();
+		
+		entity.setDueDate(task.getTargetTimestamp());
+		entity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		entity.setDescription(task.getDescription());
+		entity.setName(task.getName());
+		entity.setOwner(task.getOwner());
+		entity.setProjectId(task.getProjectId());
+		entity.setStatus("Not Started");
+		
+		taskRepository.save(entity);
+		
+	}
 	@Override
 	public void addProjectUser(ProjectUser user) {
 		ProjectUserEntity entity = UserMapper.toEntity(user);
@@ -207,17 +222,18 @@ public class ProjectServicesImpl implements ProjectServices{
 	@Override
 	public List<Project> findFirst10() {
 		
-//		final PageRequest page = new PageRequest(
-//				0, 20, Direction.DESC, "id");
-//		
-//		List<Project> projects = new ArrayList<Project>();
-//		Iterable<ProjectEntity> projectRepository.findAll(page);
-//		
-//		ProjectEntity entities = projectRepository.findFirstByName();
-//		//for(ProjectEntity entity : entities){
-//			projects.add(ProjectMapper.fromEntity(entities));
-//		//}
-//		return projects;
-		return null;
+		final PageRequest pageRequest = new PageRequest(
+				0, 10, Direction.DESC, "id");
+		
+		List<Project> projects = new ArrayList<Project>();
+		Iterable<ProjectEntity> entities = projectRepository.findAll(pageRequest);
+		
+		for(ProjectEntity entity : entities){
+			projects.add(ProjectMapper.fromEntity(entity));
+		}
+		return projects;
+		//return null;
 	}
+
+
 }
