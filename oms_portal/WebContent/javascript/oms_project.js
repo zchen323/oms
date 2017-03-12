@@ -912,6 +912,7 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 													oms.project.AssignNewUserPanel.hide();
 													var grid=Ext.getCmp("usergrid"+formData.projectId)
 													grid.getStore().setData(respObj.result);
+													oms.project.projectUserUpdate(respObj.result);
 												}
 											},
 											failure : function(response, option) {
@@ -942,6 +943,7 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 													oms.project.AssignNewUserPanel.hide();
 													var grid=Ext.getCmp("usergrid"+formData.projectId)
 													grid.getStore().setData(respObj.result);
+													oms.project.projectUserUpdate(respObj.result);
 												}
 											},
 											failure : function(response, option) {
