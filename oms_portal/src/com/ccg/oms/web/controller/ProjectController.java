@@ -159,10 +159,6 @@ public class ProjectController {
 		RestResponse resp = RestResponse.getSuccessResponse();
 		try{
 				service.addProjectUser(projectUser);
-<<<<<<< Upstream, based on origin/master
-				// now attach users to response
-=======
->>>>>>> e7ecd8f re- user add/remove refresh
 				List<ProjectUser>users=service.findProjectUserByProjectId(projectUser.getProjectId());
 				resp.setResult(users);
 				
