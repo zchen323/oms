@@ -39,6 +39,7 @@ public class Project {
 	private Integer projTempId;
 	private String projManager;
 	private String projStatus;
+	private String description;
 	
 	//private List<Task> tasks;
 	
@@ -143,6 +144,12 @@ public class Project {
 	}
 	public void setProjStatus(String projStatus) {
 		this.projStatus = projStatus;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

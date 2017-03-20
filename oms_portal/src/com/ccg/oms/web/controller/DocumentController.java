@@ -140,7 +140,7 @@ public class DocumentController {
 					doc.setId(documentId);
 				}
 			}
-			
+			System.out.println("======params======");
 			System.out.println(params);
 			
 			// update taskdoc table;

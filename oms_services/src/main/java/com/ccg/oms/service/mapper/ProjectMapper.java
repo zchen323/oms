@@ -27,6 +27,7 @@ public class ProjectMapper {
 		project.setProjOrg(entity.getOrganization());
 		project.setProjStatus(entity.getStatus());
 		project.setProjManager(entity.getManager());
+		project.setDescription(entity.getDescription());
 		//project.setProjTempId(projTempId);
 		
 		
@@ -40,7 +41,7 @@ public class ProjectMapper {
 		//entity.setCompletedDate();
 		//entity.setCreatedBy(createdBy);
 		entity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		//entity.setDescription(description);
+		entity.setDescription(project.getDescription());
 		entity.setDueDate(project.getDueDate());
 		//entity.setId(id);
 		entity.setLastUpdateDate(new Timestamp(System.currentTimeMillis()));

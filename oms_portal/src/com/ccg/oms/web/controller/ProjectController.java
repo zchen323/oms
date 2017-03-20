@@ -136,8 +136,6 @@ public class ProjectController {
 				String loginUser = request.getRemoteUser();
 				taskNote.setUser(loginUser);
 				service.addTaskComment(taskNote);
-				List<TaskNote> notes=service.findTaskNotes(taskNote.getTaskId());
-				resp.setResult(notes);
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);
 			resp.setMessage(e.getMessage());
@@ -164,6 +162,7 @@ public class ProjectController {
 		RestResponse resp = RestResponse.getSuccessResponse();
 		try{
 				service.addTask(task);
+			//throw new Exception("Server error!");
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);
 			resp.setMessage(e.getMessage());
