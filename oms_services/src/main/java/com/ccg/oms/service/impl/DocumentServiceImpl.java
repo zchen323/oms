@@ -161,7 +161,8 @@ public class DocumentServiceImpl implements DocumentService{
 			entity.setUploadDate(taskDoc.getUploadTimestamp());
 			entity.setUser(taskDoc.getUser());
 			entity.setName(taskDoc.getName());
-			taskDocRepository.save(entity);			
+			taskDocRepository.save(entity);	
+			taskDoc.setId(entity.getId());
 		}
 	}
 

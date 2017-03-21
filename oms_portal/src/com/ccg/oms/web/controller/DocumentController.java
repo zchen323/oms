@@ -158,11 +158,20 @@ public class DocumentController {
 			System.out.println(JSON.toJson(taskDoc));
 			docService.saveTaskDoc(taskDoc);
 			
-			responseMessage = "{ 'success': true, 'file':'" + doc.getName() + "'}";
+			Map<String, Object> respMap = new HashMap<String, Object>();
+			respMap.put("success", true);
+			respMap.put("file", doc.getName());
+			respMap.put("docId", doc.getId() );
+			
+			responseMessage = JSON.toJson(respMap);
 
 			
 		} catch (FileUploadException e) {
-			responseMessage = "{ 'success': false, 'file': '" + e.getMessage() + "' }";
+			Map<String, Object> respMap = new HashMap<String, Object>();
+			respMap.put("success", false);
+			respMap.put("message", e.getMessage());
+			
+			responseMessage = JSON.toJson(respMap);
 			e.printStackTrace();
 		}
 		//{ "success": true, "file": "filename" }
