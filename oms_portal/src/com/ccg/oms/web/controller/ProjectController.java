@@ -136,6 +136,10 @@ public class ProjectController {
 				String loginUser = request.getRemoteUser();
 				taskNote.setUser(loginUser);
 				service.addTaskComment(taskNote);
+				
+                List<TaskNote> res=service.findTaskNotesByTaskId(taskNote.getTaskId());
+                resp.setResult(res);
+				
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);
 			resp.setMessage(e.getMessage());

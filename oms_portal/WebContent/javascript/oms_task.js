@@ -174,9 +174,18 @@ oms.task.createTaskCommentPanel=function(task,id)
 		      ],
 	    columns: [
 	              {text: "#",  dataIndex: 'id'},
-	              {text: "Title",flex:2, dataIndex: 'title'},
-	              {text: "User", flex:1, dataIndex: 'user',width:160},
+	              {text: "Title",flex:1, dataIndex: 'title'},
+	              {text: "User", flex:2, dataIndex: 'user',width:160},
 	              {text: "Date", dataIndex: 'date',formatter: 'date("m/d/Y")'},
+	              {
+	            	  text:"",dataIndex:"id",
+	            	  renderer:function(val)
+		               {
+		            	   var html='<img src="css/images/shared/icons/fam/user_edit.png">';
+		            	   return html;
+		            		 
+		               } 
+	              }
 	          ],
 	     columnLines: true,    
 	     title:'Notes',
@@ -253,7 +262,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 		      }],
 		
 	    columns: [
-	              {text:"",dataIndex:'restricted', width:40,
+	              {text:"",dataIndex:'restricted', width:20,
 	               renderer:function(val)
 	               {
 	            	 if(val==true)
@@ -263,7 +272,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	            	 return "";
 	               }	            	  
 	              },
-	              {text: "Name", flex:2,dataIndex: 'name',
+	              {text: "Name",flex:1,dataIndex: 'name',
 	               renderer:function(val, meta, rec, rowIdx)
 	               {
 	            	   if(val==null)
@@ -276,10 +285,10 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	      
 	               }
 	              },
-	              {text: "type",  dataIndex: 'doctype',width:180},	         
-	              {text: "Upload Date", dataIndex: 'uploadDate',formatter: 'date("m/d/Y")'},
-	              {text: "User",  dataIndex: 'user',width:160},	
-	              {text: "Req.",dataIndex:"required",width:50,
+	              {text: "type",  dataIndex: 'doctype',width:120},	         
+	              {text: "Date", dataIndex: 'uploadDate',formatter: 'date("m/d/Y")',width:80},
+	              {text: "User",  dataIndex: 'user',width:80},	
+	              {dataIndex:"required",width:24,
 	            	renderer:function(val)
 	            	{
 	            		if(val=="Y")
@@ -291,7 +300,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	               },
 	              { 
 	            	   xtype:'actioncolumn',
-			           width:100,
+			           width:24,
 			           items: [
 			        	   {
 			        		   icon: 'css/images/shared/icons/fam/information.png',
@@ -394,7 +403,10 @@ oms.task.addCommentPanel=Ext.create('Ext.window.Window',{
 							formdata.title = formdata.ctitle;
 							delete formdata.id;
 							delete formdata.ctitle;
-							console.log(formdata);			
+							
+				
+							console.log(formdata);
+							
 							Ext.Ajax.request({
 								url : "api/project/task/comment",
 								method : 'POST',
@@ -404,11 +416,9 @@ oms.task.addCommentPanel=Ext.create('Ext.window.Window',{
 									var respObj = Ext.decode(response.responseText);
 									Ext.Msg.alert(respObj.status, respObj.message);
 									if (respObj.status === 'success') {
+										var notes=respObj.result;
+										Ext.getCmp('commentgrid'+formdata.taskId).getStore().setData(notes);
 										oms.task.addCommentPanel.hide();
-										// now refresh the task comment grid
-										var grid=Ext.getCmp("commentgrid"+formdata.taskId);
-										console.log(respObj);
-										grid.getStore().setData(respObj.result);
 									}
 								},
 								failure : function(response, option) {
@@ -496,16 +506,33 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 						text:"Save",
 						handler: function(){
 							var form = Ext.getCmp("addtaskdocumentpanel").getForm();
-							console.log(form);
+							var taskID=form.getValues().id;
+							//console.log(form);
 							form.submit({
 								url: 'api/document/upload',
 								waitMsg: 'Uploading file...',
 								success : function(response, option) {
-									console.log(response);
+									//console.log(response);
 									//var respObj = Ext.decode(response.responseText);
 									Ext.Msg.alert("Success", option.result.file);
 									//if (respObj.status === 'success') {
+									Ext.Ajax.request({
+										url : "api/project/task/"+taskID+"/doc",
+										method : 'GET',
+											success : function(response, option) {
+												var respObj = Ext.decode(response.responseText);
+												if (respObj.status === 'success') {
+													Ext.getStore('taskdlStore'+taskID).setData(respObj.result);
+												}
+											},
+											failure : function(response, option) {
+												console.log(response);
+												Ext.Msg.alert('Error', response.responseText);
+											}
+										
+									});
 										oms.task.addDocumentPanel.hide();
+										
 									//}
 								},
 								failure : function(response, option) {

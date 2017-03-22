@@ -22,4 +22,5 @@ public interface ProjectServices {
 	void removeUserFromProject(Integer projectId, String userId, String role);
 	List<Project> findFirst10();
 	List<TaskDoc> findTaskDocByTaskId(Integer taskId);
+    List<TaskNote> findTaskNotesByTaskId(Integer taskId);
 }

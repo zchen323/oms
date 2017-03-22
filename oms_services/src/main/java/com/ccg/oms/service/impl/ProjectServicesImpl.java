@@ -245,6 +245,16 @@ public class ProjectServicesImpl implements ProjectServices{
 		}
 		return result;
 	}
-
+    @Override
+    public List<TaskNote> findTaskNotesByTaskId(Integer taskId) {
+        // TODO Auto-generated method stub
+        List<TaskNoteEntity> tmp=taskNoteRepository.findByTaskIdOrderByIdDesc(taskId);
+        List<TaskNote> res=new ArrayList<TaskNote>();
+        for(TaskNoteEntity e:tmp)
+        {
+            res.add(ProjectMapper.fromEntity(e));
+        }
+        return res;
+    }
 
 }
