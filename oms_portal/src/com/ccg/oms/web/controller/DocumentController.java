@@ -131,8 +131,12 @@ public class DocumentController {
 	        // 
 	        List<Doc> docs = searchResponse.getResponse().getDocs();
 	        for(Doc doc : docs){
-	        	Document document = docService.findDocumentById(Integer.parseInt(doc.getId()));
-	        	doc.setName(document.getName());
+	        	try{
+	        		Document document = docService.findDocumentById(Integer.parseInt(doc.getId()));
+	        		doc.setName(document.getName());
+	        	}catch(Exception e){
+	        		e.printStackTrace();
+	        	}
 	        }	        
 	        System.out.println(JSON.toJson(searchResponse));
 			resp.setResult(searchResponse);
