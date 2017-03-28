@@ -1,7 +1,13 @@
 package com.ccg.oms.web.controller;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +26,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.document.Document;
+import com.ccg.oms.common.data.document.solr.SolrSearchResponse;
 import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.service.DocumentService;
 import com.ccg.util.JSON;
+import com.ccg.util.MultipartUtility;
 
 @Controller
 @RequestMapping("/document")
@@ -96,6 +104,40 @@ public class DocumentController {
 	
 		return resp;
 	}
+
+	@RequestMapping(value="search", method=RequestMethod.GET)
+	public @ResponseBody RestResponse search(@RequestParam(value="query", required=false) String query) {
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			
+			String urlString = "http://72.177.234.240:8983/solr/select?q=" + query + "&fl=id,last_modified,content_type,author&wt=json";
+	        URL url = new URL(urlString);
+	        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+	        httpConn.setRequestMethod("GET");
+	        httpConn.setReadTimeout(15*1000);
+	        httpConn.connect();
+	        
+	       // BufferedReader br = new BufferedReader(new InputStreamReader())
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
+	        StringBuffer sb = new StringBuffer();
+	        String line = null;
+	        while((line = reader.readLine())!= null){
+	        	sb.append(line).append("\n");
+	        }
+	        
+	        System.out.println(sb.toString());
+	        
+	        SolrSearchResponse searchResponse = JSON.fromJson(sb.toString(), SolrSearchResponse.class);
+	        
+	        System.out.println(JSON.toJson(searchResponse));
+			resp.setResult(searchResponse);
+		}catch(Exception e){
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+		}
+	
+		return resp;
+	}
 	
 	
 	
@@ -138,6 +180,30 @@ public class DocumentController {
 					// save document to db
 					Integer documentId =  docService.saveDocument(doc);
 					doc.setId(documentId);
+					
+					/////////////////////////////
+					// indexing uploaded file					
+					/////////////////////////////
+					// create temp file
+					File tempFile = File.createTempFile("tempfile", doc.getType());
+					FileOutputStream fos = new FileOutputStream(tempFile);
+					fos.write(doc.getContent());
+					fos.close();
+					
+					// cal solr rest servicee for indexing
+					// TODO put rest URL in config file
+					String URL = "http://72.177.234.240:8983/solr/update/extract?literal.id=document_" + doc.getId() + "&commit=true";
+					String charSet = "UTF-8";
+					MultipartUtility utility = new MultipartUtility(URL, charSet);
+					
+					File file = new File("/Users/zchen323/Downloads/test.pdf");						
+					utility.addFilePart(doc.getName(), tempFile);						
+					List<String> resp = utility.finish();
+					for(String string : resp){
+						System.out.println("====>>>" + string);
+					}
+					// delete temp file
+					tempFile.deleteOnExit();
 				}
 			}
 			System.out.println("======params======");
@@ -166,7 +232,7 @@ public class DocumentController {
 			responseMessage = JSON.toJson(respMap);
 
 			
-		} catch (FileUploadException e) {
+		} catch (Exception e) {
 			Map<String, Object> respMap = new HashMap<String, Object>();
 			respMap.put("success", false);
 			respMap.put("message", e.getMessage());

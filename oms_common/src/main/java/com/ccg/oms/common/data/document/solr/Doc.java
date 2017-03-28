@@ -10,10 +10,19 @@ public class Doc {
 	private Date lastModified;
 	private String author;
 	private List<String> content_type = new ArrayList<String>();
-	public String getId() {
+	
+	public String getId() {		
+		if(id != null && id.startsWith("document")){
+			int p = id.indexOf("_");
+			id = id.substring(p + 1);
+		}		
 		return id;
 	}
 	public void setId(String id) {
+		if(id != null && id.startsWith("document")){
+			int p = id.indexOf("_");
+			id = id.substring(p + 1);
+		}
 		this.id = id;
 	}
 	public String getLast_modified() {

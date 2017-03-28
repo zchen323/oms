@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import com.ccg.util.MultipartUtility;
+
 public class UploadFileTest {
 	public static void main(String[] args) throws IOException{
 		/**

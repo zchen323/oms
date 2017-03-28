@@ -1,4 +1,4 @@
-package solr.test;
+package com.ccg.util;
 
 import java.io.BufferedReader;
 import java.io.File;
