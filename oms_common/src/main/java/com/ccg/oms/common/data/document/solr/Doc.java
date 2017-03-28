@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Doc {
 	private String id;
+	private String name;
 	private String last_modified;
 	private Date lastModified;
 	private String author;
@@ -49,4 +50,11 @@ public class Doc {
 	public void setContent_type(List<String> content_type) {
 		this.content_type = content_type;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 }

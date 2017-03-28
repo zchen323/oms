@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.document.Document;
+import com.ccg.oms.common.data.document.solr.Doc;
 import com.ccg.oms.common.data.document.solr.SolrSearchResponse;
 import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.service.DocumentService;
@@ -125,10 +126,14 @@ public class DocumentController {
 	        	sb.append(line).append("\n");
 	        }
 	        
-	        System.out.println(sb.toString());
-	        
+	        System.out.println(sb.toString());	        
 	        SolrSearchResponse searchResponse = JSON.fromJson(sb.toString(), SolrSearchResponse.class);
-	        
+	        // 
+	        List<Doc> docs = searchResponse.getResponse().getDocs();
+	        for(Doc doc : docs){
+	        	Document document = docService.findDocumentById(Integer.parseInt(doc.getId()));
+	        	doc.setName(document.getName());
+	        }	        
 	        System.out.println(JSON.toJson(searchResponse));
 			resp.setResult(searchResponse);
 		}catch(Exception e){
