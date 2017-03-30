@@ -1031,7 +1031,7 @@ oms.project.editProjInfoPanel=Ext.create('Ext.window.Window',{
 				},
 				{
 					xtype:'combobox',
-					name:'projorg', 
+					name:'projOrg', 
 					id:'projorgcombo',
 					valueField:'org',
 					displayField:'org',
@@ -1113,7 +1113,31 @@ oms.project.editProjInfoPanel=Ext.create('Ext.window.Window',{
 	buttons:[
 		{
 			text:"Update Project",
-			handler: function(){		
+			handler: function(){
+				var formData = Ext.getCmp("editprojinfopanel").getForm().getValues();
+				
+				console.log(formData);
+				
+				Ext.Ajax.request({
+					url : "api/project",
+					method : 'PUT',
+					jsonData : JSON.stringify(formData),
+					success : function(response, option) {
+						console.log(response);
+						var respObj = Ext.decode(response.responseText);
+						Ext.Msg.alert(respObj.status, respObj.message);
+						if (respObj.status === 'success') {
+							oms.project.AssignNewUserPanel.hide();
+							var grid=Ext.getCmp("usergrid"+formData.projectId)
+							grid.getStore().setData(respObj.result);
+							oms.project.projectUserUpdate(respObj.result);
+						}
+					},
+					failure : function(response, option) {
+						console.log(response);
+						Ext.Msg.alert('Error', response.responseText);
+					}
+				});
 			}
 		}]}]
 	

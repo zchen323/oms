@@ -257,4 +257,18 @@ public class ProjectServicesImpl implements ProjectServices{
         return res;
     }
 
+	@Override
+	public void updateProject(Project project) {
+		ProjectEntity entity = projectRepository.findOne(project.getProjId());		
+
+		ProjectMapper.copyToEntity(project, entity);
+		entity.setLastUpdateDate(new Timestamp(System.currentTimeMillis()));
+		if("In Progress".equals(entity.getStatus())){
+			entity.setStartDate(new Timestamp(System.currentTimeMillis()));
+		}else if("Completed".equals(entity.getStatus())){
+			entity.setCompletedDate(new Timestamp(System.currentTimeMillis()));
+		}
+		projectRepository.save(entity);		
+	}
+
 }

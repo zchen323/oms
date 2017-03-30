@@ -72,6 +72,21 @@ public class ProjectController {
 		return resp;
 	}
 	
+	@RequestMapping(method=RequestMethod.PUT)
+	public @ResponseBody RestResponse updateProject(@RequestBody Project project){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			System.out.println(JSON.toJson(project));
+			service.updateProject(project);
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+	}
+	
+	
 	@RequestMapping(value="all", method=RequestMethod.GET)
 	public @ResponseBody RestResponse findAllProject(){
 		RestResponse resp = RestResponse.getSuccessResponse();

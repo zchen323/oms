@@ -57,6 +57,29 @@ public class ProjectMapper {
 		//entity.setUsers(users);
 		return entity;
 	}
+
+	public static void copyToEntity(Project project, ProjectEntity entity){
+		entity.setAgency(project.getProjAgency());
+		entity.setCategory(project.getProjcategory());
+		//entity.setCompletedDate();
+		//entity.setCreatedBy(createdBy);
+		entity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		entity.setDescription(project.getDescription());
+		entity.setDueDate(project.getDueDate());
+		//entity.setId(id);
+		entity.setLastUpdateDate(new Timestamp(System.currentTimeMillis()));
+		entity.setLocation(project.getProjloc());
+		entity.setName(project.getProjName());
+		entity.setOrganization(project.getProjOrg());
+		entity.setPrime(project.getIsPrimeProject());
+		entity.setPrimeContactInfo(project.getContactoffice());
+		entity.setPrimeName(project.getPrimeName());
+		//entity.setStartDate(project.getp);
+		entity.setStatus(project.getProjStatus());
+		entity.setManager(project.getProjManager());
+		//entity.setUsers(users);
+	}
+	
 	
 	public static TaskEntity toEntity(Task task){
 		TaskEntity entity = new TaskEntity();
