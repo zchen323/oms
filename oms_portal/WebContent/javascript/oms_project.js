@@ -362,6 +362,7 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 		width:'98%',
 		margin:'0 0 0 4', 
 		collapsible:true,
+		id:'projinfo'+pinfo.projId,
 		projectInfo:pinfo,
 		header:{
 			baseCls:'omspanelheadercls',
@@ -374,7 +375,7 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 			{
 				oms.project.editProjInfoPanel.show();
 				Ext.getCmp('editprojinfopanel').getForm().loadRecord({
-					getData:function(){return pinfo;}
+					getData:function(){return panel.projectInfo;}
 				});
 			}
 			
@@ -1127,10 +1128,10 @@ oms.project.editProjInfoPanel=Ext.create('Ext.window.Window',{
 						var respObj = Ext.decode(response.responseText);
 						Ext.Msg.alert(respObj.status, respObj.message);
 						if (respObj.status === 'success') {
-							oms.project.AssignNewUserPanel.hide();
-							var grid=Ext.getCmp("usergrid"+formData.projectId)
-							grid.getStore().setData(respObj.result);
-							oms.project.projectUserUpdate(respObj.result);
+								var rec={getData:function(){return formData;}};
+								 Ext.getCmp("projinfo"+formData.projId).getForm().loadRecord(rec);
+								 Ext.getCmp("projinfo"+formData.projId).projectInfo=formData;
+								 oms.project.editProjInfoPanel.hide();
 						}
 					},
 					failure : function(response, option) {
