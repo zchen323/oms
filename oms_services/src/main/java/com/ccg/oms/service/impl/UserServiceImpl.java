@@ -321,6 +321,32 @@ public class UserServiceImpl implements UserServices{
 		}
 		return result;
 	}
-	
 
+	@Override
+	public boolean validateUser(String user, String pass) {
+		UserEntity userEntity = userRepository.findOne(user);
+		boolean result = false;
+		if(userEntity.getEnabled()){
+			if(userEntity.getUsername().equalsIgnoreCase(user) 
+					&& userEntity.getPassword().equalsIgnoreCase(pass)){
+				System.out.println("====== is valid");
+				result = true;
+			}else{
+				System.out.println("user: " + user  + ", pass: " + pass + "not match in db");
+			}
+		}else{
+			System.out.println("====== user " + user + " is disabled");
+		}
+		return result;		
+	}
+
+	@Override
+	public List<String> findUserRoles(String user) {
+		List<String> roles = new ArrayList<String>();
+		List<UserRoleEntity> entities = roleRepository.findByUsername(user);
+		for(UserRoleEntity entity : entities){
+			roles.add(entity.getRole());
+		}
+		return roles;
+	}
 }

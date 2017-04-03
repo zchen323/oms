@@ -24,4 +24,7 @@ public interface UserServices {
 	public List<UserInfo> getUserInfo();
 	
 	public List<UserInfo> searchUserByName(String nameContains);
+	
+	public boolean validateUser(String user, String pass);
+	public List<String> findUserRoles(String user);
 }
