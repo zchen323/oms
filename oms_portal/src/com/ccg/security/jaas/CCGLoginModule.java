@@ -59,6 +59,7 @@ public class CCGLoginModule implements LoginModule {
 				
 				userGroups = new ArrayList<String>();
 				userGroups.addAll(UserHelper.getUserRoles(name));
+				System.out.println("==== roles: " + userGroups);
 				return true;
 			}
 

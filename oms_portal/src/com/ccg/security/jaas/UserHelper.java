@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ccg.oms.common.data.RestResponseConstants;
+import com.ccg.util.JSON;
 
 public class UserHelper {
 
@@ -62,6 +63,10 @@ public class UserHelper {
 	        
 	        System.out.println("======" + response);
 	        
+	       UserRolesResponse userRolesResponse =  JSON.fromJson(response, UserRolesResponse.class);
+	       if("success".equals(userRolesResponse.getStatus())){
+	    	   roles = userRolesResponse.getResult();
+	       }	        
 		}catch(Exception e){
 			e.printStackTrace();
 		}
