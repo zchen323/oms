@@ -10,11 +10,13 @@
 		/> <logout logout-success-url="/logout" /> </http> -->
 
 	<http>
+		
+		<intercept-url pattern="/*" access="hasRole('ROLE_admin')" />
 		<!-- 
-		<intercept-url pattern="/*" access="hasRole('ROLE_RRR')" />
+		<intercept-url pattern="/oms_protal/**" access="isAuthenticated()" />
 		-->
-		<intercept-url pattern="/*" access="isAuthenticated()" />
 		<http-basic />
+		<csrf disabled="true"/>
 	</http>
 
 	<authentication-manager>
