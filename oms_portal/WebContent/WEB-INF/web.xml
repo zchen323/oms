@@ -23,6 +23,8 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>
 			/WEB-INF/mvc-dispatcher-servlet.xml
+			/WEB-INF/spring-security.xml
+			/WEB-INF/security_db_beans.xml
 			classpath:oms_dao_beans.xml
 			classpath:oms_services_beans.xml
 		</param-value>
@@ -30,7 +32,19 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-  
+ 
+ 	<!-- Spring Security -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+ 
+  <!-- 
   	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Admin</web-resource-name>
@@ -49,6 +63,6 @@
 		<auth-method>BASIC</auth-method>
 		<realm-name>Admin</realm-name>
 	</login-config>
-  
+  -->
   
 </web-app>

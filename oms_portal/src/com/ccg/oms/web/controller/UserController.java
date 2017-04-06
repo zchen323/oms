@@ -2,7 +2,8 @@ package com.ccg.oms.web.controller;
 
 import java.util.List;
 
-import javax.websocket.server.PathParam;
+import javax.security.auth.Subject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -160,34 +161,22 @@ public class UserController {
 		return response;
 	}
 	
-	@RequestMapping(value="validateUser", method=RequestMethod.POST)
-	public @ResponseBody RestResponse changePassword(@RequestParam("user") String user, @RequestParam("pass") String pass){
-		RestResponse result = new RestResponse();
-		try{
-			if(services.validateUser(user, pass)){
-				result.setStatus(RestResponseConstants.SUCCESS);
-			}else{
-				result.setStatus(RestResponseConstants.FAIL);
-			}
-		}catch(Exception e){
-			result.setStatus(RestResponseConstants.FAIL);
-			result.setMessage(e.getMessage());
-		}
-		return result;
-	}	
-
-	@RequestMapping(value="userRoles/{user}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse findUserRoles(@PathVariable("user") String user ){
+	@RequestMapping(value="myProfile", method=RequestMethod.GET)
+	public @ResponseBody RestResponse getMyProfile(HttpServletRequest request){
 		RestResponse response = new RestResponse();
 		try{
-			List<String> userRoles = services.findUserRoles(user);
-			response.setResult(userRoles);
-			response.setStatus(RestResponseConstants.SUCCESS);			
+			//Subject.
+			String loginUser = request.getRemoteUser();
+			System.out.println(request.getUserPrincipal().getName());
+			System.out.println("=== login user: " + loginUser);
+			//response.setResult();
+			
 		}catch(Exception e){
 			response.setStatus(RestResponseConstants.FAIL);
 			response.setMessage(e.getMessage());
+			e.printStackTrace();
 		}
 		return response;
-	}	
-	
+	}
+
 }

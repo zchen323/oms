@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.util.JSON;
@@ -16,7 +17,7 @@ import com.ccg.util.JSON;
 public class UserHelper {
 
 	public static boolean validateUser(String user, String pass) {
-		String urlString = "http://localhost:8080/oms_portal/api/user/validateUser";
+		String urlString = "http://localhost:8080/oms_portal/api/login/validateUser";
 		String params = "user=" + user + "&" + "pass=" + pass;
 		boolean isValidUser = false;
 		try {
@@ -32,11 +33,15 @@ public class UserHelper {
 			httpConn.setUseCaches( false );
 			DataOutputStream wr = new DataOutputStream( httpConn.getOutputStream());
 			wr.write(params.getBytes("UTF-8"));
+
+			
 			InputStream is = httpConn.getInputStream();
 			String response = inputStreamToString(is);
+			System.out.println("response:" + response);
 			if(response.contains(RestResponseConstants.SUCCESS)){
 				isValidUser = true;
 			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -45,7 +50,7 @@ public class UserHelper {
 	}
 
 	public static List<String> getUserRoles(String user) {
-		String urlString = "http://localhost:8080/oms_portal/api/user/userRoles/" + user;
+		String urlString = "http://localhost:8080/oms_portal/api/login/userRoles/" + user;
 		
 		System.out.println(urlString);
 		

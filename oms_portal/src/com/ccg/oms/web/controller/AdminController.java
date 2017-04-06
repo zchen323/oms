@@ -1,5 +1,7 @@
 package com.ccg.oms.web.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +20,15 @@ public class AdminController {
 	private AdminServices services;
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public @ResponseBody RestResponse getAdmindata(){
+	public @ResponseBody RestResponse getAdmindata(HttpServletRequest request){
 		Admin admin = services.getAdiminData();
 		RestResponse resp = RestResponse.getSuccessResponse();
 		resp.setResult(admin);
+		
+		String loginUser = request.getRemoteUser();
+		//System.out.println(request.getUserPrincipal().getName());
+		System.out.println("=== login user: " + loginUser);
+		
 		return resp;
 	}
 	

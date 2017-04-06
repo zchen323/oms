@@ -7,9 +7,8 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/test" />
-		<property name="username" value="test" />
-		<property name="password" value="test" />
+		<property name="url" value="jdbc:mysql://72.177.234.240:3306/oms2?useSSL=false" />
+		<property name="username" value="ccg" />
+		<property name="password" value="ccg" />
 	</bean>
-	<bean id="myFilter" class="org.springframework.web.filter.DelegatingFilterProxy" />
 </beans>

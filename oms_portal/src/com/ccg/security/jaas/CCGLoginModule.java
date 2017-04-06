@@ -29,6 +29,7 @@ public class CCGLoginModule implements LoginModule {
 
 		handler = callbackHandler;
 		this.subject = subject;
+		System.out.println("==========subject:" + subject.getClass().getName());
 	}
 
 	@Override
