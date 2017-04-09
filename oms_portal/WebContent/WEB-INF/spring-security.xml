@@ -10,12 +10,23 @@
 		/> <logout logout-success-url="/logout" /> </http> -->
 
 	<http>
+		<intercept-url pattern="/oms*" access="hasRole('ROLE_admin')" />
+		<intercept-url pattern="/api/**" access="hasRole('ROLE_admin')" />
 		
-		<intercept-url pattern="/*" access="hasRole('ROLE_admin')" />
 		<!-- 
-		<intercept-url pattern="/oms_protal/**" access="isAuthenticated()" />
-		-->
 		<http-basic />
+		-->
+		<form-login 
+			login-processing-url="/j_spring_security_check"
+			login-page="/login.html"
+			username-parameter="username"
+			password-parameter="password" 
+			default-target-url="/oms.html"
+			authentication-failure-url="/login.html?error=true" />
+		
+		<logout logout-success-url="/login.html" logout-url="/j_spring_security_logout"/>
+		
+		
 		<csrf disabled="true"/>
 		<headers>
 			<frame-options policy="SAMEORIGIN" />
