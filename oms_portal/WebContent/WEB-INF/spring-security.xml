@@ -17,6 +17,9 @@
 		-->
 		<http-basic />
 		<csrf disabled="true"/>
+		<headers>
+			<frame-options policy="SAMEORIGIN" />
+		</headers>
 	</http>
 
 	<authentication-manager>
