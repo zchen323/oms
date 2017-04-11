@@ -174,7 +174,51 @@ oms.doc.createDocMainPanel=function(doc) // proj is the json data for the							
 		}); 
 	return mainpanel;
 };
+oms.doc.openDoc=function(docID){
+    if(Ext.getCmp('docPanel'+docID)!=null)
+	{
+		Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp('docPanel'+docID));
+	}
+    else{
+	// now need to ajax calls
+	Ext.Ajax.request({
+		url:'api/document/'+docID,
+		success:function(response)
+		{
+			var obj=Ext.JSON.decode(response.responseText);
+			//console.log(obj);
+			var doc=obj.result;
+			var dpanel=oms.doc.createDocMainPanel(doc);
+			Ext.getCmp('centerViewPort').add(dpanel);
+			Ext.getCmp('centerViewPort').setActiveTab(dpanel);
+		},
+		failure: function(response) 
+		        { 
+		            console.log(response.responseText); 
+		        } 
 
+	});
+
+}
+};
+oms.doc.buildSearchDocs=function(docs){
+    var res="<ul>";
+	for(var i=0;i<docs.length;i++)
+	{
+	    var doc=docs[i];
+		if(docs[i].name!=null)
+			{
+				res=res+"<li>"
+				res=res+"<font color=green>"+doc.name+"</font> -- by "+doc.author;
+				res=res+"</font><p>......<a href='#' onclick='oms.doc.openDoc("+doc.id+");return false;'>Open Document</a>";
+				res=res+"</li>";
+			}
+
+	}
+	res=res+"</ul>"
+	
+	return res;
+};
 oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 	frame: true,
 	float:true,
@@ -185,74 +229,57 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 	scrollable:true,
 	closeAction: 'hide',
 	layout:'vbox',
-	height:240,
+	height:360,
 	items:[{
 			xtype:'displayfield',			
 			margin: '0 2 2 15',
-			value:'Please enter Document name'
+			value:'Pease enter the searching key words:'
 		},
 		{
-			xtype:'combobox',
+			xtype:'textfield',
 			width:'90%',
 			margin: '0 2 2 15',
-			id:'docsearchkey',
-			valueField:'docId',
+			id:'docsearchkey'
+		},
+		{
+			xtype:'panel',
+			width:'90%',
+			height:200,
+			margin: '0 2 2 15',
 			displayField:'docName',
-			minChars: 1,
-            queryParam: 'dname',
-            queryMode: 'remote',
-            typeAhead: true,
-            multiSelect: false,
-            triggerAction: 'all',
-            allowBlank:false,
-            store:Ext.create('Ext.data.JsonStore', {
-				fields: [
-					{name: 'docId' },
-					{name: 'docName'}
-					],
-				proxy: {
-				        type: 'ajax',
-				        url: 'api/document/search',
-				        reader: {
-				            type: 'json',
-				            rootProperty: 'result'
-				        }
-				    }
-
-			}),
-			tpl: Ext.create('Ext.XTemplate','<tpl for=".">',
-					 	'<div class="x-boundlist-item" style="border-bottom:1px solid #f0f0f0;">',
-				      '<div>[Project ID: {docId} ] --<font size=+1 color=green>{docName}</font></div></div>',
-				       '</tpl>'
-					),
-			displayTpl:Ext.create('Ext.XTemplate','<tpl for=".">',
-				      '[ID:{docId} ] --{docName}',
-				       '</tpl>'
-					)
-		},{
-			xtype:'displayfield',			
-			margin: '0 2 2 15',
-			value:'Or Enter the Keywords'
-		},
-		{
-			xtype:'combobox',
-			width:'90%',
-			margin: '0 2 2 15',
-			id:'docsearchkey2',
-			valueField:'docId2',
-			displayField:'docName2'
+			id:'searchedDocuments',
+			html:''
 		}
 	],
 	buttons:[
 		{
-			text:"Open Document",
+			text:"Search",
 			handler: function()
 			{
-				var rec=Ext.getCmp('docsearchkey').getSelection();
-				console.log(rec.data);
+				var key=Ext.getCmp('docsearchkey').getValue();
 				
+				Ext.Ajax.request({
+					url : "api/document/search?query="+Ext.encode(key),
+					method : 'GET',
+					success : function(response, option) {
+						//console.log(response);
+						var respObj = Ext.decode(response.responseText);
+					//	Ext.Msg.alert(respObj.status, respObj.message);
+						console.log(respObj);
+						if (respObj.status === 'success') {
+							// now we need to render the documents
+							var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
+							Ext.getCmp('searchedDocuments').update(htmlstr);
+						}
+					},
+					failure : function(response, option) {
+						console.log(response);
+						Ext.Msg.alert('Error', response.responseText);
+					}
+				});
 				
 			}
+
 		}
 		]
 });　
