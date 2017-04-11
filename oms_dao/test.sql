@@ -141,6 +141,25 @@ create table projecttaskdocument(
 	primary key(id)
 );
 
+create table userprojecthistory (
+	id int not null auto_increment,
+	userId varchar(50),
+	projectId int not null,
+	primary key(id)
+);
+
+create table userdocumenthistory (
+	id int not null auto_increment,
+	userId varchar(50),
+	documentId int,
+	primary key(id)
+);
+
+
+
+
+
+
 
 
 

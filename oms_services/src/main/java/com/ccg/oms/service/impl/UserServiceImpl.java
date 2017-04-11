@@ -10,23 +10,37 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ccg.oms.common.data.document.Document;
+import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.user.NewUser;
 import com.ccg.oms.common.data.user.User;
 import com.ccg.oms.common.data.user.UserInfo;
 import com.ccg.oms.common.data.user.UserWithPassword;
+import com.ccg.oms.dao.entiry.document.DocumentEntity;
+import com.ccg.oms.dao.entiry.project.ProjectEntity;
 import com.ccg.oms.dao.entiry.user.UserDetailEntity;
+import com.ccg.oms.dao.entiry.user.UserDocumentHistoryEntity;
 import com.ccg.oms.dao.entiry.user.UserEntity;
 import com.ccg.oms.dao.entiry.user.UserEntity2;
+import com.ccg.oms.dao.entiry.user.UserProjectHistoryEntity;
 import com.ccg.oms.dao.entiry.user.UserRoleEntity;
 import com.ccg.oms.dao.entiry.user.UserRoleEntity2;
+import com.ccg.oms.dao.repository.document.DocumentRepository;
+import com.ccg.oms.dao.repository.project.ProjectRepository;
 import com.ccg.oms.dao.repository.user.User2Repository;
 import com.ccg.oms.dao.repository.user.UserDetailRepository;
+import com.ccg.oms.dao.repository.user.UserDocumentHistoryRepository;
+import com.ccg.oms.dao.repository.user.UserProjectHistoryRepository;
 import com.ccg.oms.dao.repository.user.UserRepository;
 import com.ccg.oms.dao.repository.user.UserRoleRepository;
 import com.ccg.oms.service.UserServices;
+import com.ccg.oms.service.mapper.DocumentMapper;
+import com.ccg.oms.service.mapper.ProjectMapper;
 import com.ccg.oms.service.mapper.UserMapper;
 
 @Service
@@ -44,7 +58,17 @@ public class UserServiceImpl implements UserServices{
 	@Autowired
 	UserDetailRepository detailRepository;
 	
+	@Autowired
+	UserProjectHistoryRepository userProjectHistoryRepository;
 	
+	@Autowired
+	UserDocumentHistoryRepository userDocumentHistoryRepository;
+	
+	@Autowired
+	ProjectRepository projectRepository;
+	
+	@Autowired
+	DocumentRepository documentRepository;
 
 	@Transactional
 	public User findUserById(String username) {
@@ -348,5 +372,70 @@ public class UserServiceImpl implements UserServices{
 			roles.add(entity.getRole());
 		}
 		return roles;
+	}
+
+	@Override
+	public void addUserProject(String userid, Integer projectid) {
+		UserProjectHistoryEntity entity = new UserProjectHistoryEntity();
+		entity.setProjectId(projectid);
+		entity.setUserid(userid);
+		userProjectHistoryRepository.save(entity);		
+	}
+
+	@Override
+	public void addUserDocument(String userid, Integer documentid) {
+		UserDocumentHistoryEntity entity = new UserDocumentHistoryEntity();
+		entity.setDocumentId(documentid);
+		entity.setUserid(userid);
+		userDocumentHistoryRepository.save(entity);
+	}
+
+	@Override
+	public List<Project> getUserProject(String user) {
+		
+		final PageRequest pageRequest = new PageRequest(
+				0, 20, Direction.DESC, "id");
+		Iterable<UserProjectHistoryEntity> entities = userProjectHistoryRepository.findAll(pageRequest);
+		
+		List<Integer> projectIds = new ArrayList<Integer>();
+		
+		
+		
+		for(UserProjectHistoryEntity uphEntity : entities){
+			Integer projectid = uphEntity.getProjectId();
+			if(!projectIds.contains(projectid)){
+				projectIds.add(uphEntity.getProjectId());	
+			}
+			
+		}
+		System.out.println("====== project ids: " + projectIds);
+		List<Project> projects = new ArrayList<Project>();
+		for(int i = 0; i < projectIds.size(); i++){
+			ProjectEntity projectEntity = projectRepository.findOne(projectIds.get(i));
+			projects.add(ProjectMapper.fromEntity(projectEntity));
+		}
+		return projects;
+	}
+
+	@Override
+	public List<Document> getUserDocument(String user) {
+		final PageRequest pageRequest = new PageRequest(
+				0, 20, Direction.DESC, "id");
+		Iterable<UserDocumentHistoryEntity> entities = userDocumentHistoryRepository.findAll(pageRequest);
+		
+		List<Integer> documentIds = new ArrayList<Integer>();
+		for(UserDocumentHistoryEntity uchEntity : entities){
+			if(!documentIds.contains(uchEntity.getDocumentId())){
+				documentIds.add(uchEntity.getDocumentId());
+			}
+		}
+		
+		List<Document> documents = new ArrayList<Document>();
+		for(int i = 0; i < documentIds.size(); i++){
+			DocumentEntity documentEntity = documentRepository.findOne(documentIds.get(i));
+			documentEntity.setContent(null);
+			documents.add(DocumentMapper.fromEntity(documentEntity));
+		}
+		return documents;
 	}
 }

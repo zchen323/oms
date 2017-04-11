@@ -2,7 +2,6 @@ package com.ccg.oms.web.controller;
 
 import java.util.List;
 
-import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
+import com.ccg.oms.common.data.document.Document;
+import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.user.NewUser;
 import com.ccg.oms.common.data.user.User;
 import com.ccg.oms.common.data.user.UserChangePassword;
@@ -178,5 +179,37 @@ public class UserController {
 		}
 		return response;
 	}
+	
+	@RequestMapping(value="viewedProjects", method=RequestMethod.GET)
+	public @ResponseBody RestResponse getViewedProjects(HttpServletRequest request){
+		RestResponse response = new RestResponse();
+		try{
+			String userid = request.getRemoteUser();
+			List<Project> projects = services.getUserProject(userid);
+			response.setResult(projects);
+			response.setStatus(RestResponseConstants.SUCCESS);
+		}catch(Exception e){
+			response.setStatus(RestResponseConstants.FAIL);
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@RequestMapping(value="viewedDocuments", method=RequestMethod.GET)
+	public @ResponseBody RestResponse getViewedDocuments(HttpServletRequest request){
+		RestResponse response = new RestResponse();
+		try{
+			String userid = request.getRemoteUser();
+			List<Document> projects = services.getUserDocument(userid);
+			response.setResult(projects);
+			response.setStatus(RestResponseConstants.SUCCESS);
+		}catch(Exception e){
+			response.setStatus(RestResponseConstants.FAIL);
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return response;
+	}		
 
 }

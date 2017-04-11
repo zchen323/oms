@@ -22,6 +22,7 @@ import com.ccg.oms.common.data.project.Task;
 import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.common.data.project.TaskNote;
 import com.ccg.oms.service.ProjectServices;
+import com.ccg.oms.service.UserServices;
 import com.ccg.util.JSON;
 
 @Controller
@@ -30,6 +31,9 @@ public class ProjectController {
 	
 	@Autowired
 	ProjectServices service;
+	
+	@Autowired
+	UserServices userServices;
 	
 	// project user role
 	@RequestMapping(value="projectUserRoleType/all", method=RequestMethod.GET)
@@ -59,16 +63,23 @@ public class ProjectController {
 
 	
 	@RequestMapping(value="{id}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse findProjectById(@PathVariable Integer id){
+	public @ResponseBody RestResponse findProjectById(@PathVariable Integer id, HttpServletRequest request){
 		RestResponse resp = RestResponse.getSuccessResponse();
 		try{
 			ProjectInfo info = service.findProjectInfo(id);
+			if(info != null){
+				String userid = request.getRemoteUser();
+				if(userid != null && !userid.isEmpty()){
+					userServices.addUserProject(userid, id);
+				}
+			}			
 			resp.setResult(info);
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);
 			resp.setMessage(e.getMessage());
 			e.printStackTrace();
 		}
+		
 		return resp;
 	}
 	

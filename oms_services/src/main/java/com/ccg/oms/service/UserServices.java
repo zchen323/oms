@@ -2,6 +2,8 @@ package com.ccg.oms.service;
 
 import java.util.List;
 
+import com.ccg.oms.common.data.document.Document;
+import com.ccg.oms.common.data.project.Project;
 import com.ccg.oms.common.data.user.NewUser;
 import com.ccg.oms.common.data.user.User;
 import com.ccg.oms.common.data.user.UserInfo;
@@ -27,4 +29,9 @@ public interface UserServices {
 	
 	public boolean validateUser(String user, String pass);
 	public List<String> findUserRoles(String user);
+	
+	public void addUserProject(String userid, Integer projectid);
+	public void addUserDocument(String userid, Integer documentid);
+	public List<Project> getUserProject(String user);
+	public List<Document> getUserDocument(String user);
 }

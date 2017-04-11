@@ -36,8 +36,11 @@ import com.ccg.oms.common.data.document.solr.Doc;
 import com.ccg.oms.common.data.document.solr.SolrSearchResponse;
 import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.service.DocumentService;
+import com.ccg.oms.service.UserServices;
 import com.ccg.util.JSON;
 import com.ccg.util.MultipartUtility;
+
+import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 @Controller
 @RequestMapping("/document")
@@ -46,9 +49,19 @@ public class DocumentController {
 	@Autowired
 	DocumentService docService;
 	
+	@Autowired
+	UserServices userServices;
+	
 	@RequestMapping(value="download/{id}")
-	public void downLoadDocument(@PathVariable("id") Integer documentId, HttpServletResponse response) throws IOException{
+	public void downLoadDocument(@PathVariable("id") Integer documentId, HttpServletRequest request, HttpServletResponse response) throws IOException{
 		Document document = docService.findDocumentById(documentId);
+		if(document != null){
+			String userid = request.getRemoteUser();
+			if(userid != null && !userid.isEmpty()){
+				userServices.addUserDocument(userid, documentId);
+			}
+		}
+		
 		response.setHeader("content-disposition", "inline; filename=" + document.getName());
 		if("pdf".equalsIgnoreCase(document.getType())){
 			response.setContentType("application/pdf");
@@ -61,6 +74,8 @@ public class DocumentController {
 		}else{
 			response.setContentType("text/plain");
 		}
+		
+		
 		OutputStream os = response.getOutputStream();
 		os.write(document.getContent());
 		os.flush();
