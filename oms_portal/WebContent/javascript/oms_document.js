@@ -265,7 +265,7 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 						//console.log(response);
 						var respObj = Ext.decode(response.responseText);
 					//	Ext.Msg.alert(respObj.status, respObj.message);
-						console.log(respObj);
+		//				console.log(respObj);
 						if (respObj.status === 'success') {
 							// now we need to render the documents
 							var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);

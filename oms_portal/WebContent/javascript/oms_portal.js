@@ -49,7 +49,53 @@ function displayRate()
 		}]
 	});
 
-　
+oms.loadUserDoc=function(){
+	Ext.Ajax.request({
+		url : "api/user/viewedDocuments",
+		method : 'GET',
+		success : function(response, option) {
+			//console.log(response);
+			var respObj = Ext.decode(response.responseText);
+		//	Ext.Msg.alert(respObj.status, respObj.message);
+		    
+			if (respObj.status === 'success') {
+				// now we need to render the documents
+				var l_doc=respObj.result;
+			//	console.log(l_proj);
+				var htmlstr=oms.ui.getUserDocumentHtml(l_doc);
+				Ext.getCmp('mydocpanel').update(htmlstr);
+			}
+		},
+		failure : function(response, option) {
+			console.log(response);
+			Ext.Msg.alert('Error', response.responseText);
+		}
+	});
+}
+oms.loadUserProject=function()
+{
+	Ext.Ajax.request({
+		url : "api/user/viewedProjects",
+		method : 'GET',
+		success : function(response, option) {
+			//console.log(response);
+			var respObj = Ext.decode(response.responseText);
+		//	Ext.Msg.alert(respObj.status, respObj.message);
+		    
+			if (respObj.status === 'success') {
+				// now we need to render the documents
+				var l_proj=respObj.result;
+			//	console.log(l_proj);
+				var htmlstr=oms.ui.getUserProjectHtml(l_proj);
+				Ext.getCmp('myprojpanel').update(htmlstr);
+			}
+		},
+		failure : function(response, option) {
+			console.log(response);
+			Ext.Msg.alert('Error', response.responseText);
+		}
+	});
+};　
 Ext.onReady(function(){
 	Ext.create('Ext.container.Viewport', {
 		layout: 'border',
@@ -79,10 +125,12 @@ Ext.onReady(function(){
 					},
 			items: [
 					{title:'My Projects',
-						html:oms.ui.getUserProjectHtml(12)
+						id:'myprojpanel',
+						html:""
 					}, 
 					{title:'My Documents',
-						html:oms.ui.getUserDocumentHtml(12)
+						id:'mydocpanel',
+						html:''
 					},
 					{title:'Admin',
 						html:oms.ui.getAdminHtml()
@@ -126,4 +174,6 @@ Ext.onReady(function(){
 //	viewport.setActiveTab(2);
 	//viewport.add(oms.project.createNewProjPanel);
 	oms.admin.refreshData();
+	oms.loadUserProject();
+	oms.loadUserDoc();
 });

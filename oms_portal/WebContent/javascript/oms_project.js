@@ -95,6 +95,35 @@ oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
 		}
 		]
 });
+
+oms.project.openProject=function(projId)
+{
+	Ext.Ajax.request({
+		url:'api/project/'+projId,
+		success:function(response)
+		{
+			var obj=Ext.JSON.decode(response.responseText);
+			var proj=obj.result;
+		//	console.log(obj.result);
+			var ppanelID="projectPanel"+projId;
+			if(Ext.getCmp(ppanelID)!=null)
+			{
+					// panel already exist
+				  Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp(ppanelID));
+			}
+			else
+			{
+				var p_proj=oms.project.createProjectPanel(proj);
+				Ext.getCmp('centerViewPort').add(p_proj);
+				Ext.getCmp('centerViewPort').setActiveTab(p_proj);
+			}
+		},
+		failure:function(response)
+		{
+			console.log(response);
+		}
+	});
+};
 // panel for create new project
 oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 	frame: true,

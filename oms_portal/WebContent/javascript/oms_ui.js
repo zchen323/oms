@@ -18,13 +18,14 @@ oms.ui={
 				res=res+"</ul>";
 			return res;
 		},
-		getUserDocumentHtml:function(user)
+		getUserDocumentHtml:function(docs)
 		{
 			var res='<p><b><u><font size=2 color="#336699">Recent Documents:</font></u></b>';
 			res=res+"<ul>";
-			res=res+'<li><font size=1><a href="#">RFP -- Project: SCCG Database upgrade RFP</a></font></li>';
-			res=res+'<li><font size=1><a href="#">Finalize Proposal --  Project: GMST Tracking System</a></font></li>';
-			res=res+'<li><font size=1><a href="#">Completed EN Checklist -- Project: SVT Global Delivery </a></font></li>';
+			for(var i=0;i<docs.length;i++){
+				doc=docs[i];
+				res=res+'<li><font size=1><a href="#" onclick="oms.doc.openDoc('+doc.id+');return false;">'+doc.name+'</a> -- '+doc.type+'</font></li>';
+			}
 			res=res+"</ul>";
 			res=res+'<p><b><u><font size=2 color="#336699">Frequent Search Keywords:</font></u></b>';
 			res=res+"<ul>";
@@ -35,16 +36,18 @@ oms.ui={
 			res=res+'  <a href="#" onclick="oms.doc.openDocumentPanel.show();return false;"><img src="css/images/magnify.png"/>Search Document  </a> ';
 		return res;
 		},
-		getUserProjectHtml:function(user)
+		getUserProjectHtml:function(projs)
 		{
-			
+			    console.log('...');
+			    console.log(projs);
 				var res='<a href="" onclick="oms.project.createNewProjPanel.show();return false;"><img src="css/images/shared/icons/fam/add.png"/>Create Project </a> ';
 				res=res+'<p><a href="" onclick="oms.project.openProjectPanel.show();return false;"><img src="css/images/shared/icons/fam/grid.png"/>Open Project </a>';
 				res=res+'<p><b><u><font size=2 color="#336699">Recent Project:</font></u></b>';
 				res=res+"<ul>";
-				res=res+'<li><font size=1><a href="#">SCCG Database upgrade RFP</a></font></li>';
-				res=res+'<li><font size=1><a href="#">GMST Tracking System</a></font></li>';
-				res=res+'<li><font size=1><a href="#">Project: SVT Global Delivery </a></font></li>';
+				for(var i=0;i<projs.length;i++){
+					 var proj=projs[i];
+					res=res+'<li><font size=1><a href="#" onclick="oms.project.openProject('+proj.projId+');return false;">'+proj.projName+'</a> -- '+proj.projOrg+'</font></li>';
+				}
 				res=res+"</ul>";
 				return res;				
 		},
