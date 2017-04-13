@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Table(name="userdocumenthistory")
 public class UserDocumentHistoryEntity {
 	private Integer id;
-	private String userid;
+	private String userId;
 	private Integer documentId;
 	
 	@Id
@@ -21,11 +21,12 @@ public class UserDocumentHistoryEntity {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getUserid() {
-		return userid;
+
+	public String getUserId() {
+		return userId;
 	}
-	public void setUserid(String userid) {
-		this.userid = userid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public Integer getDocumentId() {
 		return documentId;

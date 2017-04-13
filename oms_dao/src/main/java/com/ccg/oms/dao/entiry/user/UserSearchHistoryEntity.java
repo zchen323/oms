@@ -7,12 +7,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="userprojecthistory")
-public class UserProjectHistoryEntity {
-	
+@Table(name="usersearchhistory")
+public class UserSearchHistoryEntity {
 	private Integer id;
 	private String userId;
-	private Integer projectId;
+	private String keyword;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,18 +21,16 @@ public class UserProjectHistoryEntity {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	
 	public String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public Integer getProjectId() {
-		return projectId;
+	public String getKeyword() {
+		return keyword;
 	}
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 }

@@ -32,6 +32,8 @@ public interface UserServices {
 	
 	public void addUserProject(String userid, Integer projectid);
 	public void addUserDocument(String userid, Integer documentid);
+	public void addUserSearch(String userid, String keyword);
 	public List<Project> getUserProject(String user);
 	public List<Document> getUserDocument(String user);
+	public List<String> getUserSearchKeyWorld(String user);
 }

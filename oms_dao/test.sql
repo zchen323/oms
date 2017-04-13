@@ -155,6 +155,12 @@ create table userdocumenthistory (
 	primary key(id)
 );
 
+create table usersearchhistory (
+	id int not null auto_increment,
+	userId varchar(50),
+	keyword varchar(250),
+	primary key(id)
+);
 
 
 

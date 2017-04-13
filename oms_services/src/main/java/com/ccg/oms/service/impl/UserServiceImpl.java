@@ -30,6 +30,7 @@ import com.ccg.oms.dao.entiry.user.UserEntity2;
 import com.ccg.oms.dao.entiry.user.UserProjectHistoryEntity;
 import com.ccg.oms.dao.entiry.user.UserRoleEntity;
 import com.ccg.oms.dao.entiry.user.UserRoleEntity2;
+import com.ccg.oms.dao.entiry.user.UserSearchHistoryEntity;
 import com.ccg.oms.dao.repository.document.DocumentRepository;
 import com.ccg.oms.dao.repository.project.ProjectRepository;
 import com.ccg.oms.dao.repository.user.User2Repository;
@@ -38,6 +39,7 @@ import com.ccg.oms.dao.repository.user.UserDocumentHistoryRepository;
 import com.ccg.oms.dao.repository.user.UserProjectHistoryRepository;
 import com.ccg.oms.dao.repository.user.UserRepository;
 import com.ccg.oms.dao.repository.user.UserRoleRepository;
+import com.ccg.oms.dao.repository.user.UserSearchHistoryRepository;
 import com.ccg.oms.service.UserServices;
 import com.ccg.oms.service.mapper.DocumentMapper;
 import com.ccg.oms.service.mapper.ProjectMapper;
@@ -63,6 +65,9 @@ public class UserServiceImpl implements UserServices{
 	
 	@Autowired
 	UserDocumentHistoryRepository userDocumentHistoryRepository;
+	
+	@Autowired
+	UserSearchHistoryRepository userSearchHistoryRepository;
 	
 	@Autowired
 	ProjectRepository projectRepository;
@@ -98,7 +103,11 @@ public class UserServiceImpl implements UserServices{
 				user.setUsername(entity.getUsername());				
 				Set<UserRoleEntity2> roles = entity.getRoles();
 				for(UserRoleEntity2 role :roles){
-					user.getRoles().add(role.getRole());
+					String r = role.getRole();
+					if(r.startsWith("ROLE_")){
+						r = r.substring(5);
+					}
+					user.getRoles().add(r);
 				}
 				users.add(user);
 			}
@@ -214,8 +223,10 @@ public class UserServiceImpl implements UserServices{
 		
 		Set<UserRoleEntity2> roleSet = new HashSet<UserRoleEntity2>();
 		for(String role : newUser.getRoleSet()){
-			System.out.println("=================" + role);
 			UserRoleEntity2 roleEntity = new UserRoleEntity2();
+			if(!role.startsWith("ROLE_")){
+				role = "ROLE_" + role;
+			}
 			roleEntity.setRole(role);
 			roleEntity.setUser(entity);
 			roleSet.add(roleEntity);
@@ -253,7 +264,11 @@ public class UserServiceImpl implements UserServices{
 				StringBuffer sb = new StringBuffer();
 				Set<UserRoleEntity2> roles = userEntity.getRoles();
 				for(UserRoleEntity2 role : roles){
-					sb.append(role.getRole()).append(", ");
+					String r = role.getRole();
+					if(r.startsWith("ROLE_")){
+						r = r.substring(5);
+					}
+					sb.append(r).append(", ");
 				}
 				String temp = sb.toString();
 				if(temp.length() > 2){
@@ -378,7 +393,7 @@ public class UserServiceImpl implements UserServices{
 	public void addUserProject(String userid, Integer projectid) {
 		UserProjectHistoryEntity entity = new UserProjectHistoryEntity();
 		entity.setProjectId(projectid);
-		entity.setUserid(userid);
+		entity.setUserId(userid);
 		userProjectHistoryRepository.save(entity);		
 	}
 
@@ -386,7 +401,7 @@ public class UserServiceImpl implements UserServices{
 	public void addUserDocument(String userid, Integer documentid) {
 		UserDocumentHistoryEntity entity = new UserDocumentHistoryEntity();
 		entity.setDocumentId(documentid);
-		entity.setUserid(userid);
+		entity.setUserId(userid);
 		userDocumentHistoryRepository.save(entity);
 	}
 
@@ -395,8 +410,9 @@ public class UserServiceImpl implements UserServices{
 		
 		final PageRequest pageRequest = new PageRequest(
 				0, 20, Direction.DESC, "id");
-		Iterable<UserProjectHistoryEntity> entities = userProjectHistoryRepository.findAll(pageRequest);
-		
+//		Iterable<UserProjectHistoryEntity> entities = userProjectHistoryRepository.findAll(pageRequest);
+		Iterable<UserProjectHistoryEntity> entities = userProjectHistoryRepository.findByUserId(user);//, pageRequest);
+				
 		List<Integer> projectIds = new ArrayList<Integer>();
 		
 		
@@ -421,7 +437,7 @@ public class UserServiceImpl implements UserServices{
 	public List<Document> getUserDocument(String user) {
 		final PageRequest pageRequest = new PageRequest(
 				0, 20, Direction.DESC, "id");
-		Iterable<UserDocumentHistoryEntity> entities = userDocumentHistoryRepository.findAll(pageRequest);
+		Iterable<UserDocumentHistoryEntity> entities = userDocumentHistoryRepository.findByUserId(user);//findAll(pageRequest);
 		
 		List<Integer> documentIds = new ArrayList<Integer>();
 		for(UserDocumentHistoryEntity uchEntity : entities){
@@ -437,5 +453,26 @@ public class UserServiceImpl implements UserServices{
 			documents.add(DocumentMapper.fromEntity(documentEntity));
 		}
 		return documents;
+	}
+
+	@Override
+	public List<String> getUserSearchKeyWorld(String user) {
+		List<String> keywords = new ArrayList<String>();
+		List<UserSearchHistoryEntity> entities = userSearchHistoryRepository.findByUserId(user);
+		for(UserSearchHistoryEntity entity : entities){
+			String keyword = entity.getKeyword();
+			if(!keywords.contains(keyword)){
+				keywords.add(keyword);
+			}
+		}		
+		return keywords;
+	}
+
+	@Override
+	public void addUserSearch(String userid, String keyword) {
+		UserSearchHistoryEntity entity = new UserSearchHistoryEntity();
+		entity.setKeyword(keyword);
+		entity.setUserId(userid);
+		userSearchHistoryRepository.save(entity);	
 	}
 }

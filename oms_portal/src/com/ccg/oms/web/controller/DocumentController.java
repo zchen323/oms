@@ -122,7 +122,9 @@ public class DocumentController {
 	}
 
 	@RequestMapping(value="search", method=RequestMethod.GET)
-	public @ResponseBody RestResponse search(@RequestParam(value="query", required=false) String query) {
+	public @ResponseBody RestResponse search(
+			@RequestParam(value="query", required=false) String query,
+			HttpServletRequest request) {
 		RestResponse resp = RestResponse.getSuccessResponse();
 		try{
 			
@@ -154,6 +156,14 @@ public class DocumentController {
 	        	}
 	        }	        
 	        System.out.println(JSON.toJson(searchResponse));
+	        
+	        // save searched keyword
+	        String userid = request.getRemoteUser();
+	        if(userid != null && !userid.isEmpty()){
+	        	userServices.addUserSearch(userid, query);
+	        }
+	        
+	        
 			resp.setResult(searchResponse);
 		}catch(Exception e){
 			resp.setMessage(e.getMessage());

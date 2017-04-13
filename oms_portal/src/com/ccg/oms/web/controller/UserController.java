@@ -212,4 +212,21 @@ public class UserController {
 		return response;
 	}		
 
+	@RequestMapping(value="searchedKeyWords", method=RequestMethod.GET)
+	public @ResponseBody RestResponse getSearchedKeyWords(HttpServletRequest request){
+		RestResponse response = new RestResponse();
+		try{
+			String userid = request.getRemoteUser();
+			List<String> keywords = services.getUserSearchKeyWorld(userid);
+			response.setResult(keywords);
+			response.setStatus(RestResponseConstants.SUCCESS);
+		}catch(Exception e){
+			response.setStatus(RestResponseConstants.FAIL);
+			response.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return response;
+	}		
+	
+	
 }
