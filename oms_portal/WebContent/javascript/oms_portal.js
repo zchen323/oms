@@ -62,8 +62,21 @@ oms.loadUserDoc=function(){
 				// now we need to render the documents
 				var l_doc=respObj.result;
 			//	console.log(l_proj);
-				var htmlstr=oms.ui.getUserDocumentHtml(l_doc);
-				Ext.getCmp('mydocpanel').update(htmlstr);
+		    //  now load search keyworkds
+				console.log("call key words");
+				Ext.Ajax.request({
+					url : "api/user/searchedKeyWords",
+					method : 'GET',
+					success : function(response, option) {
+						
+						var keys= Ext.decode(response.responseText).result;
+						var htmlstr=oms.ui.getUserDocumentHtml(l_doc,keys);
+						Ext.getCmp('mydocpanel').update(htmlstr);
+					},
+					failure : function(response, option) {
+					console.log(response);
+					}
+				});
 			}
 		},
 		failure : function(response, option) {

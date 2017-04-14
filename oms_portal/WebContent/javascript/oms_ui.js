@@ -18,7 +18,7 @@ oms.ui={
 				res=res+"</ul>";
 			return res;
 		},
-		getUserDocumentHtml:function(docs)
+		getUserDocumentHtml:function(docs,keys)
 		{
 			var res='<p><b><u><font size=2 color="#336699">Recent Documents:</font></u></b>';
 			res=res+"<ul>";
@@ -29,9 +29,11 @@ oms.ui={
 			res=res+"</ul>";
 			res=res+'<p><b><u><font size=2 color="#336699">Frequent Search Keywords:</font></u></b>';
 			res=res+"<ul>";
-			res=res+'<li><font size=1><a href="#">Security</a></font></li>';				
-			res=res+'<li><font size=1><a href="#">Mobile Development</a></font></li>';	
-			res=res+'<li><font size=1><a href="#">Network Engineer</a></font></li>';			
+			for (var i=0;i<keys.length;i++){
+				key=keys[i].replace(/"/g,'').trim();
+				res=res+'<li><font size=1><a href="#" onclick="oms.doc.preDocSearch(\''+key+'\');return false;">'+key+'</a></font></li>';
+			}
+						
 			res=res+'</ul>';
 			res=res+'  <a href="#" onclick="oms.doc.openDocumentPanel.show();return false;"><img src="css/images/magnify.png"/>Search Document  </a> ';
 		return res;

@@ -219,6 +219,31 @@ oms.doc.buildSearchDocs=function(docs){
 	
 	return res;
 };
+
+oms.doc.preDocSearch=function(key){
+	oms.doc.openDocumentPanel.show();
+	Ext.getCmp('docsearchkey').setValue(key);
+	Ext.getCmp('searchedDocuments').update("loading....");
+	Ext.Ajax.request({
+		url : "api/document/search?query="+Ext.encode(key),
+		method : 'GET',
+		success : function(response, option) {
+			//console.log(response);
+			var respObj = Ext.decode(response.responseText);
+		//	Ext.Msg.alert(respObj.status, respObj.message);
+//				console.log(respObj);
+			if (respObj.status === 'success') {
+				// now we need to render the documents
+				var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
+				Ext.getCmp('searchedDocuments').update(htmlstr);
+			}
+		},
+		failure : function(response, option) {
+			console.log(response);
+			Ext.Msg.alert('Error', response.responseText);
+		}
+	});
+};
 oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 	frame: true,
 	float:true,
@@ -257,7 +282,7 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 			handler: function()
 			{
 				var key=Ext.getCmp('docsearchkey').getValue();
-				
+				Ext.getCmp('searchedDocuments').update("loading....");
 				Ext.Ajax.request({
 					url : "api/document/search?query="+Ext.encode(key),
 					method : 'GET',
