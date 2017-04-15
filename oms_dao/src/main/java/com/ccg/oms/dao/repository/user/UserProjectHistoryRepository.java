@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ccg.oms.dao.entiry.user.UserProjectHistoryEntity;
 
 public interface UserProjectHistoryRepository extends JpaRepository<UserProjectHistoryEntity, Integer> {
-	List<UserProjectHistoryEntity> findByUserId(String userid);//, PageRequest pageRequest);
+	List<UserProjectHistoryEntity> findByUserIdOrderByIdDesc(String userid);//, PageRequest pageRequest);
 }

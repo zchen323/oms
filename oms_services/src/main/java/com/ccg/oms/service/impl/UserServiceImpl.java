@@ -411,7 +411,7 @@ public class UserServiceImpl implements UserServices{
 		final PageRequest pageRequest = new PageRequest(
 				0, 20, Direction.DESC, "id");
 //		Iterable<UserProjectHistoryEntity> entities = userProjectHistoryRepository.findAll(pageRequest);
-		Iterable<UserProjectHistoryEntity> entities = userProjectHistoryRepository.findByUserId(user);//, pageRequest);
+		Iterable<UserProjectHistoryEntity> entities = userProjectHistoryRepository.findByUserIdOrderByIdDesc(user);//, pageRequest);
 				
 		List<Integer> projectIds = new ArrayList<Integer>();
 		
@@ -437,7 +437,7 @@ public class UserServiceImpl implements UserServices{
 	public List<Document> getUserDocument(String user) {
 		final PageRequest pageRequest = new PageRequest(
 				0, 20, Direction.DESC, "id");
-		Iterable<UserDocumentHistoryEntity> entities = userDocumentHistoryRepository.findByUserId(user);//findAll(pageRequest);
+		Iterable<UserDocumentHistoryEntity> entities = userDocumentHistoryRepository.findByUserIdOrderByIdDesc(user);//findAll(pageRequest);
 		
 		List<Integer> documentIds = new ArrayList<Integer>();
 		for(UserDocumentHistoryEntity uchEntity : entities){
@@ -458,7 +458,7 @@ public class UserServiceImpl implements UserServices{
 	@Override
 	public List<String> getUserSearchKeyWorld(String user) {
 		List<String> keywords = new ArrayList<String>();
-		List<UserSearchHistoryEntity> entities = userSearchHistoryRepository.findByUserId(user);
+		List<UserSearchHistoryEntity> entities = userSearchHistoryRepository.findByUserIdOrderById(user);
 		for(UserSearchHistoryEntity entity : entities){
 			String keyword = entity.getKeyword();
 			if(!keywords.contains(keyword)){
