@@ -242,7 +242,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	var grid=Ext.create('Ext.grid.Panel',{
 		id:'taskdoclistgrid'+id,
 		store:dlstore,		
-		width:'99%',
+		width:'98%',
 		scrollable:true,
 		tbar:[
 		      {
@@ -267,7 +267,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	               {
 	            	 if(val==true)
 	            	 {
-	            		 return "<img src='css/images/sec.jpg' width=20 />"; 
+	            		 return "<img src='css/images/sec.jpg' width=12 />"; 
 	            	 }
 	            	 return "";
 	               }	            	  
@@ -300,8 +300,11 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	               },
 	              { 
 	            	   xtype:'actioncolumn',
-			           width:24,
-			           items: [
+			           width:40,
+			           items: [			        	   
+			        	   {
+			        		   icon: 'css/images/shared/icons/fam/delete.gif'
+			        	   },
 			        	   {
 			        		   icon: 'css/images/shared/icons/fam/information.png',
 			        	       handler: function(grid, rowIndex, colIndex) {
