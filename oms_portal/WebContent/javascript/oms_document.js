@@ -250,11 +250,11 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 	closable:true, 
 	title: 'Searching Document',
 	bodyPadding: 10,
-	width:420,
+	width:600,
 	scrollable:true,
 	closeAction: 'hide',
 	layout:'vbox',
-	height:360,
+	height:540,
 	items:[{
 			xtype:'displayfield',			
 			margin: '0 2 2 15',
@@ -262,18 +262,21 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 		},
 		{
 			xtype:'textfield',
-			width:'90%',
+			width:'95%',
 			margin: '0 2 2 15',
 			id:'docsearchkey'
 		},
 		{
-			xtype:'panel',
-			width:'90%',
-			height:200,
-			margin: '0 2 2 15',
-			displayField:'docName',
-			id:'searchedDocuments',
-			html:''
+			 xtype:'tabpanel',				   
+			   id:'searchtabpanel',	
+			   width:'95%',
+			   height:360,
+			   margin: '5 5 5 15',
+			    activeTab:0,
+			items:[
+			   
+			]
+
 		}
 	],
 	buttons:[
@@ -282,19 +285,31 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 			handler: function()
 			{
 				var key=Ext.getCmp('docsearchkey').getValue();
-				Ext.getCmp('searchedDocuments').update("loading....");
+				var myMask = Ext.MessageBox.wait("Processing....","Searching Article...");
 				Ext.Ajax.request({
 					url : "api/document/search?query="+Ext.encode(key),
 					method : 'GET',
 					success : function(response, option) {
 						//console.log(response);
 						var respObj = Ext.decode(response.responseText);
+						myMask.close();
 					//	Ext.Msg.alert(respObj.status, respObj.message);
 		//				console.log(respObj);
 						if (respObj.status === 'success') {
 							// now we need to render the documents
 							var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
-							Ext.getCmp('searchedDocuments').update(htmlstr);
+							var colors=["#ffcccc","#ccffcc","orange"];
+							var index=Ext.getCmp('searchtabpanel').items.length;
+							var c=colors[index%3];
+							var panel=Ext.create('Ext.panel.Panel', {
+								style: {borderColor:c, borderStyle:'double', borderWidth:'3px'},
+								title: '['+key+':]', 
+								closable: true,
+							    autoScroll:true,
+							    scroll:'vertical',
+							    html:htmlstr
+							});
+							Ext.getCmp('searchtabpanel').add(panel).show();
 						}
 					},
 					failure : function(response, option) {

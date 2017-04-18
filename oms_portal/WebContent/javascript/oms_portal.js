@@ -145,6 +145,10 @@ Ext.onReady(function(){
 						id:'mydocpanel',
 						html:''
 					},
+					{
+						title:'Reports',
+						html:oms.ui.getReportHtml()
+					},
 					{title:'Admin',
 						html:oms.ui.getAdminHtml()
 					}
