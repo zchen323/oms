@@ -11,6 +11,7 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +40,6 @@ import com.ccg.oms.service.DocumentService;
 import com.ccg.oms.service.UserServices;
 import com.ccg.util.JSON;
 import com.ccg.util.MultipartUtility;
-
-import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 @Controller
 @RequestMapping("/document")
@@ -93,6 +92,20 @@ public class DocumentController {
 	
 		return resp;
 	}
+	
+	@RequestMapping(value="delete/{documentId}", method=RequestMethod.GET)
+	public @ResponseBody RestResponse deleteDocument(@PathVariable(name="documentId") Integer documentId){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			docService.deleteDocumentById(documentId);
+		}catch(Exception e){
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+		}
+	
+		return resp;
+	}
+	
 	
 	@RequestMapping(value="project/{projectId}", method=RequestMethod.GET)
 	public @ResponseBody RestResponse getDocumentInfoByProjectId(@PathVariable(name="projectId") Integer projectId){
@@ -147,23 +160,28 @@ public class DocumentController {
 	        SolrSearchResponse searchResponse = JSON.fromJson(sb.toString(), SolrSearchResponse.class);
 	        // 
 	        List<Doc> docs = searchResponse.getResponse().getDocs();
+	        /// find document name and filterd deleted document
+	        List<Doc> finalDocs = new LinkedList<Doc>();
 	        for(Doc doc : docs){
 	        	try{
 	        		Document document = docService.findDocumentById(Integer.parseInt(doc.getId()));
-	        		doc.setName(document.getName());
+	        		if(document != null && !document.getName().isEmpty()){
+	        			doc.setName(document.getName());
+	        			finalDocs.add(doc);
+	        		}
 	        	}catch(Exception e){
 	        		e.printStackTrace();
 	        	}
-	        }	        
+	        }
+	        searchResponse.getResponse().setDocs(finalDocs);
+	        
 	        System.out.println(JSON.toJson(searchResponse));
 	        
 	        // save searched keyword
 	        String userid = request.getRemoteUser();
 	        if(userid != null && !userid.isEmpty()){
 	        	userServices.addUserSearch(userid, query);
-	        }
-	        
-	        
+	        }	        
 			resp.setResult(searchResponse);
 		}catch(Exception e){
 			resp.setMessage(e.getMessage());

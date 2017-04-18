@@ -449,8 +449,10 @@ public class UserServiceImpl implements UserServices{
 		List<Document> documents = new ArrayList<Document>();
 		for(int i = 0; i < documentIds.size(); i++){
 			DocumentEntity documentEntity = documentRepository.findOne(documentIds.get(i));
-			documentEntity.setContent(null);
-			documents.add(DocumentMapper.fromEntity(documentEntity));
+			if(documentEntity != null){
+				documentEntity.setContent(null);
+				documents.add(DocumentMapper.fromEntity(documentEntity));
+			}
 		}
 		return documents;
 	}

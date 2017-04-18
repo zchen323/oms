@@ -303,7 +303,29 @@ oms.task.createTaskDocumentPanel=function(task,id)
 			           width:40,
 			           items: [			        	   
 			        	   {
-			        		   icon: 'css/images/shared/icons/fam/delete.gif'
+			        		   icon: 'css/images/shared/icons/fam/delete.gif',
+			        		   handler: function(grid, rowIndex, colIndex) {
+				                    var rec = grid.getStore().getAt(rowIndex);
+				                    console.log(rec);
+				                    Ext.Ajax.request({
+				                    	url: 'api/document/delete/' + rec.data.documentId,
+										success : function(response, option) {
+											console.log(response);
+											var respObj = Ext.decode(response.responseText);
+											Ext.Msg.alert(respObj.status, respObj.message);
+											if (respObj.status === 'success') {
+												Ext.Msg.alert('Success', "document deleted");
+											}else{
+												Ext.Msg.alert('Error', respObj.message);
+											}
+										},
+										failure : function(response, option) {
+											console.log(response);
+											Ext.Msg.alert('Error', response.responseText);
+										}
+				                    });
+
+			        	       }
 			        	   },
 			        	   {
 			        		   icon: 'css/images/shared/icons/fam/information.png',

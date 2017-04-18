@@ -13,6 +13,7 @@ public interface DocumentService {
 	List<Document> findDocumentByTaskId(Integer taskId);
 	Document findDocumentById(Integer documentId);
 	DocumentInfo findDocumentInfoById(Integer documentId);
+	void deleteDocumentById(Integer documentId);
 	
 	void saveTaskDoc(TaskDoc taskDoc);
 }

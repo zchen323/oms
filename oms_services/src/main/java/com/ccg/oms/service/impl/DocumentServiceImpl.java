@@ -208,5 +208,30 @@ public class DocumentServiceImpl implements DocumentService{
 		docInfo.setUrl("api/document/download/" + documentId);
 		
 		return docInfo;
+	}
+
+	@Override
+	public void deleteDocumentById(Integer documentId) {
+		
+		List<ProjectTaskDocumentEntity> projectTaskDocuments = ptdRepository.findByDocumentId(documentId);
+		if(projectTaskDocuments != null && !projectTaskDocuments.isEmpty()){
+			ptdRepository.delete(projectTaskDocuments);
+		}	
+		
+		List<TaskDocEntity> taskDocEntities = taskDocRepository.findByDocumentId(documentId);
+		if(taskDocEntities != null && !taskDocEntities.isEmpty()){
+			taskDocRepository.delete(taskDocEntities);
+		}
+		
+		DocumentEntity docEntity = docRepository.findOne(documentId);
+		if(docEntity != null){
+			docRepository.delete(docEntity);
+		}
+		
+		List<DocumentAdditionalEntity> documentAddEntities = docAddRepository.findByDocumentIdOrderById(documentId);
+		if(documentAddEntities != null && !documentAddEntities.isEmpty()){
+			docAddRepository.delete(documentAddEntities);
+		}
+	
 	}	
 }
