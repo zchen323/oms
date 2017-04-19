@@ -306,15 +306,32 @@ oms.task.createTaskDocumentPanel=function(task,id)
 			        		   icon: 'css/images/shared/icons/fam/delete.gif',
 			        		   handler: function(grid, rowIndex, colIndex) {
 				                    var rec = grid.getStore().getAt(rowIndex);
-				                    console.log(rec);
+				                    //console.log(rec);
+				                    var myMask = Ext.MessageBox.wait("Remove Document and Reloading task...");
 				                    Ext.Ajax.request({
 				                    	url: 'api/document/delete/' + rec.data.documentId,
 										success : function(response, option) {
 											console.log(response);
 											var respObj = Ext.decode(response.responseText);
-											Ext.Msg.alert(respObj.status, respObj.message);
+											//Ext.Msg.alert(respObj.status, respObj.message);
 											if (respObj.status === 'success') {
-												Ext.Msg.alert('Success', "document deleted");
+												
+												Ext.Ajax.request({
+													url : "api/project/task/"+id+"/doc",
+													method : 'GET',
+														success : function(response, option) {
+															var respObj = Ext.decode(response.responseText);
+															if (respObj.status === 'success') {
+																Ext.getStore('taskdlStore'+id).setData(respObj.result);
+															}
+															myMask.close();
+														},
+														failure : function(response, option) {
+															console.log(response);
+															Ext.Msg.alert('Error', response.responseText);
+														}
+													
+												});
 											}else{
 												Ext.Msg.alert('Error', respObj.message);
 											}

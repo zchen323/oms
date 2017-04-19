@@ -22,7 +22,7 @@ oms.ui={
 		{
 			var res='<p><b><u><font size=2 color="#336699">Recent Documents:</font></u></b>';
 			res=res+"<ul>";
-			for(var i=0;i<docs.length;i++){
+			for(var i=0;i<docs.length&&i<5;i++){
 				doc=docs[i];
 				res=res+'<li><font size=1><a href="#" onclick="oms.doc.openDoc('+doc.id+');return false;">'+doc.name+'</a> -- '+doc.type+'</font></li>';
 			}

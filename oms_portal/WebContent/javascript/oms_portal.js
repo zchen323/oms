@@ -49,7 +49,7 @@ function displayRate()
 		}]
 	});
 
-oms.loadUserDoc=function(){
+oms.loadUserDoc=function(mask){
 	Ext.Ajax.request({
 		url : "api/user/viewedDocuments",
 		method : 'GET',
@@ -63,7 +63,7 @@ oms.loadUserDoc=function(){
 				var l_doc=respObj.result;
 			//	console.log(l_proj);
 		    //  now load search keyworkds
-				console.log("call key words");
+				//console.log("call key words");
 				Ext.Ajax.request({
 					url : "api/user/searchedKeyWords",
 					method : 'GET',
@@ -72,6 +72,10 @@ oms.loadUserDoc=function(){
 						var keys= Ext.decode(response.responseText).result;
 						var htmlstr=oms.ui.getUserDocumentHtml(l_doc,keys);
 						Ext.getCmp('mydocpanel').update(htmlstr);
+						if(mask)
+							{
+							  mask.close();
+							}
 					},
 					failure : function(response, option) {
 					console.log(response);
@@ -190,7 +194,8 @@ Ext.onReady(function(){
 	viewport.doLayout();
 //	viewport.setActiveTab(2);
 	//viewport.add(oms.project.createNewProjPanel);
+	var myMask = Ext.MessageBox.wait("Initialized Data Please Wait...");
 	oms.admin.refreshData();
 	oms.loadUserProject();
-	oms.loadUserDoc();
+	oms.loadUserDoc(myMask);
 });

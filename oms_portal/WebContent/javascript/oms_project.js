@@ -98,6 +98,7 @@ oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
 
 oms.project.openProject=function(projId)
 {
+	var myMask = Ext.MessageBox.wait("Loading Project...."+projId);
 	Ext.Ajax.request({
 		url:'api/project/'+projId,
 		success:function(response)
@@ -116,6 +117,7 @@ oms.project.openProject=function(projId)
 				var p_proj=oms.project.createProjectPanel(proj);
 				Ext.getCmp('centerViewPort').add(p_proj);
 				Ext.getCmp('centerViewPort').setActiveTab(p_proj);
+				myMask.close();
 			}
 		},
 		failure:function(response)

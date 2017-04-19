@@ -181,6 +181,7 @@ oms.doc.openDoc=function(docID){
 	}
     else{
 	// now need to ajax calls
+    	 var myMask = Ext.MessageBox.wait("Loading Document...."+docID);
 	Ext.Ajax.request({
 		url:'api/document/'+docID,
 		success:function(response)
@@ -191,6 +192,7 @@ oms.doc.openDoc=function(docID){
 			var dpanel=oms.doc.createDocMainPanel(doc);
 			Ext.getCmp('centerViewPort').add(dpanel);
 			Ext.getCmp('centerViewPort').setActiveTab(dpanel);
+			myMask.close();
 		},
 		failure: function(response) 
 		        { 
