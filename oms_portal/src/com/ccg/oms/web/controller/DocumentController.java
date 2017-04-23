@@ -156,6 +156,7 @@ public class DocumentController {
 					order.add(doc.getDocumentId());
 					map.put(doc.getDocumentId(), sr);
 				}
+				doc.setDocumentTitle(null);
 			}
 			
 			// final searh result
