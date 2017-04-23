@@ -12,6 +12,7 @@ public interface DocumentService {
 	List<Document> findDocumentByProjectId(Integer projectId);
 	List<Document> findDocumentByTaskId(Integer taskId);
 	Document findDocumentById(Integer documentId);
+	Document findDocumentByCategoryId(Integer categoryId);
 	DocumentInfo findDocumentInfoById(Integer documentId);
 	void deleteDocumentById(Integer documentId);
 	

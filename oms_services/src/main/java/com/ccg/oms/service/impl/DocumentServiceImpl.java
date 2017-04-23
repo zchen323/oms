@@ -20,6 +20,7 @@ import com.ccg.oms.common.data.document.Document;
 import com.ccg.oms.common.data.document.DocumentInfo;
 import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.common.indexing.Doc;
+import com.ccg.oms.common.indexing.IndexingException;
 import com.ccg.oms.common.indexing.IndexingHelper;
 import com.ccg.oms.dao.entiry.document.DocumentAdditionalEntity;
 import com.ccg.oms.dao.entiry.document.DocumentCategoryEntity;
@@ -272,9 +273,9 @@ public class DocumentServiceImpl implements DocumentService{
 	private void indexing(Document document){
 		InputStream is = new ByteArrayInputStream(document.getContent());
 		ExtractArticleInfo extract = new ExtractArticleInfo();
+		//ArticleInfo info = null;
 		try {
 			ArticleInfo info = extract.fromPDF(is, ArticleTypePattern.PROPOSALS_1);
-			
 			DocumentTextEntity dtEntity = new DocumentTextEntity();
 			dtEntity.setDocumentId(document.getId());
 			dtEntity.setText(info.getContent());
@@ -298,24 +299,36 @@ public class DocumentServiceImpl implements DocumentService{
 				int endPosition = c.getEndPosition();
 				String categoryContent = info.getContent().substring(startPosition, endPosition);
 				convertToDoc(docsToBeIndexed, dcEntity, info.getTitle(), categoryContent );
-			}
-			// update indexing
-			if(docsToBeIndexed.isEmpty()){
-				Doc doc = new Doc();
-				doc.setDocumentId(document.getId());
-				doc.setDocumentTitle(document.getName());
-				doc.setText(info.getContent());
-				docsToBeIndexed.add(doc);
-				IndexingHelper.updateDocument(docsToBeIndexed);
 				
-			}else{
-				IndexingHelper.updateDocument(docsToBeIndexed);	
+				try{
+					// update indexing
+					if(docsToBeIndexed.isEmpty()){
+						Doc doc = new Doc();
+						doc.setDocumentId(document.getId());
+						doc.setDocumentTitle(document.getName());
+						doc.setText(info.getContent());
+						docsToBeIndexed.add(doc);
+						IndexingHelper.updateDocument(docsToBeIndexed);
+						
+					}else{
+						IndexingHelper.updateDocument(docsToBeIndexed);	
+					}
+				}catch(IndexingException e){		
+					e.printStackTrace();
+				}
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		}catch(Exception e){
+			// indexing document as whole file
 			e.printStackTrace();
+			DocumentCategoryEntity dcEntity = new DocumentCategoryEntity();
+			dcEntity.setDocumentId(document.getId());
+			dcRepository.save(dcEntity);
+			try{
+				IndexingHelper.updateDocument(document, "" + dcEntity.getId());
+			}catch(IndexingException ie){
+				ie.printStackTrace();
+			}			
 		}
-		
 	}
 	
 	private void convertToDoc(
@@ -334,6 +347,16 @@ public class DocumentServiceImpl implements DocumentService{
 		doc.setEndPosition(dcEntity.getEndPosition());
 		doc.setText(content);
 		docsToBeIndexed.add(doc);
+	}
+
+	@Override
+	@Transactional
+	public Document findDocumentByCategoryId(Integer categoryId) {
+		DocumentCategoryEntity dcEntity = dcRepository.findOne(categoryId);
+		Integer documentId = dcEntity.getDocumentId();
+		DocumentEntity docEntity = docRepository.findOne(documentId);
+		Document doc = DocumentMapper.fromEntity(docEntity);
+		return doc;
 	}
 	
 }

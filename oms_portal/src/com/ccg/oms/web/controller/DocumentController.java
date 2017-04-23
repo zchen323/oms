@@ -148,13 +148,24 @@ public class DocumentController {
 				}else{
 					SearchResult sr = new SearchResult();
 					sr.setQ(query);
-					ResultDoc resultDoc = new ResultDoc();
-					resultDoc.setId(doc.getDocumentId());
-					resultDoc.setTitle(doc.getDocumentTitle());
-					resultDoc.getCategories().add(doc);
-					sr.setDocuement(resultDoc);
-					order.add(doc.getDocumentId());
-					map.put(doc.getDocumentId(), sr);
+					if(documentId == null){
+						Document document = docService.findDocumentByCategoryId(Integer.parseInt(doc.getId()));
+						ResultDoc resultDoc = new ResultDoc();
+						resultDoc.setId(document.getId());
+						resultDoc.setTitle(document.getName());
+						order.add(document.getId());
+						sr.setDocuement(resultDoc);
+						map.put(document.getId(), sr);
+					}else{					
+
+						ResultDoc resultDoc = new ResultDoc();
+						resultDoc.setId(doc.getDocumentId());
+						resultDoc.setTitle(doc.getDocumentTitle());
+						resultDoc.getCategories().add(doc);
+						sr.setDocuement(resultDoc);
+						order.add(doc.getDocumentId());
+						map.put(doc.getDocumentId(), sr);
+					}
 				}
 				doc.setDocumentTitle(null);
 			}
@@ -166,6 +177,7 @@ public class DocumentController {
 			}
 			resp.setResult(srs);
 		}catch(Exception e){
+			e.printStackTrace();
 			resp.setMessage(e.getMessage());
 			resp.setStatus(RestResponseConstants.FAIL);
 		}
