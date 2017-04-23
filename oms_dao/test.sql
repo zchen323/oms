@@ -163,7 +163,23 @@ create table usersearchhistory (
 );
 
 
+create table documenttext (
+	id int not null auto_increment,
+	documentId int,
+	text mediumtext,
+	primary key(id)
+);
 
+create table documentcategory (
+	id int not null auto_increment,
+	documentId int,
+	categoryTitle varchar(250),
+	startPage int,
+	endPage int,
+	startPosition int,
+	endPosition int,
+	primary key(id)
+);
 
 
 

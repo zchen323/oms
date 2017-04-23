@@ -6,6 +6,7 @@
 		<project>oms_services</project>
 		<project>oms_dao</project>
 		<project>oms_common</project>
+		<project>ingestion</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

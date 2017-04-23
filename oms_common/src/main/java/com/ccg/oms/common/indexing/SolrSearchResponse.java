@@ -1,4 +1,4 @@
-package com.ccg.oms.common.data.document.solr;
+package com.ccg.oms.common.indexing;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

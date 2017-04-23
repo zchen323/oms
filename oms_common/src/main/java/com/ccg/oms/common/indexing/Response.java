@@ -1,4 +1,4 @@
-package com.ccg.oms.common.data.document.solr;
+package com.ccg.oms.common.indexing;
 
 import java.util.ArrayList;
 import java.util.List;

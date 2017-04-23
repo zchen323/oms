@@ -9,6 +9,7 @@ public class ArticleInfo {
 	String type="PDF"; // PDF, ...
 	String content;
 	String upperCaseContent=null;
+	
 	public String getUpperCaseContent() {
 		if(upperCaseContent==null&&content!=null)
 		{
@@ -16,6 +17,7 @@ public class ArticleInfo {
 		}
 		return upperCaseContent;
 	}
+	
 	int pages;
 	List<Category> categoryList ;
 	

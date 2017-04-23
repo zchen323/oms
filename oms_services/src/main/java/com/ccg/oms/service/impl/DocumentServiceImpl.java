@@ -1,5 +1,7 @@
 package com.ccg.oms.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,18 +10,28 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.ccg.ingestion.extract.ArticleInfo;
+import com.ccg.ingestion.extract.ArticleTypePattern;
+import com.ccg.ingestion.extract.Category;
+import com.ccg.ingestion.extract.ExtractArticleInfo;
 import com.ccg.oms.common.data.document.Document;
 import com.ccg.oms.common.data.document.DocumentInfo;
 import com.ccg.oms.common.data.project.TaskDoc;
+import com.ccg.oms.common.indexing.Doc;
+import com.ccg.oms.common.indexing.IndexingHelper;
 import com.ccg.oms.dao.entiry.document.DocumentAdditionalEntity;
+import com.ccg.oms.dao.entiry.document.DocumentCategoryEntity;
 import com.ccg.oms.dao.entiry.document.DocumentEntity;
+import com.ccg.oms.dao.entiry.document.DocumentTextEntity;
 import com.ccg.oms.dao.entiry.document.ProjectTaskDocumentEntity;
-import com.ccg.oms.dao.entiry.project.ProjectEntity;
 import com.ccg.oms.dao.entiry.project.TaskDocEntity;
 import com.ccg.oms.dao.entiry.project.TaskEntity;
 import com.ccg.oms.dao.repository.document.DocumentAdditionalRepository;
+import com.ccg.oms.dao.repository.document.DocumentCategoryRepository;
 import com.ccg.oms.dao.repository.document.DocumentRepository;
+import com.ccg.oms.dao.repository.document.DocumentTextRepository;
 import com.ccg.oms.dao.repository.document.ProjectTaskDocumentRepository;
 import com.ccg.oms.dao.repository.project.TaskDocRepository;
 import com.ccg.oms.dao.repository.project.TaskRepository;
@@ -48,6 +60,12 @@ public class DocumentServiceImpl implements DocumentService{
 	
 	@Autowired
 	ProjectServices projectService;
+	
+	@Autowired
+	DocumentTextRepository dtRepository;
+	
+	@Autowired
+	DocumentCategoryRepository dcRepository;
 	
 	static final int max = 1000000;
 	
@@ -94,6 +112,9 @@ public class DocumentServiceImpl implements DocumentService{
 				docAddRepository.save(daEntity);
 			}
 		}
+		doc.setId(entity.getId());
+		indexing(doc);
+		
 		return entity.getId();
 	}
 
@@ -232,6 +253,90 @@ public class DocumentServiceImpl implements DocumentService{
 		if(documentAddEntities != null && !documentAddEntities.isEmpty()){
 			docAddRepository.delete(documentAddEntities);
 		}
-	
+		
+		// remove from indexing
+		List<DocumentCategoryEntity> dcEntities = dcRepository.findByDocumentId(documentId);
+		List<String> categoryIds = new ArrayList<String>();
+		for(DocumentCategoryEntity dce : dcEntities){
+			categoryIds.add("" + dce.getId());
+		}
+		try {
+			IndexingHelper.deleteDocument(categoryIds);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}	
+	
+	@Transactional
+	private void indexing(Document document){
+		InputStream is = new ByteArrayInputStream(document.getContent());
+		ExtractArticleInfo extract = new ExtractArticleInfo();
+		try {
+			ArticleInfo info = extract.fromPDF(is, ArticleTypePattern.PROPOSALS_1);
+			
+			DocumentTextEntity dtEntity = new DocumentTextEntity();
+			dtEntity.setDocumentId(document.getId());
+			dtEntity.setText(info.getContent());
+			dtRepository.save(dtEntity);
+			
+			List<Doc> docsToBeIndexed = new ArrayList<Doc>();
+			
+			for(Category c : info.getCategoryList()){
+				System.out.println(c.getTitle() + ", " 
+						+ c.getStartPosition() + ", " + c.getEndPosition() + ", p"
+						+ c.getStartPage() + ", p" + c.getEndPage());
+				DocumentCategoryEntity dcEntity = new DocumentCategoryEntity();
+				dcEntity.setCategoryTitle(c.getTitle());
+				dcEntity.setDocumentId(document.getId());
+				dcEntity.setStartPage(c.getStartPage());
+				dcEntity.setEndPage(c.getEndPage());
+				dcEntity.setStartPosition(c.getStartPosition());
+				dcEntity.setEndPosition(c.getEndPosition());
+				dcRepository.save(dcEntity);
+				int startPosition = c.getStartPosition();
+				int endPosition = c.getEndPosition();
+				String categoryContent = info.getContent().substring(startPosition, endPosition);
+				convertToDoc(docsToBeIndexed, dcEntity, info.getTitle(), categoryContent );
+			}
+			// update indexing
+			if(docsToBeIndexed.isEmpty()){
+				Doc doc = new Doc();
+				doc.setDocumentId(document.getId());
+				doc.setDocumentTitle(document.getName());
+				doc.setText(info.getContent());
+				docsToBeIndexed.add(doc);
+				IndexingHelper.updateDocument(docsToBeIndexed);
+				
+			}else{
+				IndexingHelper.updateDocument(docsToBeIndexed);	
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void convertToDoc(
+			List<Doc> docsToBeIndexed, 
+			DocumentCategoryEntity dcEntity, 
+			String documentTitle,
+			String content){
+		Doc doc = new Doc();
+		doc.setId("" + dcEntity.getId());
+		doc.setDocumentId(dcEntity.getDocumentId());
+		doc.setDocumentTitle(documentTitle);
+		doc.setCategoryTitle(dcEntity.getCategoryTitle());
+		doc.setStartPage(dcEntity.getStartPage());
+		doc.setEndPage(dcEntity.getEndPage());
+		doc.setStartPosition(dcEntity.getStartPosition());
+		doc.setEndPosition(dcEntity.getEndPosition());
+		doc.setText(content);
+		docsToBeIndexed.add(doc);
+	}
+	
 }
+
+
+

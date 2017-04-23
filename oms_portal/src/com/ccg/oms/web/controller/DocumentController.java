@@ -1,17 +1,11 @@
 package com.ccg.oms.web.controller;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,13 +27,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.document.Document;
-import com.ccg.oms.common.data.document.solr.Doc;
-import com.ccg.oms.common.data.document.solr.SolrSearchResponse;
 import com.ccg.oms.common.data.project.TaskDoc;
+import com.ccg.oms.common.indexing.Doc;
+import com.ccg.oms.common.indexing.IndexingHelper;
+import com.ccg.oms.common.indexing.ResultDoc;
+import com.ccg.oms.common.indexing.SearchResult;
 import com.ccg.oms.service.DocumentService;
 import com.ccg.oms.service.UserServices;
 import com.ccg.util.JSON;
-import com.ccg.util.MultipartUtility;
 
 @Controller
 @RequestMapping("/document")
@@ -140,49 +135,35 @@ public class DocumentController {
 			HttpServletRequest request) {
 		RestResponse resp = RestResponse.getSuccessResponse();
 		try{
+			List<Doc> docs = IndexingHelper.search(query);
 			
-			String urlString = "http://72.177.234.240:8983/solr/select?q=" + query + "&fl=id,last_modified,content_type,author&wt=json";
-	        URL url = new URL(urlString);
-	        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-	        httpConn.setRequestMethod("GET");
-	        httpConn.setReadTimeout(15*1000);
-	        httpConn.connect();
-	        
-	       // BufferedReader br = new BufferedReader(new InputStreamReader())
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
-	        StringBuffer sb = new StringBuffer();
-	        String line = null;
-	        while((line = reader.readLine())!= null){
-	        	sb.append(line).append("\n");
-	        }
-	        
-	        System.out.println(sb.toString());	        
-	        SolrSearchResponse searchResponse = JSON.fromJson(sb.toString(), SolrSearchResponse.class);
-	        // 
-	        List<Doc> docs = searchResponse.getResponse().getDocs();
-	        /// find document name and filterd deleted document
-	        List<Doc> finalDocs = new LinkedList<Doc>();
-	        for(Doc doc : docs){
-	        	try{
-	        		Document document = docService.findDocumentById(Integer.parseInt(doc.getId()));
-	        		if(document != null && !document.getName().isEmpty()){
-	        			doc.setName(document.getName());
-	        			finalDocs.add(doc);
-	        		}
-	        	}catch(Exception e){
-	        		e.printStackTrace();
-	        	}
-	        }
-	        searchResponse.getResponse().setDocs(finalDocs);
-	        
-	        System.out.println(JSON.toJson(searchResponse));
-	        
-	        // save searched keyword
-	        String userid = request.getRemoteUser();
-	        if(userid != null && !userid.isEmpty()){
-	        	userServices.addUserSearch(userid, query);
-	        }	        
-			resp.setResult(searchResponse);
+			//SearchResults sr = new SearchResults();
+			List<Integer> order = new ArrayList<Integer>();
+			Map<Integer, SearchResult> map = new HashMap<Integer, SearchResult>();
+			for(Doc doc : docs){
+				Integer documentId = doc.getDocumentId();
+				if(map.containsKey(documentId)){
+					SearchResult sr = map.get(documentId);
+					sr.getDocuement().getCategories().add(doc);
+				}else{
+					SearchResult sr = new SearchResult();
+					sr.setQ(query);
+					ResultDoc resultDoc = new ResultDoc();
+					resultDoc.setId(doc.getDocumentId());
+					resultDoc.setTitle(doc.getDocumentTitle());
+					resultDoc.getCategories().add(doc);
+					sr.setDocuement(resultDoc);
+					order.add(doc.getDocumentId());
+					map.put(doc.getDocumentId(), sr);
+				}
+			}
+			
+			// final searh result
+			List<SearchResult> srs = new ArrayList<SearchResult>();
+			for(Integer docId : order){
+				srs.add(map.get(docId));
+			}
+			resp.setResult(srs);
 		}catch(Exception e){
 			resp.setMessage(e.getMessage());
 			resp.setStatus(RestResponseConstants.FAIL);
@@ -237,25 +218,27 @@ public class DocumentController {
 					// indexing uploaded file					
 					/////////////////////////////
 					// create temp file
-					File tempFile = File.createTempFile("tempfile", doc.getType());
-					FileOutputStream fos = new FileOutputStream(tempFile);
-					fos.write(doc.getContent());
-					fos.close();
-					
-					// cal solr rest servicee for indexing
-					// TODO put rest URL in config file
-					String URL = "http://72.177.234.240:8983/solr/update/extract?literal.id=document_" + doc.getId() + "&commit=true";
-					String charSet = "UTF-8";
-					MultipartUtility utility = new MultipartUtility(URL, charSet);
-					
-					File file = new File("/Users/zchen323/Downloads/test.pdf");						
-					utility.addFilePart(doc.getName(), tempFile);						
-					List<String> resp = utility.finish();
-					for(String string : resp){
-						System.out.println("====>>>" + string);
-					}
-					// delete temp file
-					tempFile.deleteOnExit();
+//					File tempFile = File.createTempFile("tempfile", doc.getType());
+//					FileOutputStream fos = new FileOutputStream(tempFile);
+//					fos.write(doc.getContent());
+//					fos.close();
+//					
+//					// cal solr rest servicee for indexing
+//					// TODO put rest URL in config file
+//					String URL = "http://72.177.234.240:8983/solr/update/extract?literal.id=document_" + doc.getId() + "&commit=true";
+//					String charSet = "UTF-8";
+//					MultipartUtility utility = new MultipartUtility(URL, charSet);
+//					
+//					File file = new File("/Users/zchen323/Downloads/test.pdf");						
+//					utility.addFilePart(doc.getName(), tempFile);						
+//					List<String> resp = utility.finish();
+//					for(String string : resp){
+//						System.out.println("====>>>" + string);
+//					}
+//					
+//					
+//					// delete temp file
+//					tempFile.deleteOnExit();
 				}
 			}
 			System.out.println("======params======");
