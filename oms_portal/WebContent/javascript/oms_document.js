@@ -225,26 +225,18 @@ oms.doc.buildSearchDocs=function(docs){
 oms.doc.preDocSearch=function(key){
 	oms.doc.openDocumentPanel.show();
 	Ext.getCmp('docsearchkey').setValue(key);
-	Ext.getCmp('searchedDocuments').update("loading....");
-	Ext.Ajax.request({
-		url : "api/document/search?query="+Ext.encode(key),
-		method : 'GET',
-		success : function(response, option) {
-			//console.log(response);
-			var respObj = Ext.decode(response.responseText);
-		//	Ext.Msg.alert(respObj.status, respObj.message);
-//				console.log(respObj);
-			if (respObj.status === 'success') {
-				// now we need to render the documents
-				var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
-				Ext.getCmp('searchedDocuments').update(htmlstr);
-			}
-		},
-		failure : function(response, option) {
-			console.log(response);
-			Ext.Msg.alert('Error', response.responseText);
+//	Ext.getCmp('searchedDocuments').update("loading....");
+};
+oms.doc.buildTreeStore=function(searchkey,nodes){
+	var stree=Ext.create('Ext.data.TreeStore',{
+		root:{
+			text:'Search Result for:['+searchkey+']',
+			expanded:true,
+			children:nodes
+	//		loaded:true
 		}
 	});
+	return stree;
 };
 oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 	frame: true,
@@ -287,31 +279,36 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 			handler: function()
 			{
 				var key=Ext.getCmp('docsearchkey').getValue();
+				var urlstr="api/document/search?query="+Ext.encode(key);
 				var myMask = Ext.MessageBox.wait("Processing....","Searching Article...");
+			
 				Ext.Ajax.request({
-					url : "api/document/search?query="+Ext.encode(key),
+					url : urlstr,
 					method : 'GET',
 					success : function(response, option) {
 						//console.log(response);
 						var respObj = Ext.decode(response.responseText);
-						myMask.close();
+						
 					//	Ext.Msg.alert(respObj.status, respObj.message);
 		//				console.log(respObj);
 						if (respObj.status === 'success') {
 							// now we need to render the documents
-							var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
+						//	var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
+							console.log(respObj);
+							var store=oms.doc.buildTreeStore(key,respObj.result);
 							var colors=["#ffcccc","#ccffcc","orange"];
 							var index=Ext.getCmp('searchtabpanel').items.length;
 							var c=colors[index%3];
-							var panel=Ext.create('Ext.panel.Panel', {
+							var panel=Ext.create('Ext.tree.Panel', {
 								style: {borderColor:c, borderStyle:'double', borderWidth:'3px'},
 								title: '['+key+':]', 
 								closable: true,
 							    autoScroll:true,
 							    scroll:'vertical',
-							    html:htmlstr
+							    store:store
 							});
 							Ext.getCmp('searchtabpanel').add(panel).show();
+							myMask.close();
 						}
 					},
 					failure : function(response, option) {

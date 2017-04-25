@@ -171,9 +171,9 @@ public class DocumentController {
 			}
 			
 			// final searh result
-			List<SearchResult> srs = new ArrayList<SearchResult>();
+			List<ResultDoc> srs = new ArrayList<ResultDoc>();
 			for(Integer docId : order){
-				srs.add(map.get(docId));
+				srs.add(map.get(docId).getDocuement());
 			}
 			resp.setResult(srs);
 		}catch(Exception e){

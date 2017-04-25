@@ -29,7 +29,7 @@ oms.ui={
 			res=res+"</ul>";
 			res=res+'<p><b><u><font size=2 color="#336699">Frequent Search Keywords:</font></u></b>';
 			res=res+"<ul>";
-			for (var i=0;i<keys.length;i++){
+			for (var i=0;i<keys.length&&i<5;i++){
 				key=keys[i].replace(/"/g,'').trim();
 				res=res+'<li><font size=1><a href="#" onclick="oms.doc.preDocSearch(\''+key+'\');return false;">'+key+'</a></font></li>';
 			}
