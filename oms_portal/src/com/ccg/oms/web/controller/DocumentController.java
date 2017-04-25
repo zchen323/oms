@@ -1,6 +1,10 @@
 package com.ccg.oms.web.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -32,6 +36,7 @@ import com.ccg.oms.common.indexing.Doc;
 import com.ccg.oms.common.indexing.IndexingHelper;
 import com.ccg.oms.common.indexing.ResultDoc;
 import com.ccg.oms.common.indexing.SearchResult;
+import com.ccg.oms.common.pdf.util.PdfUtil;
 import com.ccg.oms.service.DocumentService;
 import com.ccg.oms.service.UserServices;
 import com.ccg.util.JSON;
@@ -74,6 +79,164 @@ public class DocumentController {
 		os.write(document.getContent());
 		os.flush();
 	}
+
+	@RequestMapping(value="/download/{documentId}/{selectedPages}",method=RequestMethod.GET)
+	public void downloadParticalArticle(
+			@PathVariable("documentId") Integer documentId, 
+			@PathVariable("selectedPages") String selectedPages,  
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception
+	{
+		Document document = docService.findDocumentById(documentId);
+		if(document != null){
+			String userid = request.getRemoteUser();
+			if(userid != null && !userid.isEmpty()){
+				userServices.addUserDocument(userid, documentId);
+			}
+		}
+		response.setHeader("content-disposition", "inline; filename=" + document.getName());
+		
+		//ArticleContent content = dataservice.getArticleContent(articleId);
+		//String filename = content.getUrl();
+		File pdfFile = File.createTempFile(document.getName(), ".tmp");
+		FileOutputStream fos = new FileOutputStream(pdfFile);
+		fos.write(document.getContent());
+		fos.close();
+
+		
+		//File pdfFile = new File(filename);
+		File particalTemp = File.createTempFile(pdfFile.getName(), selectedPages);
+		
+		getParticalPdf(pdfFile, selectedPages, particalTemp);
+
+		response.setHeader("content-disposition", "inline; filename=" + pdfFile.getName());
+		response.setContentType("application/pdf");		
+		
+		OutputStream out = response.getOutputStream();
+		InputStream is = new FileInputStream(particalTemp);
+		byte[] buffer = new byte[1024];
+		int length = -1;
+		while((length = is.read(buffer)) != -1){
+			out.write(buffer, 0, length);
+		}
+		out.flush();
+		is.close();
+		particalTemp.delete();
+	}	
+
+	private void getParticalPdf(File pdfFile, String selectedPages, File newFile) throws Exception{
+		List<Integer> pages = new ArrayList<Integer>();
+		
+		int startPage = 0;
+		int endPage = 0;
+		
+		// page range 1-5 (from page 1 to page 5)
+		if(selectedPages.indexOf("-") != -1){
+			String[] pageRanges = selectedPages.split("-");
+			startPage = Integer.parseInt(pageRanges[0]);
+			endPage = Integer.parseInt(pageRanges[1]);
+			if(endPage < startPage){
+				endPage = startPage;
+			}
+			for(int i = startPage; i < endPage + 1; i++ ){
+				pages.add(i);
+			}
+		}else if(selectedPages.indexOf(",") != -1){
+			// selected pages: 1,4,5,9 (page 1, page 4, page 5 and page 9)
+			String[] pageRanges = selectedPages.split(",");
+			for(String string : pageRanges){
+				pages.add(Integer.parseInt(string));
+			}	
+		}else{
+			// single page: 5 (page 5)
+			pages.add(Integer.parseInt(selectedPages));
+		}	
+		
+		PdfUtil.extractSelectPageIntoNewFile(pdfFile, newFile, pages);		
+	}	
+	
+	@RequestMapping(value="/download/{documentId}/{selectedPages}/{highlightRegEx}",method=RequestMethod.GET)
+	public void downloadParticalArticleAndHighlightText(
+			@PathVariable("documentId") Integer documentId, 
+			@PathVariable("selectedPages") String selectedPages,
+			@PathVariable("highlightRegEx") String highlightRegEx,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception	{
+		//ArticleContent content = dataservice.getArticleContent(articleId);
+		//String filename = content.getUrl();
+
+		Document document = docService.findDocumentById(documentId);
+		if(document != null){
+			String userid = request.getRemoteUser();
+			if(userid != null && !userid.isEmpty()){
+				userServices.addUserDocument(userid, documentId);
+			}
+		}
+		response.setHeader("content-disposition", "inline; filename=" + document.getName());
+		
+		//ArticleContent content = dataservice.getArticleContent(articleId);
+		//String filename = content.getUrl();
+		File originalFile = File.createTempFile(document.getName(), ".tmp");
+		FileOutputStream fos = new FileOutputStream(originalFile);
+		fos.write(document.getContent());
+		fos.close();
+		
+		
+		//File originalFile = new File(filename);
+		
+		if(highlightRegEx == null){
+			highlightRegEx = "";
+		}
+		
+		if(highlightRegEx.startsWith("\"") && highlightRegEx.endsWith("\"")){
+			highlightRegEx = highlightRegEx.substring(1, highlightRegEx.length() - 1);
+		}else{
+			highlightRegEx = highlightRegEx.replaceAll("\\s+?", "|");
+		}
+		
+		if(selectedPages.equals("-1")){
+			
+			//ArticleMetaData metadata = dataservice.getArticleMetaDataByArticleId(articleId);
+			String html = "Error!!!";//metadata.toHTML();
+			response.setContentType("text/html");
+			// (?i) means CASE_INSENSITIVE.
+			html = html.replaceAll("(?i)" + highlightRegEx, "<span style='background:yellow;'>$0</span>");			
+			
+			response.getWriter().println(html);			
+		} else {
+
+			File tempFile = File.createTempFile(originalFile.getName(), ".tmp");
+
+			getParticalPdf(originalFile, selectedPages, tempFile);
+
+			response.setHeader("content-disposition", "inline; filename=" + originalFile.getName());
+			response.setContentType("application/pdf");
+
+			File highlightedTempFile = File.createTempFile(originalFile.getName(), "highlight");
+			try {
+				PdfUtil.textHighlight(tempFile, highlightedTempFile, highlightRegEx);
+			} catch (Exception e) {
+				e.printStackTrace();
+				// failed to highlight, just show the file without highlight
+				highlightedTempFile = tempFile;
+			}
+			OutputStream out = response.getOutputStream();
+			InputStream is = new FileInputStream(highlightedTempFile);
+			byte[] buffer = new byte[1024];
+			int length = -1;
+			while ((length = is.read(buffer)) != -1) {
+				out.write(buffer, 0, length);
+			}
+			out.flush();
+			is.close();
+			// out.close();
+			tempFile.delete();
+			highlightedTempFile.delete();
+		}
+	}			
+	
+	
+	
 	
 	@RequestMapping(value="{documentId}", method=RequestMethod.GET)
 	public @ResponseBody RestResponse getDocumentInfo(@PathVariable(name="documentId") Integer documentId){
