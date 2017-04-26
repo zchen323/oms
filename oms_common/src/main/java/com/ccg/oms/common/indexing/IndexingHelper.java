@@ -2,8 +2,8 @@ package com.ccg.oms.common.indexing;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ccg.oms.common.data.document.Document;
@@ -13,11 +13,14 @@ import com.ccg.util.MultipartUtility;
 
 public class IndexingHelper {
 	
+	private static String indexServerURL = "http://72.177.234.240:8983";
+	
 	public static void updateDocument(List<Doc> documents) throws IndexingException{
 		SimpleRestClient client = new SimpleRestClient();
 		// TODO put url in configuration file
-		String urlString = "http://localhost:8083/solr/update/json?commit=true";
-		String jsonPayload = JSON.toJson(documents);
+		String urlString = indexServerURL + "/solr/update/json?commit=true";
+		String jsonPayload = JSON.toJson(mapping(documents));
+		System.out.println("+++++" + jsonPayload);
 		try{
 			client.post(urlString, jsonPayload);	
 		}catch(Exception e){
@@ -35,7 +38,7 @@ public class IndexingHelper {
 			
 			// cal solr rest servicee for indexing
 			// TODO put rest URL in config file
-			String URL = "http://72.177.234.240:8983/solr/update/extract?" 
+			String URL = indexServerURL + "/solr/update/extract?" 
 					+ "literal.id=" + indexingId 
 					+ "&literal.documentId=" + doc.getId()
 					+ "&literal.documentTitless=title"
@@ -65,7 +68,7 @@ public class IndexingHelper {
 		
 		SimpleRestClient client = new SimpleRestClient();
 		// TODO put url in configuration file
-		String urlString = "http://localhost:8083/solr/update/json?commit=true";
+		String urlString = indexServerURL + "/solr/update/json?commit=true";
 		String jsonPayload = JSON.toJson(deleteRequest);
 		try{
 			client.post(urlString, jsonPayload);
@@ -88,7 +91,7 @@ public class IndexingHelper {
 		Integer endPosition;
 		String text;
 		*/
-		String searURL = "http://72.177.234.240:8983/solr/select?q=" + URLEncoder.encode(query, "UTF-8") 
+		String searURL = indexServerURL + "/solr/select?q=" + URLEncoder.encode(query, "UTF-8") 
 			+ "&fl=id,documentId,documentTitle,categoryTitle,startPage,endPage,startPosition,endPosition"
 			+ "&wt=json";
 		SimpleRestClient client = new SimpleRestClient();
@@ -99,5 +102,24 @@ public class IndexingHelper {
 			return resp.getResponse().getDocs();
 		}
 		return null;
+	}
+	
+	private static List<DocForIndexing> mapping(List<Doc> docs){
+		
+		List<DocForIndexing> dfis = new ArrayList<DocForIndexing>();
+		for(Doc doc : docs){
+			DocForIndexing dfi = new DocForIndexing();
+			dfi.setCategoryTitle(doc.getCategoryTitle());
+			dfi.setDocumentId(doc.getDocumentId());
+			dfi.setDocumentTitle(doc.getDocumentTitle());
+			dfi.setEndPage(doc.getEndPage());
+			dfi.setEndPosition(doc.getEndPosition());
+			dfi.setId(doc.getId());
+			dfi.setStartPage(doc.getStartPage());
+			dfi.setStartPosition(doc.getStartPosition());
+			dfi.setText(doc.getText());
+			dfis.add(dfi);
+		}
+		return dfis;		
 	}
 }

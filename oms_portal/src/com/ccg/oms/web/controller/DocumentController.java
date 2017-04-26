@@ -94,26 +94,29 @@ public class DocumentController {
 				userServices.addUserDocument(userid, documentId);
 			}
 		}
-		response.setHeader("content-disposition", "inline; filename=" + document.getName());
-		
-		//ArticleContent content = dataservice.getArticleContent(articleId);
-		//String filename = content.getUrl();
-		File pdfFile = File.createTempFile(document.getName(), ".tmp");
-		FileOutputStream fos = new FileOutputStream(pdfFile);
+				
+		File originalFile = File.createTempFile(document.getName(), ".tmp");
+		FileOutputStream fos = new FileOutputStream(originalFile);
 		fos.write(document.getContent());
 		fos.close();
 
+		File resultFile = File.createTempFile(document.getName(), "pdf");
+		getParticalPdf(originalFile, selectedPages, resultFile);
 		
-		//File pdfFile = new File(filename);
-		File particalTemp = File.createTempFile(pdfFile.getName(), selectedPages);
+		writeFileToResponse(response, resultFile);
 		
-		getParticalPdf(pdfFile, selectedPages, particalTemp);
+		resultFile.delete();
+		originalFile.delete();
+	}	
 
-		response.setHeader("content-disposition", "inline; filename=" + pdfFile.getName());
+	
+	private void writeFileToResponse(HttpServletResponse response, File resultFile) throws IOException{
+		
+		response.setHeader("content-disposition", "inline; filename=" + resultFile.getName());
 		response.setContentType("application/pdf");		
 		
 		OutputStream out = response.getOutputStream();
-		InputStream is = new FileInputStream(particalTemp);
+		InputStream is = new FileInputStream(resultFile);
 		byte[] buffer = new byte[1024];
 		int length = -1;
 		while((length = is.read(buffer)) != -1){
@@ -121,10 +124,10 @@ public class DocumentController {
 		}
 		out.flush();
 		is.close();
-		particalTemp.delete();
-	}	
-
-	private void getParticalPdf(File pdfFile, String selectedPages, File newFile) throws Exception{
+	}
+	
+	
+	private void getParticalPdf(File originalFile, String selectedPages, File resultFile) throws Exception{
 		List<Integer> pages = new ArrayList<Integer>();
 		
 		int startPage = 0;
@@ -150,9 +153,8 @@ public class DocumentController {
 		}else{
 			// single page: 5 (page 5)
 			pages.add(Integer.parseInt(selectedPages));
-		}	
-		
-		PdfUtil.extractSelectPageIntoNewFile(pdfFile, newFile, pages);		
+		}
+		PdfUtil.extractSelectPageIntoNewFile(originalFile, resultFile, pages);
 	}	
 	
 	@RequestMapping(value="/download/{documentId}/{selectedPages}/{highlightRegEx}",method=RequestMethod.GET)
@@ -162,28 +164,7 @@ public class DocumentController {
 			@PathVariable("highlightRegEx") String highlightRegEx,
 			HttpServletRequest request, 
 			HttpServletResponse response) throws Exception	{
-		//ArticleContent content = dataservice.getArticleContent(articleId);
-		//String filename = content.getUrl();
 
-		Document document = docService.findDocumentById(documentId);
-		if(document != null){
-			String userid = request.getRemoteUser();
-			if(userid != null && !userid.isEmpty()){
-				userServices.addUserDocument(userid, documentId);
-			}
-		}
-		response.setHeader("content-disposition", "inline; filename=" + document.getName());
-		
-		//ArticleContent content = dataservice.getArticleContent(articleId);
-		//String filename = content.getUrl();
-		File originalFile = File.createTempFile(document.getName(), ".tmp");
-		FileOutputStream fos = new FileOutputStream(originalFile);
-		fos.write(document.getContent());
-		fos.close();
-		
-		
-		//File originalFile = new File(filename);
-		
 		if(highlightRegEx == null){
 			highlightRegEx = "";
 		}
@@ -194,48 +175,54 @@ public class DocumentController {
 			highlightRegEx = highlightRegEx.replaceAll("\\s+?", "|");
 		}
 		
+		Document document = docService.findDocumentById(documentId);
+		if(document != null){
+			String userid = request.getRemoteUser();
+			if(userid != null && !userid.isEmpty()){
+				userServices.addUserDocument(userid, documentId);
+			}
+		}
+		
+		File originalFile = File.createTempFile(document.getName(), ".tmp");
+		FileOutputStream fos = new FileOutputStream(originalFile);
+		fos.write(document.getContent());
+		fos.close();
+		
 		if(selectedPages.equals("-1")){
 			
 			//ArticleMetaData metadata = dataservice.getArticleMetaDataByArticleId(articleId);
 			String html = "Error!!!";//metadata.toHTML();
 			response.setContentType("text/html");
 			// (?i) means CASE_INSENSITIVE.
-			html = html.replaceAll("(?i)" + highlightRegEx, "<span style='background:yellow;'>$0</span>");			
-			
+			html = html.replaceAll("(?i)" + highlightRegEx, "<span style='background:yellow;'>$0</span>");						
 			response.getWriter().println(html);			
 		} else {
 
-			File tempFile = File.createTempFile(originalFile.getName(), ".tmp");
+			//File selectedPageFile = new File(System.currentTimeMillis() + "_" + originalFile.getName());//File.createTempFile(originalFile.getName(), ".tmp");
+			File selectedPageFile = File.createTempFile(originalFile.getName(), ".tmp");
+			
+			getParticalPdf(originalFile, selectedPages, selectedPageFile);
 
-			getParticalPdf(originalFile, selectedPages, tempFile);
-
-			response.setHeader("content-disposition", "inline; filename=" + originalFile.getName());
-			response.setContentType("application/pdf");
-
-			File highlightedTempFile = File.createTempFile(originalFile.getName(), "highlight");
+			File highlightedFile = File.createTempFile(originalFile.getName(), "pdf");
+			
+			//String originalFilePath = "/Users/zchen323/codebase/test_doc/Volume II Technical BAMC IT IM-053.pdf";
+			//selectedPageFile = new File(originalFilePath);
+			
 			try {
-				PdfUtil.textHighlight(tempFile, highlightedTempFile, highlightRegEx);
+				PdfUtil.textHighlight(selectedPageFile, highlightedFile, highlightRegEx);
 			} catch (Exception e) {
 				e.printStackTrace();
 				// failed to highlight, just show the file without highlight
-				highlightedTempFile = tempFile;
+				highlightedFile = selectedPageFile;
 			}
-			OutputStream out = response.getOutputStream();
-			InputStream is = new FileInputStream(highlightedTempFile);
-			byte[] buffer = new byte[1024];
-			int length = -1;
-			while ((length = is.read(buffer)) != -1) {
-				out.write(buffer, 0, length);
-			}
-			out.flush();
-			is.close();
-			// out.close();
-			tempFile.delete();
-			highlightedTempFile.delete();
+			
+			writeFileToResponse(response, highlightedFile);
+			
+			selectedPageFile.delete();
+			highlightedFile.delete();
 		}
+		originalFile.delete();
 	}			
-	
-	
 	
 	
 	@RequestMapping(value="{documentId}", method=RequestMethod.GET)
