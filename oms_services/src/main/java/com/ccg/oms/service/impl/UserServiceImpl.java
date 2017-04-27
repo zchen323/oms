@@ -104,9 +104,9 @@ public class UserServiceImpl implements UserServices{
 				Set<UserRoleEntity2> roles = entity.getRoles();
 				for(UserRoleEntity2 role :roles){
 					String r = role.getRole();
-					if(r.startsWith("ROLE_")){
-						r = r.substring(5);
-					}
+//					if(r.startsWith("ROLE_")){
+//						r = r.substring(5);
+//					}
 					user.getRoles().add(r);
 				}
 				users.add(user);
@@ -224,9 +224,9 @@ public class UserServiceImpl implements UserServices{
 		Set<UserRoleEntity2> roleSet = new HashSet<UserRoleEntity2>();
 		for(String role : newUser.getRoleSet()){
 			UserRoleEntity2 roleEntity = new UserRoleEntity2();
-			if(!role.startsWith("ROLE_")){
-				role = "ROLE_" + role;
-			}
+//			if(!role.startsWith("ROLE_")){
+//				role = "ROLE_" + role;
+//			}
 			roleEntity.setRole(role);
 			roleEntity.setUser(entity);
 			roleSet.add(roleEntity);
@@ -265,9 +265,9 @@ public class UserServiceImpl implements UserServices{
 				Set<UserRoleEntity2> roles = userEntity.getRoles();
 				for(UserRoleEntity2 role : roles){
 					String r = role.getRole();
-					if(r.startsWith("ROLE_")){
-						r = r.substring(5);
-					}
+//					if(r.startsWith("ROLE_")){
+//						r = r.substring(5);
+//					}
 					sb.append(r).append(", ");
 				}
 				String temp = sb.toString();

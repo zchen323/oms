@@ -10,8 +10,8 @@
 		/> <logout logout-success-url="/logout" /> </http> -->
 
 	<http>
-		<intercept-url pattern="/oms*" access="hasRole('ROLE_admin')" />
-		<intercept-url pattern="/api/**" access="hasRole('ROLE_admin')" />
+		<intercept-url pattern="/oms*" access="hasAnyRole('ROLE_admin','ROLE_user')" />
+		<intercept-url pattern="/api/**" access="hasAnyRole('ROLE_admin','ROLE_user')" />
 		
 		<!-- 
 		<http-basic />
