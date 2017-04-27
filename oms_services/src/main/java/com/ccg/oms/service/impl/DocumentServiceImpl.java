@@ -273,7 +273,7 @@ public class DocumentServiceImpl implements DocumentService{
 	private void indexing(Document document){
 		InputStream is = new ByteArrayInputStream(document.getContent());
 		ExtractArticleInfo extract = new ExtractArticleInfo();
-		//ArticleInfo info = null;
+		
 		try {
 			ArticleInfo info = extract.fromPDF(is, ArticleTypePattern.PROPOSALS_1);
 			DocumentTextEntity dtEntity = new DocumentTextEntity();
@@ -298,7 +298,12 @@ public class DocumentServiceImpl implements DocumentService{
 				int startPosition = c.getStartPosition();
 				int endPosition = c.getEndPosition();
 				String categoryContent = info.getContent().substring(startPosition, endPosition);
-				convertToDoc(docsToBeIndexed, dcEntity, info.getTitle(), categoryContent );
+				
+				String docTitle = info.getTitle();
+				if(docTitle == null || docTitle.isEmpty()){
+					docTitle = document.getName();
+				}
+				convertToDoc(docsToBeIndexed, dcEntity, docTitle, categoryContent );
 				
 				try{
 					// update indexing
