@@ -444,15 +444,19 @@ public class UserServiceImpl implements UserServices{
 			if(!documentIds.contains(uchEntity.getDocumentId())){
 				documentIds.add(uchEntity.getDocumentId());
 			}
+			if(documentIds.size() > 10){
+				break;
+			}
 		}
 		
 		List<Document> documents = new ArrayList<Document>();
-		for(int i = 0; i < documentIds.size(); i++){
-			DocumentEntity documentEntity = documentRepository.findOne(documentIds.get(i));
-			if(documentEntity != null){
-				documentEntity.setContent(null);
-				documents.add(DocumentMapper.fromEntity(documentEntity));
-			}
+		long t1 = System.currentTimeMillis();
+		Iterable<DocumentEntity> documentEntities = documentRepository.findAll(documentIds);
+		long t2 = System.currentTimeMillis();
+		System.out.println("=======" + (t2-t1));
+		for(DocumentEntity documentEntity : documentEntities){
+			documentEntity.setContent(null);
+			documents.add(DocumentMapper.fromEntity(documentEntity));
 		}
 		return documents;
 	}
