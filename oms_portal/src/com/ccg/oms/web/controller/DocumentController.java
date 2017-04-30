@@ -377,31 +377,6 @@ public class DocumentController {
 					Integer documentId =  docService.saveDocument(doc);
 					doc.setId(documentId);
 					
-					/////////////////////////////
-					// indexing uploaded file					
-					/////////////////////////////
-					// create temp file
-//					File tempFile = File.createTempFile("tempfile", doc.getType());
-//					FileOutputStream fos = new FileOutputStream(tempFile);
-//					fos.write(doc.getContent());
-//					fos.close();
-//					
-//					// cal solr rest servicee for indexing
-//					// TODO put rest URL in config file
-//					String URL = "http://72.177.234.240:8983/solr/update/extract?literal.id=document_" + doc.getId() + "&commit=true";
-//					String charSet = "UTF-8";
-//					MultipartUtility utility = new MultipartUtility(URL, charSet);
-//					
-//					File file = new File("/Users/zchen323/Downloads/test.pdf");						
-//					utility.addFilePart(doc.getName(), tempFile);						
-//					List<String> resp = utility.finish();
-//					for(String string : resp){
-//						System.out.println("====>>>" + string);
-//					}
-//					
-//					
-//					// delete temp file
-//					tempFile.deleteOnExit();
 				}
 			}
 			System.out.println("======params======");
@@ -414,6 +389,7 @@ public class DocumentController {
 			taskDoc.setTaskId(Integer.parseInt(params.get("id")));
 			taskDoc.setUser(request.getRemoteUser());
 			taskDoc.setUploadTimestamp(new Timestamp(System.currentTimeMillis()));
+			taskDoc.setDoctype(params.get("doctype"));
 			if("".equals(params.get("taskdocid"))){
 				;
 			}else{
