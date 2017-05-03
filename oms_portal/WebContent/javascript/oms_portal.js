@@ -53,6 +53,7 @@ oms.loadUserDoc=function(mask){
 	Ext.Ajax.request({
 		url : "api/user/viewedDocuments",
 		method : 'GET',
+		timeout:120000,
 		success : function(response, option) {
 			//console.log(response);
 			var respObj = Ext.decode(response.responseText);

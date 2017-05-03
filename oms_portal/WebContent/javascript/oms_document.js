@@ -118,7 +118,71 @@ oms.doc.isImage=function(fn)
 			return false;
 		}
 };
-oms.doc.createDocMainPanel=function(doc) // proj is the json data for the											// project
+oms.doc.createSearchDocMainPanel=function(doc,start,end,query)
+{
+	var infop=oms.doc.createDocInfoPanel(doc) ;
+	var filename=doc.name.toLowerCase();
+	var mimetype="pdf";
+	if(oms.doc.isImage(filename))
+	{
+		mimetype='image';
+	}
+	
+	var htmlstr="";
+	if(mimetype=='image')
+		{
+			htmlstr='<img src="'+doc.url+'"/>';
+		}
+	else
+		{
+		    url=doc.url;
+		    if(start&&end)
+		    {
+		    	if(start==end)
+		    	{
+		    		url="api/document/download/"+doc.documentId+"/"+start+"/"+query;
+		    	}
+		    	else{
+		    		url="api/document/download/"+doc.documentId+"/"+start+"-"+end+"/"+query;
+		    	}
+		    
+		    }
+			htmlstr='<iframe src="'+url+'" width="100%" height="100%"></iframe>'
+		}
+	// now build html
+	var mainpanel=Ext.create('Ext.panel.Panel',{
+		layout:'hbox',
+		title:"DOC: -- ["+doc.name+"]--["+query+"]",
+		border:true,
+		items:[ 
+			{
+			xtype:'component',
+			id:'doccontent_'+doc.documentId,
+			width:'72%',
+			height:'100%',
+			scrollable:true,
+			margin:'2 2 2 2', 
+			defaults:{
+			bodypadding:10,
+			scrollable:true,
+			border:true
+			},
+			html: htmlstr
+			},
+			{
+			xtype:'panel',
+			width:'28%', 
+			
+			layout:'vbox',
+			items:[infop]
+			}
+			
+		]
+
+		}); 
+	return mainpanel;
+};
+oms.doc.createDocMainPanel=function(doc) 										// project
 {
 	var infop=oms.doc.createDocInfoPanel(doc) ;
 
@@ -174,6 +238,27 @@ oms.doc.createDocMainPanel=function(doc) // proj is the json data for the							
 		}); 
 	return mainpanel;
 };
+oms.doc.openSearchDoc=function(docID,spage,epage,query){
+		// now need to ajax calls
+	    	 var myMask = Ext.MessageBox.wait("Loading Document...."+docID);
+		Ext.Ajax.request({
+			url:'api/document/'+docID,
+			success:function(response)
+			{
+				var obj=Ext.JSON.decode(response.responseText);
+				//console.log(obj);
+				var doc=obj.result;
+				var dpanel=oms.doc.createSearchDocMainPanel(doc,spage,epage,query);
+				Ext.getCmp('centerViewPort').add(dpanel);
+				Ext.getCmp('centerViewPort').setActiveTab(dpanel);
+				myMask.close();
+			},
+			failure: function(response) 
+			        { 
+			            console.log(response.responseText); 
+			        } 
+		});
+};
 oms.doc.openDoc=function(docID){
     if(Ext.getCmp('docPanel'+docID)!=null)
 	{
@@ -215,7 +300,6 @@ oms.doc.buildSearchDocs=function(docs){
 				res=res+"</font><p>......<a href='#' onclick='oms.doc.openDoc("+doc.id+");return false;'>Open Document</a>";
 				res=res+"</li>";
 			}
-
 	}
 	res=res+"</ul>"
 	
@@ -305,7 +389,31 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 								closable: true,
 							    autoScroll:true,
 							    scroll:'vertical',
-							    store:store
+							    store:store,
+							    listeners:{
+							    itemclick: function(s,r) {
+							    	if(r.data.id=='root'){
+							    			return;
+							    	}
+					            	var d=r.data;
+					            	if(d.documentId&&d.startPage&&d.endPage){
+					            		oms.doc.openSearchDoc(d.documentId,d.startPage,d.endPage,key);
+					            	}
+					          /*  	if(r.data&&r.data.startPage)
+					            	{
+					            		ccg.ui.updateSelectedContent(r.data,searchkey);
+					            		if(r.data.text.indexOf("Article")>-1)
+					            		{
+					            			if(r.data.expanded!=true)
+					            			{
+					            				this.expandNode(r,true);
+					            			}
+					            		}
+					            	}	
+					            	// now check if the tree is expanded
+					            	*/
+					            }
+							    }
 							});
 							Ext.getCmp('searchtabpanel').add(panel).show();
 							myMask.close();
