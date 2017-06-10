@@ -198,7 +198,7 @@ oms.admin.userEditPanel=Ext.create('Ext.window.Window',{
 			{ 
 				fieldLabel: 'User Name', 
 				name: 'username', 
-				emptyText: 'user id',
+				emptyText: 'user logon name',
 				id: 'username',
 			},
 			{ 

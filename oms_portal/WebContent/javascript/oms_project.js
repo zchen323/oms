@@ -98,6 +98,13 @@ oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
 
 oms.project.openProject=function(projId)
 {
+	var ppanelID="projectPanel"+projId;
+	if(Ext.getCmp(ppanelID)!=null)
+	{
+			// panel already exist
+		  Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp(ppanelID));
+		  return;
+	}
 	var myMask = Ext.MessageBox.wait("Loading Project...."+projId);
 	Ext.Ajax.request({
 		url:'api/project/'+projId,
@@ -106,19 +113,12 @@ oms.project.openProject=function(projId)
 			var obj=Ext.JSON.decode(response.responseText);
 			var proj=obj.result;
 		//	console.log(obj.result);
-			var ppanelID="projectPanel"+projId;
-			if(Ext.getCmp(ppanelID)!=null)
-			{
-					// panel already exist
-				  Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp(ppanelID));
-			}
-			else
-			{
+			
+
 				var p_proj=oms.project.createProjectPanel(proj);
 				Ext.getCmp('centerViewPort').add(p_proj);
 				Ext.getCmp('centerViewPort').setActiveTab(p_proj);
 				myMask.close();
-			}
 		},
 		failure:function(response)
 		{
@@ -555,7 +555,7 @@ oms.project.createTaskItemPanel=function(task,seq,porj)
 	h_html=h_html+"<td width=15%><font color=#336699><div id='task_ownerlbl_"+task.id+"'>"+task.owner+"</div></font></td>"; 
 	h_html=h_html+"<td width=15%><font color=green><div id='task_statuslbl_"+task.id+"'>"+task.status+"</div></font></td>";
 	h_html=h_html+"<td width=20%><font color=green><div id='task_tgtdtlbl_"+task.id+"'>"+task.targetDate+"</div></font></td>";
-	h_html=h_html+'<td width=10%><a href="" onclick="oms.task.showTaskInfoEdit('+task.id+');return false;"><img src="css/images/shared/icons/fam/cog_edit.png"></a></td>';
+	h_html=h_html+'<td width=10%><a href="" onclick="oms.task.showTaskInfoEdit('+task.id+');return false;"><img src="css/images/shared/icons/fam/cog_edit.png"></a><a href="" onclick="return false;"><img src="css/images/shared/icons/fam/delete.gif"></a></td>';
 	h_html=h_html+"</tr></table>";
 	var taskid=task.id;
 	// now build commend and document panel
@@ -605,7 +605,15 @@ oms.project.createTaskListPanel=function(taskList,projID)
 	var pc=Ext.create('Ext.panel.Panel',{
 		id:'tasklistpanel'+projID, 
 		title:'Tasks List', 
-		items:[]
+		items:[],
+		tbar:[
+		      {
+		    	text:"Add New Task",
+		 		handler:function()
+		 		{
+		 			alert("add task panel");
+		 		} 
+		      }],
 	}); 
 
 	var data=taskList;
@@ -616,7 +624,7 @@ oms.project.createTaskListPanel=function(taskList,projID)
 		var itempanel=oms.project.createTaskItemPanel(data[i],i);
 		if(data[i][4]=='in progress')
 		{
-		itempanel.collapsed=false;
+		 itempanel.collapsed=false;
 		}
 		pc.add(itempanel);
 	}
@@ -1217,7 +1225,18 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 									tlgrid, 
 									dlgrid,
 									ulgrid
-								]
+								],
+							buttons:[
+									{
+										text:"Delete Project",
+										handler: function(){
+											Ext.Msg.confirm('Please Confirm', 'Remove project and all related tasks and document from Database?', function(answer) {
+												  if (answer == "yes") {
+												   	alert("remove document logic")
+												  }
+												});
+										}
+									}]
 				},
 				{
 					xtype:'container',

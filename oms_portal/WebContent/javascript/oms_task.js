@@ -478,7 +478,7 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 	closable:true, 
 	title: 'Add New Document',
 	bodyPadding: 10,
-	width:380,
+	width:420,
 	scrollable:true,
 	closeAction: 'hide',
 	layout:'vbox',
@@ -493,18 +493,20 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 				bodypadding:'10 10 10 10',
 				items:[
 					{
-						xtype:'textfield',
+						xtype:'hiddenfield',
 						name:'taskdocid', 
 						fieldLabel:'Task Document ID:', 
 						margin: '0 2 5 15',
+						editable:false,
 						labelCls:'omslabelstyle',
 						fieldCls:'omsfieldstyle'
 					},
 					{
-						xtype:'textfield',
+						xtype:'hiddenfield',
 						name:'id', 
 						fieldLabel:'Task ID:', 
 						margin: '0 2 5 15',
+						editable:false,
 						labelCls:'omslabelstyle',
 						fieldCls:'omsfieldstyle'
 					},
@@ -531,6 +533,13 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 	            		typeAhead: true,
 						fieldLabel:'Document Types',
 				
+					},
+					{
+						xtype:'checkbox',
+						margin: '0 2 5 15',
+						name:'restricted',
+						valueField:'restricted',
+						fieldLabel:'Restricted' 
 					},
 					{
 			            xtype: 'filefield',
