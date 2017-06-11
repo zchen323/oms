@@ -1233,7 +1233,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 										handler: function(){
 											Ext.Msg.confirm('Please Confirm', 'Remove project and all related tasks and document from Database?', function(answer) {
 												  if (answer == "yes") {
-												   	alert("remove document logic: " + projectId);
+												   	//alert("remove document logic: " + projectId);
 												
 													Ext.Ajax.request({
 														url : "api/projectadmin/project/" + projectId,
