@@ -15,6 +15,7 @@ public class DocumentEntity {
 	private Integer size;
 	private byte[] content;
 	private boolean hasMore;
+	private Boolean restricted;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +56,14 @@ public class DocumentEntity {
 	}
 	public void setHasMore(boolean hasMore) {
 		this.hasMore = hasMore;
+	}
+	public Boolean isRestricted() {
+		if(restricted == null)
+			return false;
+		return restricted;
+	}
+	public void setRestricted(Boolean restricted) {
+		this.restricted = restricted;
 	}
 	
 }

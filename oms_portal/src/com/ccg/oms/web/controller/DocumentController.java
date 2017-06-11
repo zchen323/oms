@@ -32,6 +32,7 @@ import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.document.Document;
 import com.ccg.oms.common.data.project.TaskDoc;
+import com.ccg.oms.common.data.user.UserInfo;
 import com.ccg.oms.common.indexing.Doc;
 import com.ccg.oms.common.indexing.IndexingHelper;
 import com.ccg.oms.common.indexing.ResultDoc;
@@ -57,8 +58,15 @@ public class DocumentController {
 		if(document != null){
 			String userid = request.getRemoteUser();
 			if(userid != null && !userid.isEmpty()){
-				userServices.addUserDocument(userid, documentId);
+				if(this.isUserHasAccessToDocument(userid, document)){
+					userServices.addUserDocument(userid, documentId);
+				}else{
+					document = this.getNoAccessDoc();
+				}
 			}
+		}else{
+			document = new Document();
+			document.setContent("Document not existed".getBytes());
 		}
 		
 		response.setHeader("content-disposition", "inline; filename=" + document.getName());
@@ -91,9 +99,17 @@ public class DocumentController {
 		if(document != null){
 			String userid = request.getRemoteUser();
 			if(userid != null && !userid.isEmpty()){
-				userServices.addUserDocument(userid, documentId);
+				if(this.isUserHasAccessToDocument(userid, document)){
+					userServices.addUserDocument(userid, documentId);
+				}else{
+					document = this.getNoAccessDoc();
+				}
 			}
+		}else{
+			document = new Document();
+			document.setContent("Document not existed".getBytes());
 		}
+
 				
 		File originalFile = File.createTempFile(document.getName(), ".tmp");
 		FileOutputStream fos = new FileOutputStream(originalFile);
@@ -179,9 +195,17 @@ public class DocumentController {
 		if(document != null){
 			String userid = request.getRemoteUser();
 			if(userid != null && !userid.isEmpty()){
-				userServices.addUserDocument(userid, documentId);
+				if(this.isUserHasAccessToDocument(userid, document)){
+					userServices.addUserDocument(userid, documentId);
+				}else{
+					document = this.getNoAccessDoc();
+				}
 			}
+		}else{
+			document = new Document();
+			document.setContent("Document not existed".getBytes());
 		}
+
 		
 		File originalFile = File.createTempFile(document.getName(), ".tmp");
 		FileOutputStream fos = new FileOutputStream(originalFile);
@@ -374,11 +398,20 @@ public class DocumentController {
 					System.out.println("======>>>" + ft.getSize());
 					doc.setType(type);
 					// save document to db
-					Integer documentId =  docService.saveDocument(doc);
-					doc.setId(documentId);
+					//Integer documentId =  docService.saveDocument(doc);
+					//doc.setId(documentId);
 					
 				}
 			}
+			// save document to db
+			String restricted = params.get("restricted");
+			if("on".equals(restricted)){
+				doc.setRestricted(true);
+			}
+			Integer documentId =  docService.saveDocument(doc);
+			doc.setId(documentId);
+
+			
 			System.out.println("======params======");
 			System.out.println(params);
 			
@@ -417,6 +450,23 @@ public class DocumentController {
 		//{ "success": true, "file": "filename" }
 
 		return responseMessage;
+	}
+	
+	private boolean isUserHasAccessToDocument(String userId, Document doc){
+		UserInfo userInfo = userServices.getUserInfoById(userId);
+		if(userInfo.isFullaccess()){
+			return true;
+		}else if(doc.isRestricted()){
+			return false;
+		}
+		return true;
+	}
+	
+	private Document getNoAccessDoc(){
+		Document doc = new Document();
+		String content = "Access denied";
+		doc.setContent(content.getBytes());
+		return doc;
 	}
 	
 }

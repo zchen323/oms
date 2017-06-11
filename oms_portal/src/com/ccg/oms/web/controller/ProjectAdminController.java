@@ -215,6 +215,19 @@ public class ProjectAdminController {
 			restResp.setStatus(RestResponseConstants.FAIL);
 		}
 		return restResp;
-	}	
+	}
+	
+	@RequestMapping(value="project/{projectId}", method=RequestMethod.DELETE)
+	public @ResponseBody RestResponse deleteProject(@PathVariable Integer projectId) {
+		RestResponse restResp = RestResponse.getSuccessResponse();
+		try{
+			service.deleteProject(projectId);
+			restResp.setMessage("Project has been deleted");
+		}catch(Exception e){
+			restResp.setMessage(e.getMessage());
+			restResp.setStatus(RestResponseConstants.FAIL);
+		}
+		return restResp;
+	}
 }
 

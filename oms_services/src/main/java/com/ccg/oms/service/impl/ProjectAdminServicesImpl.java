@@ -16,15 +16,18 @@ import com.ccg.oms.common.data.project.TaskTemplate;
 import com.ccg.oms.dao.entiry.document.DocTypeEntity;
 import com.ccg.oms.dao.entiry.project.ProjectEntity;
 import com.ccg.oms.dao.entiry.project.ProjectTemplateEntity;
-import com.ccg.oms.dao.entiry.project.ProjectUserEntity;
 import com.ccg.oms.dao.entiry.project.ProjectUserRoleTypeEntity;
+import com.ccg.oms.dao.entiry.project.TaskEntity;
 import com.ccg.oms.dao.entiry.project.TaskTemplateEntity;
+import com.ccg.oms.dao.entiry.user.UserProjectHistoryEntity;
 import com.ccg.oms.dao.repository.document.DocTypeRepository;
 import com.ccg.oms.dao.repository.project.ProjectRepository;
 import com.ccg.oms.dao.repository.project.ProjectTemplateRepository;
 import com.ccg.oms.dao.repository.project.ProjectUserRoleTypeRepository;
+import com.ccg.oms.dao.repository.project.TaskRepository;
 import com.ccg.oms.dao.repository.project.TaskTemplateDocTypeRepository;
 import com.ccg.oms.dao.repository.project.TaskTemplateRepository;
+import com.ccg.oms.dao.repository.user.UserProjectHistoryRepository;
 import com.ccg.oms.service.ProjectAdminServices;
 import com.ccg.oms.service.mapper.BeanAndEntityMapper;
 
@@ -33,6 +36,11 @@ public class ProjectAdminServicesImpl implements ProjectAdminServices{
 
 	@Autowired
 	ProjectRepository projectRepository;
+	
+	@Autowired
+	TaskRepository taskRepository;
+	@Autowired
+	UserProjectHistoryRepository userProjectHistoryRepository;
 	
 	@Autowired
 	ProjectTemplateRepository projectTemplateReposiroty;
@@ -244,6 +252,25 @@ public class ProjectAdminServicesImpl implements ProjectAdminServices{
 			throw new RuntimeException("TaskTemplate with ID: " + id + " does not exist");
 		}
 		
+	}
+
+
+	@Override
+	public void deleteProject(Integer projectId) {
+		ProjectEntity entity = projectRepository.findOne(projectId);
+		if(entity != null){
+			projectRepository.delete(entity);
+		}
+		
+		List<TaskEntity> taskList = taskRepository.findByProjectId(projectId);
+		for(TaskEntity task : taskList){
+			taskRepository.delete(task);
+		}
+		
+		List<UserProjectHistoryEntity> projectHistoryList = userProjectHistoryRepository.findByProjectId(projectId);
+		for(UserProjectHistoryEntity projHis : projectHistoryList){
+			userProjectHistoryRepository.delete(projHis);
+		}
 	}
 
 

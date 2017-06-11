@@ -32,6 +32,8 @@ public interface ProjectAdminServices {
 	List<DocType> getDocTypes();
 	void saveDoctype(DocType docType);
 	void deleteDoctype(String docTpeId);
+	
+	void deleteProject(Integer projectId);
 
 	
 }

@@ -428,7 +428,9 @@ public class UserServiceImpl implements UserServices{
 		List<Project> projects = new ArrayList<Project>();
 		for(int i = 0; i < projectIds.size(); i++){
 			ProjectEntity projectEntity = projectRepository.findOne(projectIds.get(i));
-			projects.add(ProjectMapper.fromEntity(projectEntity));
+			if(projectEntity != null){
+				projects.add(ProjectMapper.fromEntity(projectEntity));
+			}
 		}
 		return projects;
 	}
@@ -480,5 +482,12 @@ public class UserServiceImpl implements UserServices{
 		entity.setKeyword(keyword);
 		entity.setUserId(userid);
 		userSearchHistoryRepository.save(entity);	
+	}
+
+	@Override
+	public UserInfo getUserInfoById(String userId) {
+		UserDetailEntity entity = detailRepository.findOne(userId);
+		UserInfo info = UserMapper.fromEntity(entity);
+		return info;
 	}
 }

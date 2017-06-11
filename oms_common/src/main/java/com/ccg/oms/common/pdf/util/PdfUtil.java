@@ -115,6 +115,12 @@ public class PdfUtil {
 					// Highlight the text pattern match!
 					new TextMarkup(page, null, MarkupTypeEnum.Highlight, highlightQuads);
 				}
+
+				@Override
+				public void remove() {
+					// TODO Auto-generated method stub
+					
+				}
 			});
 			
 			file.save(newFile, SerializationModeEnum.Standard);	

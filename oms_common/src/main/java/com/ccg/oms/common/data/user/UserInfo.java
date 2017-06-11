@@ -24,6 +24,11 @@ public class UserInfo {
 	public void setFullaccess(Boolean fullaccess) {
 		this.fullaccess = fullaccess;
 	}
+	public boolean isFullaccess(){
+		if(fullaccess == null)
+			return false;
+		return this.fullaccess;
+	}
 	public String getName() {
 		return name;
 	}

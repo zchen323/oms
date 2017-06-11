@@ -5,6 +5,8 @@ public class Document {
 	private String name;
 	private String type;
 	private int size;
+	private boolean restricted;
+	
 	private byte[] content;
 	
 	public Integer getId() {
@@ -37,4 +39,11 @@ public class Document {
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
+	public boolean isRestricted() {
+		return restricted;
+	}
+	public void setRestricted(boolean restricted) {
+		this.restricted = restricted;
+	}
+	
 }

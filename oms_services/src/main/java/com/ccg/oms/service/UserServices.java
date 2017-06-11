@@ -24,6 +24,7 @@ public interface UserServices {
 	public void createNewUser(NewUser newUser);
 	public void updateUser(NewUser newUser);
 	public List<UserInfo> getUserInfo();
+	public UserInfo getUserInfoById(String userId);
 	
 	public List<UserInfo> searchUserByName(String nameContains);
 	

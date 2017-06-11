@@ -1196,6 +1196,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 	var tlgrid=oms.project.createTaskListPanel(proj.tasks,proj.projectInfo.projId);
 	var dlgrid=oms.project.createDocumentPanel(proj,proj.projectInfo.projId);
 	var ulgrid=oms.project.createUserPanel(proj.projectUsers,proj.projectInfo.projId);
+	var projectId = proj.projectInfo.projId;
 	//console.log(infop);
 	// update projectuser
 	oms.project.projectUserUpdate(proj.projectUsers);
@@ -1232,7 +1233,28 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 										handler: function(){
 											Ext.Msg.confirm('Please Confirm', 'Remove project and all related tasks and document from Database?', function(answer) {
 												  if (answer == "yes") {
-												   	alert("remove document logic")
+												   	alert("remove document logic: " + projectId);
+												
+													Ext.Ajax.request({
+														url : "api/projectadmin/project/" + projectId,
+														method : 'DELETE',
+														success : function(response, option) {
+															console.log(response);
+															var respObj = Ext.decode(response.responseText);
+															Ext.Msg.alert(respObj.status, respObj.message);
+															if (respObj.status === 'success') {
+																	// refresh panel;
+																	console.log("Need refresh panel")
+															}
+														},
+														failure : function(response, option) {
+															console.log(response);
+															Ext.Msg.alert('Error', response.responseText);
+														}
+													});
+												
+												
+												
 												  }
 												});
 										}

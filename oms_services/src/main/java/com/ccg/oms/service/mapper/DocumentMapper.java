@@ -11,6 +11,7 @@ public class DocumentMapper {
 		doc.setName(entity.getName());
 		doc.setSize(entity.getSize());
 		doc.setType(entity.getType());
+		doc.setRestricted(entity.isRestricted());
 		return doc;
 	}
 	
@@ -21,6 +22,7 @@ public class DocumentMapper {
 		entity.setName(doc.getName());
 		entity.setSize(doc.getSize());
 		entity.setType(doc.getType());
+		entity.setRestricted(doc.isRestricted());
 		return entity;
 	}
 }
