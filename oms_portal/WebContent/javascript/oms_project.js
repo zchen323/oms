@@ -1334,6 +1334,7 @@ oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
 				element:'el',
 				fn:function(){
 					
+<<<<<<< Upstream, based on origin/master
 					//var data=Ext.getCmp('ptAddPTaskform').getForm().getData();
 					var formdata = Ext.getCmp("ptAddPTaskform").getForm().getValues();
 					formdata.taskTempId = formdata["ptaskcombo-inputEl"];
@@ -1363,6 +1364,13 @@ oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
 							Ext.Msg.alert('Error', response.responseText);
 						}
 					});
+=======
+					var data=Ext.getCmp('ptAddPTaskform').getForm().getData();
+					console.log(data);
+					
+					alert('do the add new Task Logic');
+					
+>>>>>>> 39fa492 add/remove task button and panel delete template for Task template and project template.
 				}
 			}
 			}
