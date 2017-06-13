@@ -363,7 +363,7 @@ oms.admin.createTTItemPanel=function(task){
 					items:grid,
 					buttons:[						
 						{
-							text:'Add Document',
+							text:'Add Document Place Holder',
 							listeners:
 							{
 								click:
@@ -482,6 +482,17 @@ oms.admin.createTTItemPanel=function(task){
 										//console.log(task);
 										Ext.getCmp('tteditform').getForm().loadRecord({getData:function(){return task;}});
 										oms.admin.TTEditPanel.show();
+									}
+								}
+							}
+						},
+						{
+							text:'Delete this Template',
+							listeners:{
+								click:{
+									element:'el',
+									fn:function(){
+										alert('delete this tempalte');
 									}
 								}
 							}
@@ -681,6 +692,17 @@ oms.admin.createPTItemPanel=function(proj)
 							console.log(proj);
 							Ext.getCmp('pteditform').getForm().loadRecord({getData:function(){return proj;}});
 							oms.admin.PTEditPanel.show();
+						}
+					}
+				}
+			},
+			{
+				text:'Delete this Template',
+				listeners:{
+					click:{
+						element:'el',
+						fn:function(){
+							alert("need del project template");
 						}
 					}
 				}

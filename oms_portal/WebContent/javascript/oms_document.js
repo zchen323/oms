@@ -121,6 +121,11 @@ oms.doc.isImage=function(fn)
 oms.doc.createSearchDocMainPanel=function(doc,start,end,query)
 {
 	var infop=oms.doc.createDocInfoPanel(doc) ;
+	if(doc ==null)
+	{
+		alert('Document deleted!!');
+		return;
+	}
 	var filename=doc.name.toLowerCase();
 	var mimetype="pdf";
 	if(oms.doc.isImage(filename))
@@ -396,8 +401,13 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 							    			return;
 							    	}
 					            	var d=r.data;
+					            	console.log(d);
 					            	if(d.documentId&&d.startPage&&d.endPage){
 					            		oms.doc.openSearchDoc(d.documentId,d.startPage,d.endPage,key);
+					            	}
+					            	else if(d.documentId)
+					            	{
+					            		oms.doc.openDoc(d.documentId);
 					            	}
 					          /*  	if(r.data&&r.data.startPage)
 					            	{

@@ -705,8 +705,14 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 						Ext.Msg.alert('Error', response.responseText);
 					}
 				});	
+			}},
+			{
+				text:'Delete Task',
+				handler:function(){
+					alert("All document/notes and associated information will be removed.");
+				}
 			}
-		}]}]
+		]}]
 });
 oms.task.createTaskMainPanel=function(task)  // proj is the json data for the project
 {

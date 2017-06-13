@@ -555,7 +555,7 @@ oms.project.createTaskItemPanel=function(task,seq,porj)
 	h_html=h_html+"<td width=15%><font color=#336699><div id='task_ownerlbl_"+task.id+"'>"+task.owner+"</div></font></td>"; 
 	h_html=h_html+"<td width=15%><font color=green><div id='task_statuslbl_"+task.id+"'>"+task.status+"</div></font></td>";
 	h_html=h_html+"<td width=20%><font color=green><div id='task_tgtdtlbl_"+task.id+"'>"+task.targetDate+"</div></font></td>";
-	h_html=h_html+'<td width=10%><a href="" onclick="oms.task.showTaskInfoEdit('+task.id+');return false;"><img src="css/images/shared/icons/fam/cog_edit.png"></a><a href="" onclick="return false;"><img src="css/images/shared/icons/fam/delete.gif"></a></td>';
+	h_html=h_html+'<td width=10%><a href="" onclick="oms.task.showTaskInfoEdit('+task.id+');return false;"><img src="css/images/shared/icons/fam/cog_edit.png"></a></td>';
 	h_html=h_html+"</tr></table>";
 	var taskid=task.id;
 	// now build commend and document panel
@@ -611,7 +611,7 @@ oms.project.createTaskListPanel=function(taskList,projID)
 		    	text:"Add New Task",
 		 		handler:function()
 		 		{
-		 			alert("add task panel");
+		 			showAddNewProjectTask(projID);
 		 		} 
 		      }],
 	}); 
@@ -1272,6 +1272,81 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 		});
 	return mainpanel;
 };
+
+// dynamice add new task to proect
+function showAddNewProjectTask(projId)
+{
+	var form=Ext.getCmp('ptAddPTaskform').getForm();
+	form.loadRecord({
+		getData:function(){return {"projId":projId};}
+	});
+	var store=Ext.getCmp('ptaskcombo').getStore();
+	store.setData(oms.admin.cachedata.taskTemplates);
+	oms.project.AddNewTaskPanel.show();
+}
+
+oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
+	frame: true,
+	float:true,
+	closable:true, 
+	title: 'Add New Task',
+	bodyPadding: 10,
+	scrollable:true,
+	closeAction: 'hide',
+	width: 420,
+	mygrid:null,
+	//modal: false,
+	items:[{xtype:'form',	
+		id:'ptAddPTaskform',
+		width:'95%',
+		frame:false,
+		border:0,
+		items:[
+			{
+				xtype:'hiddenfield',
+				name:'projId', 
+				fieldLabel:'Project ID:', 
+				margin: '0 2 5 15',
+				editable:false,
+				labelCls:'omslabelstyle',
+				fieldCls:'omsfieldstyle'
+			},
+			{
+				xtype:'combobox',
+				labelWidth:120,
+				fieldWidth:280,
+				id:'ptaskcombo',
+				valueField:'id',
+				displayField:'name',
+				queryMode: 'local',
+	            typeAhead: true,
+				fieldLabel:'Task Templates',
+				store:Ext.create('Ext.data.JsonStore', {fields: [{name: 'id' },{name: 'name'}]})
+			}
+		]
+	}
+	],
+	buttons: [{
+		text: 'Add To Project',
+		listeners:{
+			click:
+			{
+				element:'el',
+				fn:function(){
+					
+					var data=Ext.getCmp('ptAddPTaskform').getForm().getData();
+					console.log(data);
+					
+					alert('do the add new Task Logic');
+					
+				}
+			}
+			}
+		
+		}
+		]
+	});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  test mockup sample data
