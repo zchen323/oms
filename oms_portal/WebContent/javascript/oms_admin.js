@@ -505,7 +505,8 @@ oms.admin.ProjectRoleEditPanel=Ext.create('Ext.window.Window',{
 		bodyPadding: 10,
 		scrollable:true,
 		closeAction: 'hide',
-		width: 480,
+		width: 500,
+		height:220,
 		//modal: false,
 
 		items:[{xtype:'form',	
@@ -614,10 +615,23 @@ oms.admin.createProjectRoleTypeAdminPanel=function()
 		columns: [
 		{text: "Role Type", dataIndex: 'roletype',width:220}, 
 		{text: "Description", dataIndex: 'description',flex:1},
+		
 		{
             xtype:'actioncolumn',
             width:100,
             items: [{
+                icon: 'css/images/shared/icons/fam/user_edit.png',  // Use a URL in the icon config
+                tooltip: 'Edit',
+                handler: function(grid, rowIndex, colIndex) {
+                    var rec = grid.getStore().getAt(rowIndex);
+                    var rec = grid.getStore().getAt(rowIndex);
+                    Ext.getCmp("projroleEditForm").getForm().loadRecord(rec);
+                    Ext.getCmp('btprsave').setVisible(true);
+					Ext.getCmp('btprdelete').setVisible(false);
+					oms.admin.ProjectRoleEditPanel.show();
+                }
+            },
+            {
                 icon: 'css/images/shared/icons/fam/delete.gif',
                 tooltip: 'Delete',
                 handler: function(grid, rowIndex, colIndex) {
