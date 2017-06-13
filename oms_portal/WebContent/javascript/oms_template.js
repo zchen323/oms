@@ -167,6 +167,7 @@ oms.admin.TTEditPanel=Ext.create('Ext.window.Window',{
 		xtype:'combobox',
 		labelWidth: 150,
 		valueField:'status',
+		name:'status',
 		displayField:'statusLabel',
 		queryMode: 'local',
         typeAhead: true,
@@ -232,6 +233,7 @@ oms.admin.PTEditPanel=Ext.create('Ext.window.Window',{
 		xtype:'combobox',
 		labelWidth: 150,
 		valueField:'status',
+		name:'status',
 		displayField:'statusLabel',
 		queryMode: 'local',
         typeAhead: true,
@@ -304,7 +306,7 @@ oms.admin.buildTLDetails=function(data){
 	panel.doLayout();
 };
 oms.admin.createTTItemPanel=function(task){
-	
+	//console.log(task);
 	var ustore=Ext.create('Ext.data.JsonStore', {
 		// store configs
 		//storeId: 'ttdtstore'+task.id,
