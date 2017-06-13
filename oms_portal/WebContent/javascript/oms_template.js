@@ -130,7 +130,15 @@ oms.admin.TTAddDTPanel=Ext.create('Ext.window.Window',{
 		}
 		]
 	});
-		
+oms.admin.statusstore=Ext.create('Ext.data.JsonStore', {
+	// store configs
+	//storeId: 'ttdtstore'+task.id,
+	fields: [
+		{name: 'status' },
+		{name:'statusLabel'}
+		]
+});
+oms.admin.statusstore.setData([{status:'A',statusLabel:'Active'},{status:'I',statusLabel:'Inactive'},{status:'P',statusLabel:'Pending'}]);
 oms.admin.TTEditPanel=Ext.create('Ext.window.Window',{
 	frame: true,
 	float:true,
@@ -155,7 +163,16 @@ oms.admin.TTEditPanel=Ext.create('Ext.window.Window',{
 	{ fieldLabel: 'Task Template ID', name: 'id', xtype: 'hidden', readOnly: true},
 	{ fieldLabel: 'Template Name', name: 'name'},
 	{ fieldLabel: 'Description', name: 'description'},
-	{ fieldLabel: 'Status',name:'status'}]}
+	{
+		xtype:'combobox',
+		labelWidth: 150,
+		valueField:'status',
+		displayField:'statusLabel',
+		queryMode: 'local',
+        typeAhead: true,
+		fieldLabel:'Status',
+		store:oms.admin.statusstore
+	}]}
 	],
 	buttons: [{
 			text: 'Save',
@@ -172,6 +189,7 @@ oms.admin.TTEditPanel=Ext.create('Ext.window.Window',{
 						Ext.Msg.alert(respObj.status, respObj.message);
 						if (respObj.status === 'success') {
 							oms.admin.TTEditPanel.hide();
+							oms.admin.refreshData();
 						}
 					},
 					failure : function(response, option) {
@@ -210,7 +228,16 @@ oms.admin.PTEditPanel=Ext.create('Ext.window.Window',{
 	{ fieldLabel: 'Project Template ID', name: 'id', xtype: 'hidden'},
 	{ fieldLabel: 'Template Name', name: 'name'},
 	{ fieldLabel: 'Description', name: 'description'},
-	{ fieldLabel: 'Status',name:'status'}]}
+	{
+		xtype:'combobox',
+		labelWidth: 150,
+		valueField:'status',
+		displayField:'statusLabel',
+		queryMode: 'local',
+        typeAhead: true,
+		fieldLabel:'Status',
+		store:oms.admin.statusstore
+	}]}
 	],
 	buttons: [{
 		text: 'Save',
@@ -227,7 +254,9 @@ oms.admin.PTEditPanel=Ext.create('Ext.window.Window',{
 					Ext.Msg.alert(respObj.status, respObj.message);
 					if (respObj.status === 'success') {
 						oms.admin.PTEditPanel.hide();
+						oms.admin.refreshData();
 					}
+					oms.admin.refreshData();
 				},
 				failure : function(response, option) {
 					console.log(response);
