@@ -159,7 +159,7 @@ public class ProjectAdminController {
 		return resp;
 	}
 	
-	@RequestMapping(value="taskTemplate", method=RequestMethod.DELETE)
+	@RequestMapping(value="taskTemplate/{id}", method=RequestMethod.DELETE)
 	public @ResponseBody RestResponse deleteTaskTemaplate(@PathVariable Integer id){
 		service.deleteTaskTemplate(id);
 		return RestResponse.getSuccessResponse();

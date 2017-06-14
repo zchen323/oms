@@ -523,7 +523,22 @@ oms.admin.createTTItemPanel=function(task){
 								click:{
 									element:'el',
 									fn:function(){
-										alert('delete this tempalte');
+										
+										
+										Ext.Ajax.request({
+											url: "api/projectadmin/taskTemplate/" + task.id,
+											method: 'DELETE',
+											success: function(response, option){
+												console.log(response);
+												var respObj = Ext.decode(response.responseText);
+												Ext.Msg.alert(respObj.status, respObj.message);
+												oms.admin.refreshData();
+											},
+											failure: function(response, option){
+												console.log(response);
+												Ext.Msg.alert('Error', response.responseText);
+											}
+										});
 									}
 								}
 							}
@@ -733,7 +748,20 @@ oms.admin.createPTItemPanel=function(proj)
 					click:{
 						element:'el',
 						fn:function(){
-							alert("need del project template");
+							Ext.Ajax.request({
+								url: "api/projectadmin/projectTemplate/" + proj.id,
+								method: 'DELETE',
+								success: function(response, option){
+									console.log(response);
+									var respObj = Ext.decode(response.responseText);
+									Ext.Msg.alert(respObj.status, respObj.message);
+									oms.admin.refreshData();
+								},
+								failure: function(response, option){
+									console.log(response);
+									Ext.Msg.alert('Error', response.responseText);
+								}
+							});
 						}
 					}
 				}
