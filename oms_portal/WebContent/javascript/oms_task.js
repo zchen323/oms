@@ -306,6 +306,11 @@ oms.task.createTaskDocumentPanel=function(task,id)
 			        		   icon: 'css/images/shared/icons/fam/delete.gif',
 			        		   handler: function(grid, rowIndex, colIndex) {
 				                    var rec = grid.getStore().getAt(rowIndex);
+				                    if(!rec.data.documentId)
+				                    {
+				                    	Ext.Msg.alert('No Document');
+				                    	return;
+				                    }
 				                    //console.log(rec);
 				                    var myMask = Ext.MessageBox.wait("Remove Document and Reloading task...");
 				                    Ext.Ajax.request({
@@ -349,7 +354,11 @@ oms.task.createTaskDocumentPanel=function(task,id)
 			        	       handler: function(grid, rowIndex, colIndex) {
 				                    var rec = grid.getStore().getAt(rowIndex);
 				                    console.log(rec);
-				                    
+				                    if(!rec.data.documentId)
+				                    {
+				                    	Ext.Msg.alert('No Document');
+				                    	return;
+				                    }
 				                    if(Ext.getCmp('docPanel'+rec.data.documentId)!=null)
 				                    	{
 				                    		Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp('docPanel'+rec.data.documentId));

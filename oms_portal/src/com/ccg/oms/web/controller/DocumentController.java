@@ -326,6 +326,7 @@ public class DocumentController {
 						Document document = docService.findDocumentByCategoryId(Integer.parseInt(doc.getId()));
 						ResultDoc resultDoc = new ResultDoc();
 						resultDoc.setId(document.getId());
+						resultDoc.setDocumentId(document.getId());
 						resultDoc.setTitle(document.getName());
 						order.add(document.getId());
 						sr.setDocuement(resultDoc);
@@ -334,6 +335,7 @@ public class DocumentController {
 
 						ResultDoc resultDoc = new ResultDoc();
 						resultDoc.setId(doc.getDocumentId());
+						resultDoc.setDocumentId(doc.getDocumentId());
 						resultDoc.setTitle(doc.getDocumentTitle());
 						resultDoc.getCategories().add(doc);
 						sr.setDocuement(resultDoc);

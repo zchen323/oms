@@ -123,7 +123,7 @@ oms.doc.createSearchDocMainPanel=function(doc,start,end,query)
 	var infop=oms.doc.createDocInfoPanel(doc) ;
 	if(doc ==null)
 	{
-		alert('Document deleted!!');
+		alert("no document referrence found!!")
 		return;
 	}
 	var filename=doc.name.toLowerCase();
@@ -162,7 +162,7 @@ oms.doc.createSearchDocMainPanel=function(doc,start,end,query)
 		items:[ 
 			{
 			xtype:'component',
-			id:'doccontent_'+doc.documentId,
+		//	id:'doccontent_'+doc.documentId,
 			width:'72%',
 			height:'100%',
 			scrollable:true,
