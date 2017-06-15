@@ -16,7 +16,14 @@ public class Admin {
 	private List<ProjectUserRoleType> projectUserRoleTypes;
 	private List<ProjectTemplate> prjectTemplates;
 	private List<TaskTemplate> taskTemplates;
+	private UserInfo currentUser;
 	
+	public UserInfo getCurrentUser() {
+		return currentUser;
+	}
+	public void setCurrentUser(UserInfo currentUser) {
+		this.currentUser = currentUser;
+	}
 	public List<UserInfo> getUsers() {
 		return users;
 	}
