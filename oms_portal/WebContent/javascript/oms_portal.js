@@ -40,13 +40,34 @@ function displayRate()
 			xtype: 'component',
 			cls: 'app-header-title',
 			html: document.title,
-			flex: 85 / 100
+			flex: 73 / 100
 		}, 
 		{
 			xtype: 'label',
 			id: 'userProfile',
-			flex: 15 / 100
-		}]
+			flex: 12 / 100
+		},
+		{
+			  xtype: 'button',
+			  text:'Search',
+			  handler: function() {
+				  oms.doc.openDocumentPanel.show();
+			    },
+			  flex: 5 / 100
+		},
+		{
+			xtype:'label',
+			  flex: 1 / 100
+		},
+		{
+			 xtype: 'button',
+			  text:'Logout',
+			  flex: 5 / 100
+		},
+		{
+			xtype:'label',
+			  flex: 1 / 100
+		},]
 	});
 
 oms.loadUserDoc=function(mask){

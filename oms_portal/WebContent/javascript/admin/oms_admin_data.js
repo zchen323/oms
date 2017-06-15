@@ -48,6 +48,9 @@ oms.admin.refreshData=function()
 			
 			// populate project template combo box
 			Ext.getCmp('ptcombo').getStore().setData(oms.admin.cachedata.prjectTemplates);
+			// now set user profile infor
+			var pftext=oms.admin.cachedata.currentUser.name+" "+oms.admin.cachedata.currentUser.email;
+			Ext.getCmp('userProfile').setText(pftext);
 		},
 		failure: function(response) 
 		        { 

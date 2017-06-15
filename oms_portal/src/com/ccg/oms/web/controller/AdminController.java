@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.admin.Admin;
+import com.ccg.oms.common.data.user.UserInfo;
 import com.ccg.oms.service.AdminServices;
 
 @Controller
@@ -26,6 +27,14 @@ public class AdminController {
 		resp.setResult(admin);
 		
 		String loginUser = request.getRemoteUser();
+		// find the current user and set to admin object
+		for(UserInfo u:admin.getUsers())
+		{
+			if(u.getUsername().equals(loginUser))
+			{
+				admin.setCurrentUser(u);
+			}
+		}
 		//System.out.println(request.getUserPrincipal().getName());
 		System.out.println("=== login user: " + loginUser);
 		
