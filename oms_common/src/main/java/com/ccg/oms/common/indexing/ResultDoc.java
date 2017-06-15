@@ -12,6 +12,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class ResultDoc {
 	Integer id;
 	String nodetext="";
+	Integer documentId;
+	public Integer getDocumentId() {
+		return documentId;
+	}
+	public void setDocumentId(Integer documentId) {
+		this.documentId = documentId;
+	}
 	@JsonProperty("text")
 	public String getNodetext() {
 		String res="["+id+"]";
