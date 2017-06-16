@@ -185,14 +185,27 @@ public class ProjectController {
 			e.printStackTrace();
 		}
 		return resp;
-	}
-
+	}	
+	
+	@RequestMapping(value="task/{taskId}", method=RequestMethod.DELETE)
+	public @ResponseBody RestResponse deleteTask(@PathVariable Integer taskId){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+				service.deleteTask(taskId);
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+	}	
+	
 	@RequestMapping(value="task", method=RequestMethod.POST)
 	public @ResponseBody RestResponse addTask(@RequestBody Task task){
 		RestResponse resp = RestResponse.getSuccessResponse();
+		System.out.println(JSON.toJson(task));
 		try{
-				service.addTask(task);
-			//throw new Exception("Server error!");
+			service.addTask(task);
 		}catch(Exception e){
 			resp.setStatus(RestResponseConstants.FAIL);
 			resp.setMessage(e.getMessage());

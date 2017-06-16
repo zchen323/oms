@@ -62,7 +62,21 @@ function displayRate()
 		{
 			 xtype: 'button',
 			  text:'Logout',
-			  flex: 5 / 100
+			  flex: 5 / 100,
+			  handler: function(){
+				  Ext.Ajax.request({
+						url : "api/user/logoff",
+						method : 'GET',
+						success : function(response, option) {
+							console.log(response);
+							window.location.reload();
+						},
+						failure : function(response, option) {
+							console.log(response);
+							window.location.reload();
+						}
+					});	
+			  }
 		},
 		{
 			xtype:'label',

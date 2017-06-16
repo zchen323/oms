@@ -7,6 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class Task {
 	private Integer id;
 	private Integer projectId;
@@ -16,6 +20,7 @@ public class Task {
 	private String owner;
 	private String targetDate;
 	private Timestamp targetTimestamp;
+	private Integer taskTempId;
 	
 	private List<TaskDoc> docs;
 	private List<TaskNote> notes;
@@ -23,6 +28,15 @@ public class Task {
 	public Integer getId() {
 		return id;
 	}
+
+	public Integer getTaskTempId() {
+		return taskTempId;
+	}
+
+	public void setTaskTempId(Integer taskTempId) {
+		this.taskTempId = taskTempId;
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}

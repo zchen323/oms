@@ -22,12 +22,14 @@ import com.ccg.oms.dao.entiry.project.ProjectUserEntity;
 import com.ccg.oms.dao.entiry.project.TaskDocEntity;
 import com.ccg.oms.dao.entiry.project.TaskEntity;
 import com.ccg.oms.dao.entiry.project.TaskNoteEntity;
+import com.ccg.oms.dao.entiry.project.TaskTemplateEntity;
 import com.ccg.oms.dao.entiry.user.UserDetailEntity;
 import com.ccg.oms.dao.repository.project.ProjectRepository;
 import com.ccg.oms.dao.repository.project.ProjectUserRepository;
 import com.ccg.oms.dao.repository.project.TaskDocRepository;
 import com.ccg.oms.dao.repository.project.TaskNoteRepository;
 import com.ccg.oms.dao.repository.project.TaskRepository;
+import com.ccg.oms.dao.repository.project.TaskTemplateRepository;
 import com.ccg.oms.dao.repository.user.UserDetailRepository;
 import com.ccg.oms.service.ProjectAdminServices;
 import com.ccg.oms.service.ProjectServices;
@@ -42,6 +44,9 @@ public class ProjectServicesImpl implements ProjectServices{
 	
 	@Autowired
 	TaskRepository taskRepository;
+	
+	@Autowired
+	TaskTemplateRepository taskTemplateRepository;
 	
 	@Autowired
 	ProjectAdminServices projectAdminServices;
@@ -189,8 +194,19 @@ public class ProjectServicesImpl implements ProjectServices{
 	
 	@Override
 	public void addTask(Task task) {
-		TaskEntity entity = new TaskEntity();
+		Integer taskTempId = task.getTaskTempId();
+		if(taskTempId != null){
+			TaskTemplateEntity templateEntity = taskTemplateRepository.findOne(taskTempId);
+			if(templateEntity != null){
+				task.setName(templateEntity.getName());
+				System.out.println(">>>> taskName: " + task.getName());
+				task.setStatus("Not Started");
+			}else{
+				throw new RuntimeException("Task teamplate: " + taskTempId + "not found");
+			}
+		}
 		
+		TaskEntity entity = new TaskEntity();
 		entity.setDueDate(task.getTargetTimestamp());
 		entity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		entity.setDescription(task.getDescription());
@@ -269,6 +285,12 @@ public class ProjectServicesImpl implements ProjectServices{
 			entity.setCompletedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		projectRepository.save(entity);		
+	}
+
+	@Override
+	public void deleteTask(Integer taskId) {
+		TaskEntity entity = taskRepository.findOne(taskId);
+		taskRepository.delete(entity);
 	}
 
 }

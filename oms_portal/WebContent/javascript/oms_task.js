@@ -718,7 +718,32 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 			{
 				text:'Delete Task',
 				handler:function(){
-					alert("All document/notes and associated information will be removed.");
+					//alert("All document/notes and associated information will be removed.");
+					var formdata = Ext.getCmp("edittaskinfopanel").getForm().getValues();
+					var taskId = formdata.id;
+					
+					Ext.Ajax.request({
+						url : "api/project/task/" + taskId,
+						method : 'DELETE',
+						//jsonData : JSON.stringify(formdata),
+						success : function(response, option) {
+							console.log(response);
+							var respObj = Ext.decode(response.responseText);
+							Ext.Msg.alert(respObj.status, respObj.message);
+							if (respObj.status === 'success') {
+								oms.task.EditTaskInfoPanel.hide();
+								//var taskID=formdata.id;
+								//var tp=Ext.getCmp("taskitem_"+taskID);
+								//var task=tp.task;
+								//oms.task.updateTaskData(formdata,task);
+								;
+							}
+						},
+						failure : function(response, option) {
+							console.log(response);
+							Ext.Msg.alert('Error', response.responseText);
+						}
+					});	
 				}
 			}
 		]}]

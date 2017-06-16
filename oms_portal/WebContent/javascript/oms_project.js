@@ -1334,11 +1334,35 @@ oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
 				element:'el',
 				fn:function(){
 					
-					var data=Ext.getCmp('ptAddPTaskform').getForm().getData();
-					console.log(data);
+					//var data=Ext.getCmp('ptAddPTaskform').getForm().getData();
+					var formdata = Ext.getCmp("ptAddPTaskform").getForm().getValues();
+					formdata.taskTempId = formdata["ptaskcombo-inputEl"];
+					formdata.projectId=formdata.projId;
 					
-					alert('do the add new Task Logic');
+					console.log(formdata);
 					
+					Ext.Ajax.request({
+						url : "api/project/task",
+						method : 'POST',
+						jsonData : JSON.stringify(formdata),
+						success : function(response, option) {
+							console.log(response);
+							var respObj = Ext.decode(response.responseText);
+							Ext.Msg.alert(respObj.status, respObj.message);
+							if (respObj.status === 'success') {
+								oms.project.AddNewTaskPanel.hide();
+									//ar rec={getData:function(){return formData;}};
+									// Ext.getCmp("projinfo"+formData.projId).getForm().loadRecord(rec);
+									// Ext.getCmp("projinfo"+formData.projId).projectInfo=formData;
+									// oms.project.editProjInfoPanel.hide();
+								
+							}
+						},
+						failure : function(response, option) {
+							console.log(response);
+							Ext.Msg.alert('Error', response.responseText);
+						}
+					});
 				}
 			}
 			}
