@@ -523,8 +523,7 @@ oms.admin.createTTItemPanel=function(task){
 								click:{
 									element:'el',
 									fn:function(){
-<<<<<<< Upstream, based on origin/master
-										
+
 										
 										Ext.Ajax.request({
 											url: "api/projectadmin/taskTemplate/" + task.id,
@@ -540,9 +539,7 @@ oms.admin.createTTItemPanel=function(task){
 												Ext.Msg.alert('Error', response.responseText);
 											}
 										});
-=======
-										alert('delete this tempalte');
->>>>>>> 39fa492 add/remove task button and panel delete template for Task template and project template.
+
 									}
 								}
 							}
@@ -752,7 +749,7 @@ oms.admin.createPTItemPanel=function(proj)
 					click:{
 						element:'el',
 						fn:function(){
-<<<<<<< Upstream, based on origin/master
+
 							Ext.Ajax.request({
 								url: "api/projectadmin/projectTemplate/" + proj.id,
 								method: 'DELETE',
@@ -767,9 +764,7 @@ oms.admin.createPTItemPanel=function(proj)
 									Ext.Msg.alert('Error', response.responseText);
 								}
 							});
-=======
-							alert("need del project template");
->>>>>>> 39fa492 add/remove task button and panel delete template for Task template and project template.
+
 						}
 					}
 				}

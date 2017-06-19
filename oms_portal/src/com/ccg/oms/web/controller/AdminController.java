@@ -30,6 +30,7 @@ public class AdminController {
 		// find the current user and set to admin object
 		for(UserInfo u:admin.getUsers())
 		{
+			System.out.println(u.getUsername());
 			if(u.getUsername().equals(loginUser))
 			{
 				admin.setCurrentUser(u);

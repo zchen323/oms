@@ -718,7 +718,6 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 			{
 				text:'Delete Task',
 				handler:function(){
-<<<<<<< Upstream, based on origin/master
 					//alert("All document/notes and associated information will be removed.");
 					var formdata = Ext.getCmp("edittaskinfopanel").getForm().getValues();
 					var taskId = formdata.id;
@@ -745,9 +744,7 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 							Ext.Msg.alert('Error', response.responseText);
 						}
 					});	
-=======
-					alert("All document/notes and associated information will be removed.");
->>>>>>> 39fa492 add/remove task button and panel delete template for Task template and project template.
+
 				}
 			}
 		]}]
