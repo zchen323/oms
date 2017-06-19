@@ -330,7 +330,7 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 				
 				/*
 				Ext.Ajax.request({
-					url : "api/project/newProject",
+					url : "api/project/newProject",f
 					method : 'POST',
 					jsonData : JSON.stringify(formdata),
 					success : function(response, option) {
@@ -388,6 +388,12 @@ oms.project.createProjLastUpdate=function(proj)
 };
 oms.project.createProjInfoPanel=function(pinfo) // json object of the project info
 {
+	console.log(pinfo);
+	var mgr=oms.admin.findUser(pinfo.projManager);
+	if(mgr!=null)
+		{
+		pinfo.projManagerName=mgr.name;
+		}
 	var panel=Ext.create('Ext.form.Panel',{
 		//title:"Info",
 		width:'98%',
@@ -398,7 +404,7 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 		header:{
 			baseCls:'omspanelheadercls',
 			items:[{xtype:'label',html:'<span style="font-size:10pt"><b>Project Info</b></span>',width:'85%'}]
-},
+		},
 	tools:[
 		{
 			type:'gear',
@@ -428,7 +434,7 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 				fieldCls:'omsfieldstyle'
 			},
 			{
-				name:'projManager', 
+				name:'projManagerName', 
 				fieldLabel:'Project Manager:', 
 				value:"", 
 				margin: '0 2 0 15',
@@ -494,6 +500,7 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 				fieldCls:'omsfieldstyle'
 			},
 			{
+				xtype:'checkbox',
 				name:'isPrimeProject',
 				fieldLabel:'Through Prime',
 				value:'',
@@ -878,7 +885,7 @@ oms.project.AssignNewUserPanel=Ext.create('Ext.window.Window',{
 				            typeAhead: true,
 				            multiSelect: false,
 				            triggerAction: 'all',
-				            fieldLabel:'Enter User Name',
+				            fieldLabel:'Choose User',
 				            labelCls:'omslabelstyle',
 							fieldCls:'omsfieldstyle',
 				            allowBlank:false,
@@ -1124,12 +1131,16 @@ oms.project.editProjInfoPanel=Ext.create('Ext.window.Window',{
 					fieldCls:'omsfieldstyle'
 				},
 				{
+					
+					xtype:'checkbox',
 					name:'isPrimeProject',
 					fieldLabel:'Through Prime',
 					value:'',
 					margin: '0 2 3 15',
 					labelCls:'omslabelstyle',
-					fieldCls:'omsfieldstyle'
+					fieldCls:'omsfieldstyle',
+					inputValue: true,
+					uncheckedValue: false
 				},
 				{
 					name:'primeName',

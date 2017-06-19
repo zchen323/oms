@@ -45,6 +45,9 @@ function displayRate()
 		{
 			xtype: 'label',
 			id: 'userProfile',
+			style:{
+			         'font-size':'12px'
+			        },
 			flex: 12 / 100
 		},
 		{

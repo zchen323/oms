@@ -123,9 +123,10 @@ oms.doc.createSearchDocMainPanel=function(doc,start,end,query)
 	var infop=oms.doc.createDocInfoPanel(doc) ;
 	if(doc ==null)
 	{
-		alert('Document deleted!!');
+		alert("no document referrence found!!")
 		return;
 	}
+	console.log(doc);
 	var filename=doc.name.toLowerCase();
 	var mimetype="pdf";
 	if(oms.doc.isImage(filename))
@@ -193,6 +194,11 @@ oms.doc.createDocMainPanel=function(doc) 										// project
 
 	// var ulgrid=oms.project.createUserPanel(proj.userlist);
 	// console.log(infop);
+	if(doc==null)
+	{
+		alert("document not avaliable!!");
+		return;
+	}
 	var filename=doc.name.toLowerCase();
 	var mimetype="pdf";
 	if(oms.doc.isImage(filename))
@@ -376,6 +382,7 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 					method : 'GET',
 					success : function(response, option) {
 						//console.log(response);
+						console.log(response);
 						var respObj = Ext.decode(response.responseText);
 						
 					//	Ext.Msg.alert(respObj.status, respObj.message);
@@ -428,10 +435,16 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 							Ext.getCmp('searchtabpanel').add(panel).show();
 							myMask.close();
 						}
+						else{
+							console.log(response);
+							alert('Search Error or No Data!');
+							myMask.close();
+						}
 					},
 					failure : function(response, option) {
 						console.log(response);
 						Ext.Msg.alert('Error', response.responseText);
+						myMask.close();
 					}
 				});
 				

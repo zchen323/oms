@@ -20,6 +20,19 @@ oms.admin.lookupTaskDetails=function(taskID)
 	return null;
 
 };
+oms.admin.findUser=function(username)
+{
+	for (var i=0;i< oms.admin.cachedata.users.length;i++)
+		{
+		    var u=oms.admin.cachedata.users[i];
+		    console.log(u);
+			if(u.username==username)
+				{
+				return u;
+				}
+		}
+	return null;
+}
 oms.admin.refreshData=function()
 {
 	Ext.Ajax.request({
