@@ -73,7 +73,7 @@ public class ProjectServicesImpl implements ProjectServices{
 			entity.setStatus("new");
 		}
 		projectRepository.save(entity);
-		
+		project.setProjId(entity.getId());
 		System.out.println(entity.getId());
 		List<Task> tasks = projectInfo.getTasks();
 		
@@ -117,7 +117,7 @@ public class ProjectServicesImpl implements ProjectServices{
 		//projEntity = projectRepository.findOne(id);
 		project = ProjectMapper.fromEntity(projEntity);
 		
-		List<TaskEntity> taskEntities = taskRepository.findByProjectId(projEntity.getId());
+		List<TaskEntity> taskEntities = taskRepository.findByProjectIdOrderById(projEntity.getId());
 		for(TaskEntity taskEntity : taskEntities){
 			Task task = ProjectMapper.fromEntity(taskEntity);
 			tasks.add(task);

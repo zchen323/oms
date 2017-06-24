@@ -65,7 +65,9 @@ oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
 			handler: function(){
 				var rec=Ext.getCmp('projsearchkey').getSelection();
 				console.log(rec.data);
+				oms.project.openProject(rec.data.projId);
 				oms.project.openProjectPanel.hide();
+				/*
 				Ext.Ajax.request({
 					url:'api/project/'+rec.data.projId,
 					success:function(response)
@@ -90,7 +92,7 @@ oms.project.openProjectPanel=Ext.create('Ext.window.Window',{
 					{
 						console.log(response);
 					}
-				});
+				});*/
 			}
 		}
 		]
@@ -118,6 +120,7 @@ oms.project.openProject=function(projId)
 				var p_proj=oms.project.createProjectPanel(proj);
 				Ext.getCmp('centerViewPort').add(p_proj);
 				Ext.getCmp('centerViewPort').setActiveTab(p_proj);
+				oms.loadUserProject();
 				myMask.close();
 		},
 		failure:function(response)
@@ -199,7 +202,7 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 					{
 
 					name:'isPrimeProject',
-					fieldLabel:'Through Prime7',
+					fieldLabel:'Prime:',
 					xtype:'checkbox',
 					value:0,
 					inputValue:true,
@@ -318,7 +321,10 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 								var respObj = Ext.decode(response.responseText);
 								Ext.Msg.alert(respObj.status, respObj.message);
 								if (respObj.status === 'success') {
-									oms.admin.DoctypeEditPanel.hide();
+									oms.project.createNewProjPanel.hide();
+									// open project
+									var projID=respObj.result.projectInfo.projId;
+									oms.project.openProject(projID);
 								}
 							},
 							failure : function(response, option) {
@@ -1256,6 +1262,15 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 															if (respObj.status === 'success') {
 																	// refresh panel;
 																	console.log("Need refresh panel")
+																	// close porject Panel
+																	var ppanelID="projectPanel"+projectId;
+																	if(Ext.getCmp(ppanelID)!=null)
+																	{
+																		 Ext.getCmp(ppanelID).close();
+																	}
+																	// now refresh my project panel
+																	oms.loadUserProject();
+
 															}
 														},
 														failure : function(response, option) {
@@ -1365,6 +1380,28 @@ oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
 									// Ext.getCmp("projinfo"+formData.projId).getForm().loadRecord(rec);
 									// Ext.getCmp("projinfo"+formData.projId).projectInfo=formData;
 									// oms.project.editProjInfoPanel.hide();
+								//var rec=Ext.getCmp('projsearchkey').getSelection();
+								//console.log(rec.data);
+							//	oms.project.openProjectPanel.hide();
+								var myMask = Ext.MessageBox.wait("Reloading Project....");
+								Ext.Ajax.request({
+									url:'api/project/'+formdata.projectId,
+									success:function(response)
+									{
+										var obj=Ext.JSON.decode(response.responseText);
+										var proj=obj.result;
+									//	console.log(obj.result);
+										var ppanelID="projectPanel"+proj.projectInfo.projId;
+										// panel already exist
+											Ext.getCmp(ppanelID).close();
+											  //Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp(ppanelID));
+						
+											var p_proj=oms.project.createProjectPanel(proj);
+											Ext.getCmp('centerViewPort').add(p_proj);
+											Ext.getCmp('centerViewPort').setActiveTab(p_proj);
+											myMask.close();
+										
+									}});
 								
 							}
 						},

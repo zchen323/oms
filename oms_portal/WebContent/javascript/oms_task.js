@@ -610,7 +610,10 @@ oms.task.showTaskInfoEdit=function(taskID)
 	console.log(tp.task);
 	Ext.getCmp('taskstatuscombo').getStore().setData(oms.task.statuslist);
 	Ext.getCmp('edittaskinfopanel').getForm().loadRecord({getData:function(){return tp.task;}});
+	oms.task.EditTaskInfoPanel.projID=tp.task.projectId;
+	//console.log(oms.task.EditTaskInfoPanel.projID);
 	oms.task.EditTaskInfoPanel.show();
+	
 };
 oms.task.updateTaskData=function(fdata,task)
 {
@@ -632,6 +635,7 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 	scrollable:true,
 	closeAction: 'hide',
 	layout:'vbox',
+	projID:-1,
 	items:[
 		{
 			xtype:'form',
@@ -721,7 +725,7 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 					//alert("All document/notes and associated information will be removed.");
 					var formdata = Ext.getCmp("edittaskinfopanel").getForm().getValues();
 					var taskId = formdata.id;
-					
+					console.log(oms.task.EditTaskInfoPanel.projID);
 					Ext.Ajax.request({
 						url : "api/project/task/" + taskId,
 						method : 'DELETE',
@@ -736,7 +740,25 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 								//var tp=Ext.getCmp("taskitem_"+taskID);
 								//var task=tp.task;
 								//oms.task.updateTaskData(formdata,task);
-								;
+								var myMask = Ext.MessageBox.wait("Reloading Project....");
+								Ext.Ajax.request({
+									url:'api/project/'+oms.task.EditTaskInfoPanel.projID,
+									success:function(response)
+									{
+										var obj=Ext.JSON.decode(response.responseText);
+										var proj=obj.result;
+									//	console.log(obj.result);
+										var ppanelID="projectPanel"+proj.projectInfo.projId;
+										// panel already exist
+											Ext.getCmp(ppanelID).close();
+											  //Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp(ppanelID));
+						
+											var p_proj=oms.project.createProjectPanel(proj);
+											Ext.getCmp('centerViewPort').add(p_proj);
+											Ext.getCmp('centerViewPort').setActiveTab(p_proj);
+											myMask.close();
+										
+									}});
 							}
 						},
 						failure : function(response, option) {

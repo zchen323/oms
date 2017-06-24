@@ -816,7 +816,7 @@ oms.admin.createPTItemPanel=function(proj)
 											res[i]=recs[i].data;
 										}
 										console.log("====Saving Config data");
-										console.log(proj);
+										console.log(res);
 										
 										//Ext.Msg.alert("Saving Config data",Ext.encode({tasks:res}));
 										Ext.Ajax.request({

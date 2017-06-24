@@ -51,6 +51,7 @@ public class ProjectController {
 		try{
 			System.out.println(project);
 			service.createNewProject(project);
+			resp.setResult(project);
 			resp.setMessage("Done");
 		}catch(Exception e){
 			e.printStackTrace();
