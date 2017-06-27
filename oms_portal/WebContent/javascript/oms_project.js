@@ -1270,7 +1270,6 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 																	}
 																	// now refresh my project panel
 																	oms.loadUserProject();
-
 															}
 														},
 														failure : function(response, option) {

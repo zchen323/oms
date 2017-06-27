@@ -128,6 +128,18 @@ oms.loadUserDoc=function(mask){
 		}
 	});
 }
+oms.resetProjectSearch=function()
+{
+	var cc=Ext.getCmp("projsearchkey");
+	var data= cc.getStore().getData();
+	cc.clearValue();
+	if(cc.lastQuery!=null)
+		{
+			cc.lastQuery=null;
+			cc.getStore().reload();
+		}
+	cc.clearInvalid();
+};
 oms.loadUserProject=function()
 {
 	Ext.Ajax.request({
