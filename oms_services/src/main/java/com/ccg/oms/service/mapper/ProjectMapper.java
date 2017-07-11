@@ -30,7 +30,6 @@ public class ProjectMapper {
 		project.setDescription(entity.getDescription());
 		//project.setProjTempId(projTempId);
 		
-		
 		return project;
 	}
 	

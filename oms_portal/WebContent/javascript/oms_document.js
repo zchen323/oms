@@ -283,7 +283,8 @@ oms.doc.openDoc=function(docID){
 		success:function(response)
 		{
 			var obj=Ext.JSON.decode(response.responseText);
-			//console.log(obj);
+			console.log("fetching document");
+			console.log(obj);
 			var doc=obj.result;
 			var dpanel=oms.doc.createDocMainPanel(doc);
 			Ext.getCmp('centerViewPort').add(dpanel);

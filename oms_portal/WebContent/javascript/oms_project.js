@@ -584,7 +584,8 @@ oms.project.createTaskItemPanel=function(task,seq,porj)
 		collapsible: true, 
 		titleCollapse: true,
 		width:'99%',
-		layout:'vbox', 
+		draggable:true,
+		layout:'accordion', 
 		items:[
 			{
 				xtype:'tabpanel',
@@ -618,6 +619,8 @@ oms.project.createTaskListPanel=function(taskList,projID)
 	var pc=Ext.create('Ext.panel.Panel',{
 		id:'tasklistpanel'+projID, 
 		title:'Tasks List', 
+		tasks:taskList,
+		projId:projID,
 		items:[],
 		tbar:[
 		      {
@@ -626,6 +629,13 @@ oms.project.createTaskListPanel=function(taskList,projID)
 		 		{
 		 			showAddNewProjectTask(projID);
 		 		} 
+		      },
+		      {
+		    	  text:"Adjust Task Order",
+			 		handler:function()
+			 		{
+			 			oms.project.showTaskOrderPanel(projID,taskList);
+			 		}  
 		      }],
 	}); 
 
@@ -1184,9 +1194,14 @@ oms.project.editProjInfoPanel=Ext.create('Ext.window.Window',{
 						var respObj = Ext.decode(response.responseText);
 						Ext.Msg.alert(respObj.status, respObj.message);
 						if (respObj.status === 'success') {
+								formData.projManagerName=Ext.getCmp("projmgrcombo").getRawValue();
 								var rec={getData:function(){return formData;}};
+								 //onsole.log(rec);
+								 //console.log(Ext.getCmp("projmgrcombo").getRawValue());
+	
 								 Ext.getCmp("projinfo"+formData.projId).getForm().loadRecord(rec);
 								 Ext.getCmp("projinfo"+formData.projId).projectInfo=formData;
+								 // here we need to update the project info data
 								 oms.project.editProjInfoPanel.hide();
 						}
 					},
@@ -1310,6 +1325,86 @@ function showAddNewProjectTask(projId)
 	oms.project.AddNewTaskPanel.show();
 }
 
+oms.project.createReorderTaskPanel=function()
+{
+	var ustore=Ext.create('Ext.data.JsonStore', {
+		fields: [
+			{name: 'name'},
+			{name:'id'}
+			]
+	});
+	var grid=Ext.create('Ext.grid.Panel',{
+		store:ustore, 
+		scrollable:true,
+		columnLines:false,
+		width:'90%',
+		hideHeaders:true,
+		minHeight:220,
+		columns: [
+			{text:'ID',dataIndex:'id',width:'20%'},
+			{text: "Task Name", dataIndex: 'name',width:'60%'}, 
+			{
+	            xtype:'actioncolumn',
+	            width:30,
+	            items: [
+	            	{
+	                icon: 'css/images/up.png'}],
+	                handler: function(grid, rowIndex, colIndex) {    
+	                	if(rowIndex>0)
+	                	{
+	                		var rec=grid.getStore().getAt(rowIndex);
+	                		grid.getStore().removeAt(rowIndex);
+	                		grid.getStore().insert(rowIndex-1,rec);
+	                	}
+	            }
+			},
+			{
+	            xtype:'actioncolumn',
+	            width:30,
+	            items: [
+	            	{
+	            		icon: 'css/images/down.png'}], 
+	            		handler: function(grid, rowIndex, colIndex)
+	            		{    
+	            			if(rowIndex<grid.getStore().data.length-1)
+	                		{
+	                		var rec=grid.getStore().getAt(rowIndex);
+	                		grid.getStore().removeAt(rowIndex);
+	                		grid.getStore().insert(rowIndex+1,rec);
+	                		}
+	            		}
+	                
+					}		
+			]
+		});
+	var win=Ext.create('Ext.window.Window',{
+		frame: true,
+		float:true,
+		closable:true, 
+		title: 'Rearrange Task Order:',
+		bodyPadding: 10,
+		scrollable:true,
+		closeAction: 'hide',
+		width: 480,
+		layout:'fit',
+		items:[grid],
+		buttons: [{
+			text: 'Save',
+			handler: function(){
+				console.log(grid.getStore().getData());
+			}
+		}]
+	});
+	return win;
+};
+oms.project.TaskOrderPanel=oms.project.createReorderTaskPanel();
+oms.project.showTaskOrderPanel=function(projId,tasks)
+{
+	console.log(tasks);
+	oms.project.TaskOrderPanel.items.items[0].getStore().setData(tasks);
+	oms.project.TaskOrderPanel.projId=projId;
+	oms.project.TaskOrderPanel.show();
+};
 oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
 	frame: true,
 	float:true,

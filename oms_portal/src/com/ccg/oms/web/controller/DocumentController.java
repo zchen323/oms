@@ -256,6 +256,7 @@ public class DocumentController {
 			resp.setResult(docService.findDocumentInfoById(documentId));
 		}catch(Exception e){
 			resp.setMessage(e.getMessage());
+			e.printStackTrace();
 			resp.setStatus(RestResponseConstants.FAIL);
 		}
 	
