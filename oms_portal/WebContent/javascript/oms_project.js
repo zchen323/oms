@@ -1368,9 +1368,9 @@ oms.project.createReorderTaskPanel=function()
 	            		{    
 	            			if(rowIndex<grid.getStore().data.length-1)
 	                		{
-	                		var rec=grid.getStore().getAt(rowIndex);
-	                		grid.getStore().removeAt(rowIndex);
-	                		grid.getStore().insert(rowIndex+1,rec);
+	            				var rec=grid.getStore().getAt(rowIndex);
+	                			grid.getStore().removeAt(rowIndex);
+	                			grid.getStore().insert(rowIndex+1,rec);
 	                		}
 	            		}
 	                
@@ -1391,7 +1391,31 @@ oms.project.createReorderTaskPanel=function()
 		buttons: [{
 			text: 'Save',
 			handler: function(){
-				console.log(grid.getStore().getData());
+				var ary=grid.getStore().getData().items;
+				// first compare if the task sequences has changed
+				var orderChanged=false;
+				for (var i=0;i<ary.length;i++)
+				{
+					if(ary[i].id!==oms.project.TaskOrderPanel.tasks[i].id)
+					{
+						orderChanged=true;
+						break;
+					}
+				}
+				if(orderChanged)
+				{
+					var req=[];
+					for(var i=0;i<ary.length;i++)
+					{
+							req[i]={"seq":i,"taskID":ary[i].id};
+					}
+					console.log(req);
+					Ext.Msg.alert("Proceed",req+"");
+				}
+				else
+				{
+					Ext.Msg.alert("Warning","No changes in task order and sequences.");
+				}
 			}
 		}]
 	});
@@ -1403,6 +1427,7 @@ oms.project.showTaskOrderPanel=function(projId,tasks)
 	console.log(tasks);
 	oms.project.TaskOrderPanel.items.items[0].getStore().setData(tasks);
 	oms.project.TaskOrderPanel.projId=projId;
+	oms.project.TaskOrderPanel.tasks=tasks;
 	oms.project.TaskOrderPanel.show();
 };
 oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{

@@ -324,7 +324,6 @@ oms.admin.createTTItemPanel=function(task){
 			{
 				ustore.setData(obj.docs);
 			}
-			
 	}
 	
 	var grid=Ext.create('Ext.grid.Panel',{
