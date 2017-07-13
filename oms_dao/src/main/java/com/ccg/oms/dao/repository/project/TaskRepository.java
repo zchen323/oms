@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import com.ccg.oms.dao.entiry.project.TaskEntity;
 
 public interface TaskRepository extends CrudRepository<TaskEntity, Integer>{
-	List<TaskEntity> findByProjectIdOrderById(Integer projectId);
+	List<TaskEntity> findByProjectIdOrderBySeq(Integer projectId);
 }

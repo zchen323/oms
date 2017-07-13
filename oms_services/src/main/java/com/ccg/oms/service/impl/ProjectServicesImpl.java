@@ -117,7 +117,7 @@ public class ProjectServicesImpl implements ProjectServices{
 		//projEntity = projectRepository.findOne(id);
 		project = ProjectMapper.fromEntity(projEntity);
 		
-		List<TaskEntity> taskEntities = taskRepository.findByProjectIdOrderById(projEntity.getId());
+		List<TaskEntity> taskEntities = taskRepository.findByProjectIdOrderBySeq(projEntity.getId());
 		for(TaskEntity taskEntity : taskEntities){
 			Task task = ProjectMapper.fromEntity(taskEntity);
 			tasks.add(task);
@@ -291,6 +291,13 @@ public class ProjectServicesImpl implements ProjectServices{
 	public void deleteTask(Integer taskId) {
 		TaskEntity entity = taskRepository.findOne(taskId);
 		taskRepository.delete(entity);
+	}
+
+	@Override
+	public void updateTaskSeq(int taskId, int taskSeq) {
+		TaskEntity entity = taskRepository.findOne(taskId);
+		entity.setSeq(taskSeq);
+		taskRepository.save(entity);		
 	}
 
 }

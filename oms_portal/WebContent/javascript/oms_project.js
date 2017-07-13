@@ -1407,10 +1407,30 @@ oms.project.createReorderTaskPanel=function()
 					var req=[];
 					for(var i=0;i<ary.length;i++)
 					{
-							req[i]={"seq":i,"taskID":ary[i].id};
+							req[i]={"seq":i,"id":ary[i].id};
 					}
 					console.log(req);
-					Ext.Msg.alert("Proceed",req+"");
+					
+					Ext.Ajax.request({
+						url : "api/project/task/seq",
+						method : 'PUT',
+						jsonData : JSON.stringify(req),
+						success : function(response, option) {
+							console.log(response);
+							var respObj = Ext.decode(response.responseText);
+							Ext.Msg.alert(respObj.status, respObj.message);
+							if (respObj.status === 'success') {
+								//oms.admin.DoctypeEditPanel.hide();
+							}
+						},
+						failure : function(response, option) {
+							console.log(response);
+							Ext.Msg.alert('Error', response.responseText);
+						}
+					});
+					
+					
+					
 				}
 				else
 				{

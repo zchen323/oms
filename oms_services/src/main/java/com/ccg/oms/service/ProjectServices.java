@@ -16,6 +16,7 @@ public interface ProjectServices {
 	List<Project> searchByName(String nameContains);
 	void addTaskComment(TaskNote taskNote);
 	void updateTask(Task task);
+	void updateTaskSeq(int taskId, int taskSeq);
 	void addTask(Task task);
 	void deleteTask(Integer taskId);
 	List<ProjectUser> findProjectUserByProjectId(Integer projectId);

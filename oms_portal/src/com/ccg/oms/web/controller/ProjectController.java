@@ -186,7 +186,26 @@ public class ProjectController {
 			e.printStackTrace();
 		}
 		return resp;
+	}
+	
+	@RequestMapping(value="task/seq", method=RequestMethod.PUT)
+	public @ResponseBody RestResponse updateTaskSeq(@RequestBody List<Task> tasks){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		
+
+		
+		try{
+			for(Task task : tasks ){
+				service.updateTaskSeq(task.getId(), task.getSeq());
+			}		
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
 	}	
+	
 	
 	@RequestMapping(value="task/{taskId}", method=RequestMethod.DELETE)
 	public @ResponseBody RestResponse deleteTask(@PathVariable Integer taskId){

@@ -2,6 +2,7 @@ package com.ccg.oms.dao.entiry.project;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ public class TaskEntity {
 	private Integer id;
 	private Integer projectId;
 	private String name;
+	private int seq;
 	private String description;
 	private String category;
 	private String status;
@@ -92,6 +94,11 @@ public class TaskEntity {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-	
-	
+	@Column(name = "seq", columnDefinition = "SMALLINT")
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
 }

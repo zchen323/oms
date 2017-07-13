@@ -262,7 +262,7 @@ public class ProjectAdminServicesImpl implements ProjectAdminServices{
 			projectRepository.delete(entity);
 		}
 		
-		List<TaskEntity> taskList = taskRepository.findByProjectIdOrderById(projectId);
+		List<TaskEntity> taskList = taskRepository.findByProjectIdOrderBySeq(projectId);
 		for(TaskEntity task : taskList){
 			taskRepository.delete(task);
 		}

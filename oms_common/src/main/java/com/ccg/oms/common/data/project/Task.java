@@ -15,6 +15,7 @@ public class Task {
 	private Integer id;
 	private Integer projectId;
 	private String name;
+	private int seq;
 	private String description;
 	private String status;
 	private String owner;
@@ -111,4 +112,13 @@ public class Task {
 	public void setNotes(List<TaskNote> notes) {
 		this.notes = notes;
 	}
+
+	public int getSeq() {
+		return seq;
+	}
+
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+	
 }

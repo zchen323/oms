@@ -84,6 +84,7 @@ public class ProjectMapper {
 		TaskEntity entity = new TaskEntity();
 		entity.setId(task.getId());
 		entity.setName(task.getName());
+		entity.setSeq(task.getSeq());
 		entity.setDescription(task.getDescription());
 		entity.setStatus(task.getStatus());	
 		entity.setOwner(task.getOwner());
@@ -95,6 +96,7 @@ public class ProjectMapper {
 		Task task = new Task();
 		task.setDescription(entity.getDescription());
 		task.setName(entity.getName());
+		task.setSeq(entity.getSeq());
 		task.setStatus(entity.getStatus());
 		task.setId(entity.getId());
 		task.setOwner(entity.getOwner());
