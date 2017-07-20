@@ -128,6 +128,9 @@ public class ProjectAdminServicesImpl implements ProjectAdminServices{
 			ProjectTemplateEntity record = projectTemplateReposiroty.findOne(entity.getId());
 			if(record != null){
 				// do update
+				if(projectTemplate.getConfig() == null || projectTemplate.getConfig().isEmpty()){
+					entity.setConfig(record.getConfig());
+				}			
 				BeanUtils.copyProperties(entity, record);
 				projectTemplateReposiroty.save(record);
 				
@@ -175,7 +178,11 @@ public class ProjectAdminServicesImpl implements ProjectAdminServices{
 		}else{
 			TaskTemplateEntity record = taskTemplateRepository.findOne(entity.getId());
 			if(record != null){
+				if(taskTemplate.getConfig() == null || taskTemplate.getConfig().isEmpty()){
+					entity.setConfig(record.getConfig());
+				}
 				BeanUtils.copyProperties(entity, record);
+			
 				// update
 				taskTemplateRepository.save(record);
 			}else{
