@@ -1421,6 +1421,26 @@ oms.project.createReorderTaskPanel=function()
 							Ext.Msg.alert(respObj.status, respObj.message);
 							if (respObj.status === 'success') {
 								//oms.admin.DoctypeEditPanel.hide();
+								var myMask = Ext.MessageBox.wait("Reloading Project....");
+								Ext.Ajax.request({
+									url:'api/project/'+oms.project.TaskOrderPanel.projId,
+									success:function(response)
+									{
+										var obj=Ext.JSON.decode(response.responseText);
+										var proj=obj.result;
+									//	console.log(obj.result);
+										var ppanelID="projectPanel"+proj.projectInfo.projId;
+										// panel already exist
+											Ext.getCmp(ppanelID).close();
+											  //Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp(ppanelID));
+						
+											var p_proj=oms.project.createProjectPanel(proj);
+											Ext.getCmp('centerViewPort').add(p_proj);
+											Ext.getCmp('centerViewPort').setActiveTab(p_proj);
+											myMask.close();
+										
+									}});
+								win.hide();
 							}
 						},
 						failure : function(response, option) {
