@@ -113,6 +113,9 @@ public class ProjectServicesImpl implements ProjectServices{
 		ProjectInfo projInfo = new ProjectInfo();
 		Project project = null;
 		List<Task> tasks = new LinkedList<Task>();
+		if(projEntity == null){
+			return projInfo;
+		}
 
 		//projEntity = projectRepository.findOne(id);
 		project = ProjectMapper.fromEntity(projEntity);

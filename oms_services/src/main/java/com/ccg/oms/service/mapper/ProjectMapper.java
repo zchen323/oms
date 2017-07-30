@@ -15,6 +15,8 @@ public class ProjectMapper {
 	
 	public static Project fromEntity(ProjectEntity entity){
 		Project project = new Project();
+		if(entity == null)
+			return project;
 		project.setContactoffice(entity.getPrimeContactInfo());
 		project.setDueDate(entity.getDueDate());
 		project.setIsPrimeProject(entity.getPrime());

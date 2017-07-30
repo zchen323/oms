@@ -317,6 +317,9 @@ public class DocumentController {
 			Map<Integer, SearchResult> map = new HashMap<Integer, SearchResult>();
 			for(Doc doc : docs){
 				Integer documentId = doc.getDocumentId();
+				if(null == docService.findDocumentInfoById(documentId)){
+					continue;
+				}
 				if(map.containsKey(documentId)){
 					SearchResult sr = map.get(documentId);
 					sr.getDocuement().getCategories().add(doc);

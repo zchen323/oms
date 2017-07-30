@@ -192,7 +192,9 @@ public class DocumentServiceImpl implements DocumentService{
 	public Document findDocumentById(Integer documentId) {
 		
 		DocumentEntity entity = docRepository.findOne(documentId);
-
+		if(entity == null){
+			return null;
+		}	
 		if(entity.isHasMore()){
 			
 			byte[] content = new byte[entity.getSize()];
