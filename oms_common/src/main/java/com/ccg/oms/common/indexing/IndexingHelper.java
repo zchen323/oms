@@ -43,7 +43,7 @@ public class IndexingHelper {
 					+ "&literal.documentId=" + doc.getId()
 					+ "&literal.documentTitless=title"
 					+ "&commit=true";
-			System.out.println(URL);
+			System.out.println("==== index whole file: ===" + URL);
 			
 			String charSet = "UTF-8";
 			MultipartUtility utility = new MultipartUtility(URL, charSet);

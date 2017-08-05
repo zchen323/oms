@@ -332,6 +332,14 @@ public class DocumentServiceImpl implements DocumentService{
 			dcRepository.save(dcEntity);
 			try{
 				IndexingHelper.updateDocument(document, "" + dcEntity.getId());
+//				Doc doc = new Doc();
+//				doc.setDocumentId(document.getId());
+//				doc.setDocumentTitle(document.getName());
+//				doc.setText(document.getContent());
+//				docsToBeIndexed.add(doc);
+//				IndexingHelper.updateDocument(docsToBeIndexed);
+				
+				
 			}catch(IndexingException ie){
 				ie.printStackTrace();
 			}			
