@@ -405,11 +405,7 @@ public class DocumentController {
 					doc.setContent(ft.get());
 					doc.setName(ft.getName());
 					doc.setSize((int)ft.getSize());
-					System.out.println("======>>>" + ft.getSize());
 					doc.setType(type);
-					// save document to db
-					//Integer documentId =  docService.saveDocument(doc);
-					//doc.setId(documentId);
 					
 				}
 			}
@@ -420,10 +416,6 @@ public class DocumentController {
 			}
 			Integer documentId =  docService.saveDocument(doc);
 			doc.setId(documentId);
-
-			
-			System.out.println("======params======");
-			System.out.println(params);
 			
 			// update taskdoc table;
 			TaskDoc taskDoc = new TaskDoc();
@@ -438,7 +430,6 @@ public class DocumentController {
 			}else{
 				taskDoc.setId(Integer.parseInt(params.get("taskdocid")));
 			}
-			System.out.println(JSON.toJson(taskDoc));
 			docService.saveTaskDoc(taskDoc);
 			
 			Map<String, Object> respMap = new HashMap<String, Object>();
@@ -457,8 +448,6 @@ public class DocumentController {
 			responseMessage = JSON.toJson(respMap);
 			e.printStackTrace();
 		}
-		//{ "success": true, "file": "filename" }
-
 		return responseMessage;
 	}
 	

@@ -39,9 +39,9 @@ public class IndexingHelper {
 			// cal solr rest servicee for indexing
 			// TODO put rest URL in config file
 			String URL = indexServerURL + "/solr/update/extract?" 
-					+ "literal.id=" + indexingId 
-					+ "&literal.documentId=" + doc.getId()
-					+ "&literal.documentTitless=title"
+					+ "literal.id=" + indexingId //+ "&captureAttr=true&defaultField=text&fmap.documentTitle=foo_txt&capture=documentTitle&commit=true";
+				   //+ "&documentId=" + doc.getId()
+				   //+ "&documentTitle=title"
 					+ "&commit=true";
 			System.out.println("==== index whole file: ===" + URL);
 			
