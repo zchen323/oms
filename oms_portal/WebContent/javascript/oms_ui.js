@@ -58,14 +58,8 @@ oms.ui={
 			var res='';
 			res=res+'<p><b><u><font size=2 color="#336699">OMS System Reports:</font></u></b>';
 			res=res+"<ul>";
-			res=res+'<li><font size=1><a href="#">Project Summary</a></font></li>';
-			res=res+'<li><font size=1><a href="#">Task Execution Summary</a></font></li>';
-			res=res+'<li><font size=1><a href="#">System Utilization Summary</a></font></li>';
-			res=res+'<li><font size=1><a href="#">User Work Queue</a></font></li>';
-			res=res+"</ul>";
-			res=res+'<p><b><u><font size=2 color="#336699">My Reports:</font></u></b>';
-			res=res+"<ul>";			
-			res=res+'<li><font size=1><a href="#">01/04/2017 Project Summary</a></font></li>';
+			res=res+'<li><font size=1><a href="#" onclick="oms.report.openPRPanel();return false;">Project Summary</a></font></li>';
+			
 			res=res+"</ul>";
 			return res;
 		},

@@ -90,6 +90,7 @@ public class BeanAndEntityMapperImpl implements BeanAndEntityMapper {
         projectTemplateEntity.setStatus( bean.getStatus() );
         projectTemplateEntity.setCreatedTS( bean.getCreatedTS() );
         projectTemplateEntity.setCreatedBy( bean.getCreatedBy() );
+        if(bean.getConfig()!=null&&bean.getConfig().length()>0)
         projectTemplateEntity.setConfig( bean.getConfig() );
 
         return projectTemplateEntity;
@@ -109,6 +110,7 @@ public class BeanAndEntityMapperImpl implements BeanAndEntityMapper {
         taskTemplate.setStatus( entity.getStatus() );
         taskTemplate.setCreatedTS( entity.getCreatedTS() );
         taskTemplate.setCreatedBy( entity.getCreatedBy() );
+        
         taskTemplate.setConfig( entity.getConfig() );
 
         return taskTemplate;
@@ -128,6 +130,7 @@ public class BeanAndEntityMapperImpl implements BeanAndEntityMapper {
         taskTemplateEntity.setStatus( bean.getStatus() );
         taskTemplateEntity.setCreatedTS( bean.getCreatedTS() );
         taskTemplateEntity.setCreatedBy( bean.getCreatedBy() );
+        if(bean.getConfig()!=null&&bean.getConfig().length()>0)
         taskTemplateEntity.setConfig( bean.getConfig() );
 
         return taskTemplateEntity;
