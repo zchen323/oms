@@ -49,32 +49,7 @@ oms.report.openPRPanel=function(){
 		padding:'5 5 5 5',
 		border:true,
 		items:[
-			{xtype:'form',	
-				width:'95%',
-				frame:false,
-				layout:'hbox',
-				border:0,
-				items:[
-					{
-						name:'prFromdate',
-						fieldLabel:'From After:', 
-						margin: '0 2 2 15',
-						xtype:'datefield',
-						labelCls:'omslabelstyle',
-						allowBlank:false,
-						fieldCls:'omsfieldstyle'
-						},
-						{
-							name:'prTodate',
-							fieldLabel:'To Before:', 
-							margin: '0 2 2 15',
-							xtype:'datefield',
-							labelCls:'omslabelstyle',
-							allowBlank:false,
-							fieldCls:'omsfieldstyle'
-							}	
-				]
-			},
+				
 			prgrid
 			]
 	});

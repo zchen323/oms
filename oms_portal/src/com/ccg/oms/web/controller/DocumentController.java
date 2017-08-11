@@ -313,7 +313,8 @@ public class DocumentController {
 			List<Doc> docs = IndexingHelper.search(query);
 			
 			System.out.println("======" + JSON.toJson(docs));
-			
+			String userid = request.getRemoteUser();
+			userServices.addUserSearch(userid, query);
 			
 			//SearchResults sr = new SearchResults();
 			List<Integer> order = new ArrayList<Integer>();

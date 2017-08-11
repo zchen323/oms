@@ -9,6 +9,8 @@ oms.doc={}; // project builder
 // this will return a fieldSets
 oms.doc.createDocInfoPanel=function(dinfo) // json object of the project info
 {
+	console.log("doc info");
+	console.log(dinfo);
 	var panel=Ext.create('Ext.form.Panel', {
 		// title:"Project Information:",
 		margin:'2 2 2 2', 
@@ -186,6 +188,7 @@ oms.doc.createSearchDocMainPanel=function(doc,start,end,query)
 		]
 
 		}); 
+
 	return mainpanel;
 };
 oms.doc.createDocMainPanel=function(doc) 										// project
@@ -243,10 +246,9 @@ oms.doc.createDocMainPanel=function(doc) 										// project
 			layout:'vbox',
 			items:[infop]
 			}
-			
 		]
-
 		}); 
+
 	return mainpanel;
 };
 oms.doc.openSearchDoc=function(docID,spage,epage,query){
@@ -262,6 +264,7 @@ oms.doc.openSearchDoc=function(docID,spage,epage,query){
 				var dpanel=oms.doc.createSearchDocMainPanel(doc,spage,epage,query);
 				Ext.getCmp('centerViewPort').add(dpanel);
 				Ext.getCmp('centerViewPort').setActiveTab(dpanel);
+				setTimeout(oms.loadUserDoc,2000);
 				myMask.close();
 			},
 			failure: function(response) 
@@ -289,6 +292,8 @@ oms.doc.openDoc=function(docID){
 			var dpanel=oms.doc.createDocMainPanel(doc);
 			Ext.getCmp('centerViewPort').add(dpanel);
 			Ext.getCmp('centerViewPort').setActiveTab(dpanel);
+			setTimeout(oms.loadUserDoc,2000);
+			
 			myMask.close();
 		},
 		failure: function(response) 
@@ -434,6 +439,7 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 							    }
 							});
 							Ext.getCmp('searchtabpanel').add(panel).show();
+							setTimeout(oms.loadUserDoc,2000);
 							myMask.close();
 						}
 						else{
