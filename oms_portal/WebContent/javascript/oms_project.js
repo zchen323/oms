@@ -1305,8 +1305,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 					width:'30%',
 					layout:'vbox',
 					items:[
-						infop,
-						oms.project.createProjLastUpdate()
+						infop
 					]
 				}]
 		});
