@@ -25,5 +25,6 @@ public interface ProjectServices {
 	List<Project> findFirst10();
 	List<TaskDoc> findTaskDocByTaskId(Integer taskId);
     List<TaskNote> findTaskNotesByTaskId(Integer taskId);
+    List<TaskNote> findTaskNotesByProjectId(Integer projetId);
     void updateProject(Project project);
 }

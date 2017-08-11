@@ -20,7 +20,9 @@ public class Task {
 	private String status;
 	private String owner;
 	private String targetDate;
+	private String lastUpdateDate;
 	private Timestamp targetTimestamp;
+	private Timestamp lastUpdateTimestamp;
 	private Integer taskTempId;
 	
 	private List<TaskDoc> docs;
@@ -119,6 +121,22 @@ public class Task {
 
 	public void setSeq(int seq) {
 		this.seq = seq;
+	}
+
+	public String getLastUpdateDate() {
+		if(this.lastUpdateTimestamp != null && lastUpdateDate == null){
+			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+			lastUpdateDate = df.format(lastUpdateTimestamp);			
+		}
+		return lastUpdateDate;
+	}
+
+	public Timestamp getLastUpdateTimestamp() {
+		return lastUpdateTimestamp;
+	}
+
+	public void setLastUpdateTimestamp(Timestamp lastUpdateTimestamp) {
+		this.lastUpdateTimestamp = lastUpdateTimestamp;
 	}
 	
 }

@@ -103,6 +103,7 @@ public class ProjectMapper {
 		task.setId(entity.getId());
 		task.setOwner(entity.getOwner());
 		task.setTargetTimestamp(entity.getDueDate());
+		task.setLastUpdateTimestamp(entity.getLastUpdatedate());
 		task.setProjectId(entity.getProjectId());
 		return task;
 	}
@@ -134,6 +135,7 @@ public class ProjectMapper {
 	
 	public static TaskNote fromEntity(TaskNoteEntity entity){
 		TaskNote note = new TaskNote();
+		note.setTitle(entity.getTitle());
 		note.setContent(entity.getContent());
 		note.setTimestamp(entity.getCreatedTime());
 		note.setId(entity.getId());

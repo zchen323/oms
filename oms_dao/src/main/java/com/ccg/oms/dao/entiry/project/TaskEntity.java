@@ -24,6 +24,7 @@ public class TaskEntity {
 	private Timestamp createdDate;
 	private Timestamp dueDate;
 	private Timestamp completedDate;
+	private Timestamp lastUpdatedate;
 	private String owner;
 	
 	@Id
@@ -101,4 +102,12 @@ public class TaskEntity {
 	public void setSeq(int seq) {
 		this.seq = seq;
 	}
+	public Timestamp getLastUpdatedate() {
+		return lastUpdatedate;
+	}
+	public void setLastUpdatedate(Timestamp lastUpdatedate) {
+		this.lastUpdatedate = lastUpdatedate;
+	}
+	
+	
 }

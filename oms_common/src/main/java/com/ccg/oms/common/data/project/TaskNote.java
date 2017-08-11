@@ -47,7 +47,7 @@ public class TaskNote {
 	}
 	public String getDate() {
 		if(date == null && timestamp != null){
-			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+			DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 			date = df.format(timestamp);
 		}
 		return date;

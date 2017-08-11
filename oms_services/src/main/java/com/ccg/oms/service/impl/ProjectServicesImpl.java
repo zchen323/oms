@@ -2,6 +2,8 @@ package com.ccg.oms.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -142,6 +144,7 @@ public class ProjectServicesImpl implements ProjectServices{
 		
 		projInfo.setProjectInfo(project);
 		projInfo.setTasks(tasks);
+		
 		return projInfo;
 	}
 	
@@ -191,6 +194,7 @@ public class ProjectServicesImpl implements ProjectServices{
 			entity.setOwner(task.getOwner());
 			entity.setStatus(task.getStatus());
 			entity.setDueDate(task.getTargetTimestamp());
+			entity.setLastUpdatedate(new Timestamp(System.currentTimeMillis()));
 			taskRepository.save(entity);
 		}
 	}
@@ -217,6 +221,7 @@ public class ProjectServicesImpl implements ProjectServices{
 		entity.setOwner(task.getOwner());
 		entity.setProjectId(task.getProjectId());
 		entity.setStatus("Not Started");
+		entity.setLastUpdatedate(new Timestamp(System.currentTimeMillis()));
 		
 		taskRepository.save(entity);
 		
@@ -274,6 +279,30 @@ public class ProjectServicesImpl implements ProjectServices{
             res.add(ProjectMapper.fromEntity(e));
         }
         return res;
+    }
+    
+    @Override
+    public List<TaskNote> findTaskNotesByProjectId(Integer projectId){
+    	List<TaskEntity> entities = taskRepository.findByProjectIdOrderBySeq(projectId);
+    	List<TaskNote> taskNotes = new LinkedList<TaskNote>();
+    	List<TaskNoteEntity> noteEntities = new LinkedList<TaskNoteEntity>();
+    	for(TaskEntity entity : entities){
+    		noteEntities.addAll(taskNoteRepository.findByTaskIdOrderByIdDesc(entity.getId()));
+    	}
+    	
+    	for(TaskNoteEntity noteEntity : noteEntities){
+    		taskNotes.add(ProjectMapper.fromEntity(noteEntity));
+    	}
+    	
+    	Collections.sort(taskNotes, new Comparator<TaskNote>(){
+
+			@Override
+			public int compare(TaskNote o1, TaskNote o2) {
+				return o2.getId() - o1.getId();
+			}
+    	});
+    	
+    	return taskNotes;
     }
 
 	@Override

@@ -139,6 +139,21 @@ public class ProjectController {
 		return resp;
 	}	
 	
+	@RequestMapping(value="{projectId}/taskNotes", method=RequestMethod.GET)
+	public @ResponseBody RestResponse getTaskNotesByProjectId(@PathVariable Integer projectId){
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{		
+				List<TaskNote> taskNotes = service.findTaskNotesByProjectId(projectId);
+				resp.setResult(taskNotes);
+		}catch(Exception e){
+			resp.setStatus(RestResponseConstants.FAIL);
+			resp.setMessage(e.getMessage());
+			e.printStackTrace();
+		}
+		return resp;
+		
+		
+	}
 	
 	
 	@RequestMapping(value="search", method=RequestMethod.GET)
