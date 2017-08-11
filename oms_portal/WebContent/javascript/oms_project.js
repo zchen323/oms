@@ -655,7 +655,66 @@ oms.project.createTaskListPanel=function(taskList,projID)
 
 	return pc;
 };
-
+oms.project.createProjNotesPanel=function(proj,projID)
+{
+	var pnotestore=Ext.create('Ext.data.JsonStore', {
+	    // store configs
+	    storeId: 'pnotes'+projID,
+	    fields: [
+	             {name: 'id'},
+	             {name:'task'},
+	             {name: 'user' },	             
+	             {name: 'date', type: 'date'},
+	             {name: 'title'},
+	             {name: 'content'}
+	         ],
+	    
+	});
+	var tasklist=proj.tasks;
+	var pnotes=[];
+	if(tasklist!=null)
+	{
+		for(var i=0;i<tasklist.length;i++)
+		{
+			var notes=tasklist[i].docs;
+			if(notes!=null)
+			{
+				for(var j=0;j<notes.length;j++)
+				{
+					notes[j].taskname=tasklist[i].name;
+				//	console.log(docs[j]);
+					pnotes[pnotes.length]=notes[j];
+				}
+				//pdocs.concat(docs);
+			}
+		}
+	}
+	pnotestore.setData(pnotes);
+	var grid=Ext.create('Ext.grid.Panel',{
+		id:'pnotesgrid'+id,
+		store:pnotestore,		
+		scrollable:true,
+	    columns: [
+	              {text: "#",  dataIndex: 'id'},
+	              {text: "task",  dataIndex: 'taskname'},
+	              {text: "Title",flex:1, dataIndex: 'title'},
+	              {text: "User", flex:2, dataIndex: 'user',width:160},
+	              {text: "Date", dataIndex: 'date',formatter: 'date("m/d/Y")'}
+	          ],
+	     columnLines: true,    
+	     title:'Project Notes:',
+	     plugins: [{
+	         ptype: 'rowexpander',
+	         rowBodyTpl : new Ext.XTemplate(
+	        	
+	             '<font color=#336699><h3>Content</h3><p></font><hr>',	             
+	             '<font color=green>{content}</font>'
+	         )
+	     }],
+	});
+	return grid;
+	
+};
 oms.project.createDocumentPanel=function(proj,projID)
 {
 	var dlstore=Ext.create('Ext.data.JsonStore', {
@@ -1227,6 +1286,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 	var infop=oms.project.createProjInfoPanel(proj.projectInfo) ;
 	var tlgrid=oms.project.createTaskListPanel(proj.tasks,proj.projectInfo.projId);
 	var dlgrid=oms.project.createDocumentPanel(proj,proj.projectInfo.projId);
+	var nlgrid=oms.project.createProjNotesPanel(proj,proj.projectInfo.projId);
 	var ulgrid=oms.project.createUserPanel(proj.projectUsers,proj.projectInfo.projId);
 	var projectId = proj.projectInfo.projId;
 	//console.log(infop);
@@ -1257,6 +1317,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 							items:[
 									tlgrid, 
 									dlgrid,
+									nlgrid,
 									ulgrid
 								],
 							buttons:[

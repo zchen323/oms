@@ -7,50 +7,94 @@ html: '<iframe src="data/jpmcHelp.pdf" width="100%" height="100%"></iframe>',
 
 oms.doc={}; // project builder
 // this will return a fieldSets
+oms.doc.convertDocInfo=function(dinfo){
+	data={};
+	data.docname=dinfo.name;
+	data.docID=dinfo.documentId;
+	proj=dinfo.project[0];
+	data.pname=proj.projectInfo.projName;
+	data.pID=proj.projectInfo.projId;
+	// find task and doc inside task
+	tasks=proj.tasks;
+	var found=false;
+	for(var t of tasks)
+		{
+			if(t.docs)
+			{
+				for(var d of t.docs)
+				{
+					if(d.documentId==data.docID)
+					{
+						data.task=t.description;
+						data.doctype=d.doctype;
+						found=true;
+						break;
+					}
+				}
+				if(found) break;
+			}
+		}
+	return data;
+};
 oms.doc.createDocInfoPanel=function(dinfo) // json object of the project info
 {
 	console.log("doc info");
 	console.log(dinfo);
+	// now build form data
+	data=oms.doc.convertDocInfo(dinfo);
 	var panel=Ext.create('Ext.form.Panel', {
 		// title:"Project Information:",
 		margin:'2 2 2 2', 
 		width:'100%',
 		layout:'vbox',
 		buttons:[
-			{text:"View Project"}
+			{text:"View Project",
+				handler: function()
+				{
+					oms.project.openProject(data.pID);
+				}
+			}
 		],
 		items:[
 			{
-			xtype:'fieldset',
-			title:'Basic Info',
-			width:'100%',
-			margin:'2 2 2 2',
-			layout:'vbox', 
-			items:[
+				xtype:'fieldset',
+				title:'Basic Info',
+				width:'100%',
+				margin:'2 2 2 2',
+				layout:'vbox', 
+				items:[
+			{
+				xtype:'displayfield',
+				name:'docname',
+				fieldLabel:'ID:',
+				labelWidth:80,
+				margin:'0 5 0 5',
+				value: data.docID 
+				},		
+			{
+				xtype:'displayfield',
+				name:'docname',
+				fieldLabel:'Document Name:',
+				labelWidth:80,
+				margin:'0 5 0 5',
+				value: data.docname 
+				},
+			{
+				xtype:'displayfield',
+				name:'pname',
+				fieldLabel:'Project',
+				labelWidth:80,
+				margin:'0 5 0 5',
+				value: '<font color=#336699>'+data.pname+'</font>' 
+				},
+
 			{ 
 			xtype:'displayfield',
 			name:'taskname',
 			labelWidth:80,
 			fieldLabel:'Task',
 			margin:'0 5 0 5',
-			value:'<font color=#336699>Review Proposal Draft</font>'
-			},
-			{
-			xtype:'displayfield',
-			name:'pname',
-			fieldLabel:'Project',
-			labelWidth:80,
-			margin:'0 5 0 5',
-			value: '<font color=#336699>SVT Tracking System</font>' 
-			},
-			{
-			xtype:'displayfield',
-			name:'docuser',
-			fieldLabel:'User',
-			labelWidth:80,
-			margin:'0 5 0 5',
-			value: '<font color=green>Will Smith</font>' 
-			
+			value:'<font color=#336699>'+data.task+'</font>'
 			},
 			{
 			xtype:'displayfield',
@@ -58,47 +102,9 @@ oms.doc.createDocInfoPanel=function(dinfo) // json object of the project info
 			fieldLabel:'Type',
 			labelWidth:80,
 			margin:'0 5 0 5',
-			value: '<font color=green>Proposal Draft</font>' 
-			
-			},
-			{
-			xtype:'displayfield',
-			name:'docrestriced',
-			fieldLabel:'Restricted',
-			labelWidth:80,
-			margin:'0 5 0 5',
-			value: '<font color=green>N</font>' 
-			
-			},
-			{
-			xtype:'displayfield',
-			name:'docrequired',
-			fieldLabel:'Required',
-			labelWidth:80,
-			margin:'0 5 0 5',
-			value: '<font color=green>Y</font>' 
+			value: '<font color=green>'+data.doctype+'</font>' 
 			}
 			] 
-			}
-			,
-			{
-				xtype:'fieldset',
-				title:'Content and Topics',
-				margin:'2 2 12 2',
-				width:'100%',
-				layout:'vbox',
-				items:[
-					{xtype:'displayfield',
-						value:'Office Automation'},
-					{
-						xtype:'displayfield',
-						value:'System upgrade'
-					},
-					{
-						xtype:'displayfield',
-						value:'RFP'
-					}
-				]
 			}
 		]
 		});
