@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ccg.oms.common.data.RestResponse;
 import com.ccg.oms.common.data.RestResponseConstants;
 import com.ccg.oms.common.data.document.Document;
+import com.ccg.oms.common.data.document.DocumentInfo;
 import com.ccg.oms.common.data.project.TaskDoc;
 import com.ccg.oms.common.data.user.UserInfo;
 import com.ccg.oms.common.indexing.Doc;
@@ -358,7 +359,13 @@ public class DocumentController {
 			// final searh result
 			List<ResultDoc> srs = new ArrayList<ResultDoc>();
 			for(Integer docId : order){
-				srs.add(map.get(docId).getDocuement());
+				DocumentInfo docInfo = docService.findDocumentInfoById(docId);
+				if(docInfo != null && docInfo.getProject() != null && docInfo.getProject().get(0) != null){
+					if(docInfo.getProject().get(0).getProjectInfo() != null 
+							&& docInfo.getProject().get(0).getProjectInfo().getProjId() != null){
+						srs.add(map.get(docId).getDocuement());
+					}
+				}
 			}
 			resp.setResult(srs);
 		}catch(Exception e){
