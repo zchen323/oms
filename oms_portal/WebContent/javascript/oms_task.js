@@ -142,7 +142,7 @@ oms.task.createTaskInfoPanel=function(tinfo) // json object of the project info
 	return panel;
 };
 
-oms.task.createTaskCommentPanel=function(task,id)
+oms.task.createTaskCommentPanel=function(task,id,projID)
 {
 	// first load the store
 	var clstore=Ext.create('Ext.data.JsonStore', {
@@ -167,6 +167,8 @@ oms.task.createTaskCommentPanel=function(task,id)
 		 			handler:function()
 		 			{
 		 				Ext.getCmp('addtaskcommentpanel').getForm().loadRecord({getData:function(){return task;}});
+		 				oms.task.addCommentPanel.projID=projID;
+		 				oms.task.addCommentPanel.taskName=task.name;
 		 				oms.task.addCommentPanel.show();
 		 			} 
 		 		
@@ -235,8 +237,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	             {name: 'restricted',type:'boolean'}
 	         ],
 	});
-			console.log("create docs for task"+id);
-			console.log(task.docs);
+			
 			dlstore.setData(task.docs);
 
 	var grid=Ext.create('Ext.grid.Panel',{
@@ -257,6 +258,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 						{
 							Ext.getCmp('dtcombo1').setStore(store);
 						}
+						oms.task.addDocumentPanel.taskName=task.name;
 		 			oms.task.addDocumentPanel.show();
 		 		} 
 		      }],
@@ -469,6 +471,10 @@ oms.task.addCommentPanel=Ext.create('Ext.window.Window',{
 									if (respObj.status === 'success') {
 										var notes=respObj.result;
 										Ext.getCmp('commentgrid'+formdata.taskId).getStore().setData(notes);
+										// now add the comments into project notes panel
+										var projID=oms.task.addCommentPanel.projID;
+										var taskname=oms.task.addCommentPanel.taskName;
+										oms.project.updateProjNotesPanel(projID,notes,taskname);
 										oms.task.addCommentPanel.hide();
 									}
 								},
@@ -567,6 +573,7 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 						handler: function(){
 							var form = Ext.getCmp("addtaskdocumentpanel").getForm();
 							var taskID=form.getValues().id;
+							var projId=form.getValues().projectId;
 							//console.log(form);
 							form.submit({
 								url: 'api/document/upload',
@@ -583,6 +590,8 @@ oms.task.addDocumentPanel=Ext.create('Ext.window.Window',{
 												var respObj = Ext.decode(response.responseText);
 												if (respObj.status === 'success') {
 													Ext.getStore('taskdlStore'+taskID).setData(respObj.result);
+													var tn=oms.task.addDocumentPanel.taskName;
+													oms.project.updateProjDocPanel(projId,respObj.result,tn);
 												}
 											},
 											failure : function(response, option) {
@@ -774,8 +783,8 @@ oms.task.EditTaskInfoPanel=Ext.create('Ext.window.Window',{
 oms.task.createTaskMainPanel=function(task)  // proj is the json data for the project
 {
 	var infop=oms.task.createTaskInfoPanel(task.taskinfo) ;
-	var clgrid=oms.task.createTaskCommentPanel(task.commentlist,1);
-	var dlgrid=oms.task.createTaskDocumentPanel(task.doclist,1);
+	var clgrid=oms.task.createTaskCommentPanel(task.commentlist,task.taskID);
+	var dlgrid=oms.task.createTaskDocumentPanel(task.doclist,task.taskID);
 	//var ulgrid=oms.project.createUserPanel(proj.userlist);
 	//console.log(infop);
 	var mainpanel=Ext.create('Ext.panel.Panel',{

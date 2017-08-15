@@ -558,7 +558,7 @@ oms.project.createProjInfoPanel=function(pinfo) // json object of the project in
 	return panel;
 };
 
-oms.project.createTaskItemPanel=function(task,seq,porj)
+oms.project.createTaskItemPanel=function(task,seq,porjID)
 {
 	// build header
 	seq=seq+1;
@@ -572,8 +572,8 @@ oms.project.createTaskItemPanel=function(task,seq,porj)
 	h_html=h_html+"</tr></table>";
 	var taskid=task.id;
 	// now build commend and document panel
-	var clgrid=oms.task.createTaskCommentPanel(task,taskid);
-	var dlgrid=oms.task.createTaskDocumentPanel(task,taskid); 
+	var clgrid=oms.task.createTaskCommentPanel(task,taskid,porjID);
+	var dlgrid=oms.task.createTaskDocumentPanel(task,taskid,porjID); 
 	//console.log(clgrid);
 	var taskpanel=Ext.create('Ext.panel.Panel',{
 		id:"taskitem_"+taskid,
@@ -584,7 +584,6 @@ oms.project.createTaskItemPanel=function(task,seq,porj)
 		collapsible: true, 
 		titleCollapse: true,
 		width:'99%',
-		draggable:true,
 		layout:'accordion', 
 		items:[
 			{
@@ -644,7 +643,7 @@ oms.project.createTaskListPanel=function(taskList,projID)
 	for(var i=0;i<data.length;i++)
 	{
 		console.log(data[i]);
-		var itempanel=oms.project.createTaskItemPanel(data[i],i);
+		var itempanel=oms.project.createTaskItemPanel(data[i],i,projID);
 		if(data[i][4]=='in progress')
 		{
 		 itempanel.collapsed=false;
@@ -676,7 +675,7 @@ oms.project.createProjNotesPanel=function(proj,projID)
 	{
 		for(var i=0;i<tasklist.length;i++)
 		{
-			var notes=tasklist[i].docs;
+			var notes=tasklist[i].notes;
 			if(notes!=null)
 			{
 				for(var j=0;j<notes.length;j++)
@@ -691,7 +690,7 @@ oms.project.createProjNotesPanel=function(proj,projID)
 	}
 	pnotestore.setData(pnotes);
 	var grid=Ext.create('Ext.grid.Panel',{
-		id:'pnotesgrid'+id,
+		id:'pnotesgrid'+projID,
 		store:pnotestore,		
 		scrollable:true,
 	    columns: [
@@ -715,6 +714,46 @@ oms.project.createProjNotesPanel=function(proj,projID)
 	return grid;
 	
 };
+oms.project.updateProjNotesPanel=function(projID,notes,taskname){
+	var store=Ext.getStore('pnotes'+projID);
+	for(var note of notes)
+		{
+			note.taskname=taskname;
+			var found=false;
+			for(item of store.data.items)
+				{
+					if(item.id==note.id)
+						{
+						 found=true;
+						}
+				}
+			if(!found)
+				{
+					store.add(note);
+				}
+		}
+};
+oms.project.updateProjDocPanel=function(projID,docs,taskname){
+	var store=Ext.getStore('dlStore'+projID);
+	console.log(docs);
+	console.log(store.data);
+	for(var doc of docs)
+	{
+		doc.taskname=taskname;
+		var found=false;
+		for(item of store.data.items)
+			{
+				if(item.id==doc.id)
+					{
+					 found=true;
+					}
+			}
+		if(!found)
+			{
+				if(doc.documentId!=null) store.add(doc);
+			}
+	}
+}
 oms.project.createDocumentPanel=function(proj,projID)
 {
 	var dlstore=Ext.create('Ext.data.JsonStore', {
@@ -744,9 +783,11 @@ oms.project.createDocumentPanel=function(proj,projID)
 			{
 				for(var j=0;j<docs.length;j++)
 				{
-					docs[j].taskname=tasklist[i].name;
+					if(docs[j].documentId!=null){
+						docs[j].taskname=tasklist[i].name;
 				//	console.log(docs[j]);
-					pdocs[pdocs.length]=docs[j];
+						pdocs[pdocs.length]=docs[j];
+					}
 				}
 				//pdocs.concat(docs);
 			}
@@ -1304,7 +1345,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 							xtype:'tabpanel',
 							id:'projectDetails'+proj.projectInfo.projId,
 							width:'99%',
-							minHeight:400,
+							minHeight:560,
 							margin:'2 2 2 2',
 							flex:1, 
 							defaults:
@@ -1638,7 +1679,27 @@ oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
 		]
 	});
 
+oms.project.refreshPP=function(projID){
+	var myMask = Ext.MessageBox.wait("Reloading Project....");
+	Ext.Ajax.request({
+		url:'api/project/'+formdata.projID,
+		success:function(response)
+		{
+			var obj=Ext.JSON.decode(response.responseText);
+			var proj=obj.result;
+		//	console.log(obj.result);
+			var ppanelID="projectPanel"+proj.projectInfo.projId;
+			// panel already exist
+				Ext.getCmp(ppanelID).close();
+				  //Ext.getCmp('centerViewPort').setActiveTab(Ext.getCmp(ppanelID));
 
+				var p_proj=oms.project.createProjectPanel(proj);
+				Ext.getCmp('centerViewPort').add(p_proj);
+				Ext.getCmp('centerViewPort').setActiveTab(p_proj);
+				myMask.close();
+			
+		}});
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  test mockup sample data
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
