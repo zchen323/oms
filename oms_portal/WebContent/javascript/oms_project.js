@@ -305,7 +305,9 @@ oms.project.createNewProjPanel=Ext.create('Ext.window.Window',{
 								var task=oms.admin.lookupTaskDetails(l[i].data.id);
 								if(task!=null)
 									{
+										task.status='Not Started';
 										tasks[tasks.length]=task;
+										
 									}
 							}
 						}
@@ -1625,7 +1627,7 @@ oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
 					formdata.projectId=formdata.projId;
 					
 					console.log(formdata);
-					
+					formdata.status="Not Started";
 					Ext.Ajax.request({
 						url : "api/project/task",
 						method : 'POST',
