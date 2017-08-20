@@ -164,14 +164,15 @@ oms.doc.createSearchDocMainPanel=function(doc,start,end,query)
 			htmlstr='<iframe src="'+url+'" width="100%" height="100%"></iframe>'
 		}
 	// now build html
-	var mainpanel=Ext.create('Ext.panel.Panel',{
-		layout:'hbox',
+	var mainpanel=Ext.create('Ext.tab.Panel',{
+		//layout:'hbox',
 		title:"DOC: -- ["+doc.name+"]--["+query+"]",
 		border:true,
 		items:[ 
 			{
 			xtype:'component',
 		//	id:'doccontent_'+doc.documentId,
+			title:'Content',
 			width:'72%',
 			height:'100%',
 			scrollable:true,
@@ -186,7 +187,7 @@ oms.doc.createSearchDocMainPanel=function(doc,start,end,query)
 			{
 			xtype:'panel',
 			width:'28%', 
-			
+			title:'Metadata',
 			layout:'vbox',
 			items:[infop]
 			}
@@ -225,9 +226,8 @@ oms.doc.createDocMainPanel=function(doc) 										// project
 			htmlstr='<iframe src="'+doc.url+'" width="100%" height="100%"></iframe>'
 		}
 	// now build html
-	var mainpanel=Ext.create('Ext.panel.Panel',{
+	var mainpanel=Ext.create('Ext.tab.Panel',{
 		id:"docPanel"+doc.documentId,
-		layout:'hbox',
 		title:"DOC: -- ["+doc.name+"]",
 		border:true,
 		items:[ 
@@ -235,6 +235,7 @@ oms.doc.createDocMainPanel=function(doc) 										// project
 			xtype:'component',
 			id:'doccontent_'+doc.documentId,
 			width:'72%',
+			title:'Content',
 			height:'100%',
 			scrollable:true,
 			margin:'2 2 2 2', 
@@ -248,7 +249,7 @@ oms.doc.createDocMainPanel=function(doc) 										// project
 			{
 			xtype:'panel',
 			width:'28%', 
-			
+			title:'Metadata',
 			layout:'vbox',
 			items:[infop]
 			}
@@ -330,7 +331,7 @@ oms.doc.buildSearchDocs=function(docs){
 };
 
 oms.doc.preDocSearch=function(key){
-	oms.doc.openDocumentPanel.show();
+	 Ext.getCmp('searchPanel').expand();
 	Ext.getCmp('docsearchkey').setValue(key);
 //	Ext.getCmp('searchedDocuments').update("loading....");
 };
@@ -347,7 +348,6 @@ oms.doc.buildTreeStore=function(searchkey,nodes){
 };
 oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 	frame: true,
-	float:true,
 	closable:true, 
 	title: 'Searching Document',
 	bodyPadding: 10,
@@ -363,14 +363,14 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 		},
 		{
 			xtype:'textfield',
-			width:'95%',
+			width:'92%',
 			margin: '0 2 2 15',
-			id:'docsearchkey'
+			id:'docsearchkey1'
 		},
 		{
 			 xtype:'tabpanel',				   
-			   id:'searchtabpanel',	
-			   width:'95%',
+			   id:'searchtabpanel1',	
+			   width:'92%',
 			   height:360,
 			   margin: '5 5 5 15',
 			    activeTab:0,
@@ -392,6 +392,7 @@ oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
 				Ext.Ajax.request({
 					url : urlstr,
 					method : 'GET',
+					timeout:120000,
 					success : function(response, option) {
 						//console.log(response);
 						console.log(response);

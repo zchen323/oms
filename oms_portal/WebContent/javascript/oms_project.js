@@ -1335,10 +1335,9 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 	//console.log(infop);
 	// update projectuser
 	oms.project.projectUserUpdate(proj.projectUsers);
-	var mainpanel=Ext.create('Ext.panel.Panel',{
+	var mainpanel=Ext.create('Ext.tab.Panel',{
 		id:"projectPanel"+proj.projectInfo.projId,
 		project:proj,
-		layout:'hbox',
 		title:"[PROJECT"+proj.projectInfo.projId+"]: -- ["+proj.projectInfo.projName+"]",
 		padding:'5 5 5 5',
 		border:true,
@@ -1349,6 +1348,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 							width:'99%',
 							minHeight:560,
 							margin:'2 2 2 2',
+							title:'Content',
 							flex:1, 
 							defaults:
 							{
@@ -1407,6 +1407,7 @@ oms.project.createProjectPanel=function(proj) // proj is the json data for the p
 				{
 					xtype:'container',
 					width:'30%',
+					title:'Metadata',
 					layout:'vbox',
 					items:[
 						infop

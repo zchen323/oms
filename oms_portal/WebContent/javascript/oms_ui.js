@@ -35,7 +35,6 @@ oms.ui={
 			}
 						
 			res=res+'</ul>';
-			res=res+'  <a href="#" onclick="oms.doc.openDocumentPanel.show();return false;"><img src="css/images/magnify.png"/>Search Document  </a> ';
 		return res;
 		},
 		getUserProjectHtml:function(projs)

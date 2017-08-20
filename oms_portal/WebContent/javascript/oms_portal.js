@@ -54,7 +54,7 @@ function displayRate()
 			  xtype: 'button',
 			  text:'Search',
 			  handler: function() {
-				  oms.doc.openDocumentPanel.show();
+				  Ext.getCmp('searchPanel').expand();
 			    },
 			  flex: 5 / 100
 		},
@@ -218,18 +218,144 @@ Ext.onReady(function(){
 					}
 			},
 			{
-				region:'center',
-				id:'centerViewPort',
-				xtype:'tabpanel',
-				border:true,
-				frame:true,
-				defaults: {
-				bodyPadding: 10,
-				scrollable: true,
-				closable: true
-				},
-				items:[]
-			}]
+				region:'east',
+				frame: true,
+				collapsible: true,
+				id:'searchPanel',
+				title: 'Searching Document',
+				bodyPadding: 5,
+				scrollable:true,
+				layout:'vbox',
+				collapsed:true,
+				width:480,
+				items:[{
+						xtype:'displayfield',			
+						margin: '0 2 2 15',
+						value:'Pease enter the searching key words:'
+					},
+					{
+						xtype:'textfield',
+						width:'92%',
+						margin: '0 2 2 15',
+						id:'docsearchkey'
+					},
+					{
+						 xtype:'tabpanel',				   
+						   id:'searchtabpanel',	
+						   width:'92%',
+						   minHeight:480,
+						   flex:1,
+						   margin: '5 5 5 15',
+						    activeTab:0,
+						items:[
+						   
+						]
+
+					}
+				],
+				buttons:[
+					{
+						text:"Search",
+						handler: function()
+						{
+							var key=Ext.getCmp('docsearchkey').getValue();
+							var urlstr="api/document/search?query="+Ext.encode(key);
+							var myMask = Ext.MessageBox.wait("Processing....","Searching Article...");
+						
+							Ext.Ajax.request({
+								url : urlstr,
+								method : 'GET',
+								timeout:120000,
+								success : function(response, option) {
+									//console.log(response);
+									console.log(response);
+									var respObj = Ext.decode(response.responseText);
+									
+								//	Ext.Msg.alert(respObj.status, respObj.message);
+					//				console.log(respObj);
+									if (respObj.status === 'success') {
+										// now we need to render the documents
+									//	var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
+										console.log(respObj);
+										var store=oms.doc.buildTreeStore(key,respObj.result);
+										var colors=["#ffcccc","#ccffcc","orange"];
+										var index=Ext.getCmp('searchtabpanel').items.length;
+										var c=colors[index%3];
+										var panel=Ext.create('Ext.tree.Panel', {
+											style: {borderColor:c, borderStyle:'double', borderWidth:'3px'},
+											title: '['+key+':]', 
+											closable: true,
+										    autoScroll:true,
+										    scroll:'vertical',
+										    store:store,
+										    listeners:{
+										    itemclick: function(s,r) {
+										    	if(r.data.id=='root'){
+										    			return;
+										    	}
+								            	var d=r.data;
+								            	console.log(d);
+								            	if(d.documentId&&d.startPage&&d.endPage){
+								            		oms.doc.openSearchDoc(d.documentId,d.startPage,d.endPage,key);
+								            	}
+								            	else if(d.documentId)
+								            	{
+								            		oms.doc.openDoc(d.documentId);
+								            	}
+								          /*  	if(r.data&&r.data.startPage)
+								            	{
+								            		ccg.ui.updateSelectedContent(r.data,searchkey);
+								            		if(r.data.text.indexOf("Article")>-1)
+								            		{
+								            			if(r.data.expanded!=true)
+								            			{
+								            				this.expandNode(r,true);
+								            			}
+								            		}
+								            	}	
+								            	// now check if the tree is expanded
+								            	*/
+								            }
+										    }
+										});
+										Ext.getCmp('searchtabpanel').add(panel).show();
+										setTimeout(oms.loadUserDoc,2000);
+										myMask.close();
+									}
+									else{
+										console.log(response);
+										alert('Search Error or No Data!');
+										myMask.close();
+									}
+								},
+								failure : function(response, option) {
+									console.log(response);
+									Ext.Msg.alert('Error', response.responseText);
+									myMask.close();
+								}
+							});
+							
+						}
+
+					}
+					]},
+					{
+								
+						region:'center',
+						id:'centerViewPort',
+						xtype:'tabpanel',
+						border:true,
+						frame:true,
+						defaults: {
+						bodyPadding: 10,
+						height:500,
+						scrollable: true,
+						closable: true
+						},
+						items:[]
+					}
+
+			]
 	});
 // load sample project view
 
