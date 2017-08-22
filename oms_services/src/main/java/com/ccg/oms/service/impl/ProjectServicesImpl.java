@@ -223,8 +223,15 @@ public class ProjectServicesImpl implements ProjectServices{
 		entity.setStatus("Not Started");
 		entity.setLastUpdatedate(new Timestamp(System.currentTimeMillis()));
 		
-		taskRepository.save(entity);
-		
+		// adding the task related documents
+		entity=taskRepository.save(entity);
+		List<TaskDoc> taskDocs = task.getDocs();
+		for(TaskDoc taskDoc : taskDocs){
+			TaskDocEntity tde = ProjectMapper.toEntity(taskDoc);
+			tde.setDocType(taskDoc.getDoctype());
+			tde.setTaskId(entity.getId());
+			taskDocRepository.save(tde);				
+		}
 	}
 	@Override
 	public void addProjectUser(ProjectUser user) {

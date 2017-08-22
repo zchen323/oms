@@ -1626,7 +1626,9 @@ oms.project.AddNewTaskPanel=Ext.create('Ext.window.Window',{
 					var formdata = Ext.getCmp("ptAddPTaskform").getForm().getValues();
 					formdata.taskTempId = formdata["ptaskcombo-inputEl"];
 					formdata.projectId=formdata.projId;
-					
+					// now add the associated document with the tasks.
+					task=oms.admin.lookupTaskDetails(formdata.taskTempId);
+					formdata.docs=task.docs;
 					console.log(formdata);
 					formdata.status="Not Started";
 					Ext.Ajax.request({
