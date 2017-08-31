@@ -239,6 +239,7 @@ public class ProjectController {
 	public @ResponseBody RestResponse addTask(@RequestBody Task task){
 		RestResponse resp = RestResponse.getSuccessResponse();
 		System.out.println(JSON.toJson(task));
+		task.setStatus("Not Started");
 		try{
 			service.addTask(task);
 		}catch(Exception e){

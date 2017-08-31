@@ -322,7 +322,7 @@ public class DocumentController {
 			Map<Integer, SearchResult> map = new HashMap<Integer, SearchResult>();
 			for(Doc doc : docs){
 				Integer documentId = doc.getDocumentId();
-				
+				Document document = docService.findDocumentByCategoryId(Integer.parseInt(doc.getId()));
 				//if(null == docService.findDocumentInfoById(documentId)){
 				//	continue;
 				//}
@@ -333,11 +333,12 @@ public class DocumentController {
 					SearchResult sr = new SearchResult();
 					sr.setQ(query);
 					if(documentId == null){
-						Document document = docService.findDocumentByCategoryId(Integer.parseInt(doc.getId()));
+						//Document document = docService.findDocumentByCategoryId(Integer.parseInt(doc.getId()));
 						ResultDoc resultDoc = new ResultDoc();
 						resultDoc.setId(document.getId());
 						resultDoc.setDocumentId(document.getId());
 						resultDoc.setTitle(document.getName());
+						resultDoc.setDoctype(document.getType());
 						order.add(document.getId());
 						sr.setDocuement(resultDoc);
 						map.put(document.getId(), sr);
@@ -347,6 +348,7 @@ public class DocumentController {
 						resultDoc.setId(doc.getDocumentId());
 						resultDoc.setDocumentId(doc.getDocumentId());
 						resultDoc.setTitle(doc.getDocumentTitle());
+						resultDoc.setDoctype(document.getType());
 						resultDoc.getCategories().add(doc);
 						sr.setDocuement(resultDoc);
 						order.add(doc.getDocumentId());
@@ -422,6 +424,15 @@ public class DocumentController {
 			if("on".equals(restricted)){
 				doc.setRestricted(true);
 			}
+			String doctype = params.get("doctype");
+			if(doctype != null){
+				doc.setType(doctype);
+			}
+			//System.out.println("==== docType ==="+ doctype);
+			
+			
+			
+			
 			Integer documentId =  docService.saveDocument(doc);
 			doc.setId(documentId);
 			

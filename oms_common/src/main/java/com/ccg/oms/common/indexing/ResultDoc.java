@@ -13,6 +13,8 @@ public class ResultDoc {
 	Integer id;
 	String nodetext="";
 	Integer documentId;
+	String doctype = "NON";
+	
 	public Integer getDocumentId() {
 		return documentId;
 	}
@@ -69,4 +71,11 @@ public class ResultDoc {
 	public void setCategories(List<Doc> categories) {
 		this.categories = categories;
 	}
+	public String getDoctype() {
+		return doctype;
+	}
+	public void setDoctype(String doctype) {
+		this.doctype = doctype;
+	}
+	
 }
