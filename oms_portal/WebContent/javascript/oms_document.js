@@ -346,127 +346,76 @@ oms.doc.buildTreeStore=function(searchkey,nodes){
 	});
 	return stree;
 };
-oms.doc.openDocumentPanel=Ext.create('Ext.window.Window',{
-	frame: true,
-	closable:true, 
-	title: 'Searching Document',
-	bodyPadding: 10,
-	width:600,
-	scrollable:true,
-	closeAction: 'hide',
-	layout:'vbox',
-	height:540,
-	items:[{
-			xtype:'displayfield',			
-			margin: '0 2 2 15',
-			value:'Pease enter the searching key words:'
-		},
-		{
-			xtype:'textfield',
-			width:'92%',
-			margin: '0 2 2 15',
-			id:'docsearchkey1'
-		},
-		{
-			 xtype:'tabpanel',				   
-			   id:'searchtabpanel1',	
-			   width:'92%',
-			   height:360,
-			   margin: '5 5 5 15',
-			    activeTab:0,
-			items:[
-			   
-			]
+　
 
-		}
-	],
-	buttons:[
+oms.doc.makeFilterPanel=function(docary,key,treepanel)
+{
+	// first find out all the doctype
+	var dtypes=[];
+	for (doc of docary)
 		{
-			text:"Search",
-			handler: function()
+			if(doc.doctype)
 			{
-				var key=Ext.getCmp('docsearchkey').getValue();
-				var urlstr="api/document/search?query="+Ext.encode(key);
-				var myMask = Ext.MessageBox.wait("Processing....","Searching Article...");
-			
-				Ext.Ajax.request({
-					url : urlstr,
-					method : 'GET',
-					timeout:120000,
-					success : function(response, option) {
-						//console.log(response);
-						console.log(response);
-						var respObj = Ext.decode(response.responseText);
-						
-					//	Ext.Msg.alert(respObj.status, respObj.message);
-		//				console.log(respObj);
-						if (respObj.status === 'success') {
-							// now we need to render the documents
-						//	var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
-							console.log(respObj);
-							var store=oms.doc.buildTreeStore(key,respObj.result);
-							var colors=["#ffcccc","#ccffcc","orange"];
-							var index=Ext.getCmp('searchtabpanel').items.length;
-							var c=colors[index%3];
-							var panel=Ext.create('Ext.tree.Panel', {
-								style: {borderColor:c, borderStyle:'double', borderWidth:'3px'},
-								title: '['+key+':]', 
-								closable: true,
-							    autoScroll:true,
-							    scroll:'vertical',
-							    store:store,
-							    listeners:{
-							    itemclick: function(s,r) {
-							    	if(r.data.id=='root'){
-							    			return;
-							    	}
-					            	var d=r.data;
-					            	console.log(d);
-					            	if(d.documentId&&d.startPage&&d.endPage){
-					            		oms.doc.openSearchDoc(d.documentId,d.startPage,d.endPage,key);
-					            	}
-					            	else if(d.documentId)
-					            	{
-					            		oms.doc.openDoc(d.documentId);
-					            	}
-					          /*  	if(r.data&&r.data.startPage)
-					            	{
-					            		ccg.ui.updateSelectedContent(r.data,searchkey);
-					            		if(r.data.text.indexOf("Article")>-1)
-					            		{
-					            			if(r.data.expanded!=true)
-					            			{
-					            				this.expandNode(r,true);
-					            			}
-					            		}
-					            	}	
-					            	// now check if the tree is expanded
-					            	*/
-					            }
-							    }
-							});
-							Ext.getCmp('searchtabpanel').add(panel).show();
-							setTimeout(oms.loadUserDoc,2000);
-							myMask.close();
-						}
-						else{
-							console.log(response);
-							alert('Search Error or No Data!');
-							myMask.close();
-						}
-					},
-					failure : function(response, option) {
-						console.log(response);
-						Ext.Msg.alert('Error', response.responseText);
-						myMask.close();
+				if(dtypes.indexOf(doc.doctype)==-1)
+					{
+						dtypes.push(doc.doctype);
 					}
-				});
-				
 			}
-
 		}
-		]
-});　
+	console.log(dtypes);
+	var panel=Ext.create('Ext.form.Panel', {
+		title:'Doc Types Filters:',
+		region:'north',
+		layout:'vbox',
+		items:[]
+	});
+	
+	panel.filters=[];
+	for(t of dtypes)
+	{
+		lbl=Ext.create('Ext.form.Checkbox',{
+			margin: '0 2 2 15',
+			fieldLabel:t.toUpperCase(),
+			inputValue:t,
+			checked:true,
+	        listeners: {
+	            change: function (obj, oldvalue,newvalue,eops) {
+	                    oms.doc.handleFilterChanges(panel,key,treepanel,docary);
+	                }
+	        }
+		});
+		panel.add(lbl);
+		panel.filters.push(lbl);
+	}
+	return panel;
+};
+
+oms.doc.handleFilterChanges=function(panel,key,treepanel,alldocs)
+{
+	var filters=panel.filters;
+	// first build current active doclist
+	af=[]
+	for(f of filters)
+		{
+			console.log(f.inputValue,f.fieldLabel,f.checked);
+			if(f.checked)
+				{
+				 af.push(f.inputValue);
+				}
+		}
+	console.log(af);
+	console.log(alldocs.length);
+	dlist=[];
+	for(doc of alldocs)
+		{
+			if((af.indexOf(doc.doctype)>-1)||doc.doctype=='')
+				{
+					dlist.push(doc);
+				}
+		}
+	var newstore=oms.doc.buildTreeStore(key,dlist);
+	treepanel.setStore(newstore);
+}
 oms.doc.sample1={
 		projectID:1,
 		taskID:15,

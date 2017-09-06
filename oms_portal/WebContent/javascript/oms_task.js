@@ -243,7 +243,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	var grid=Ext.create('Ext.grid.Panel',{
 		id:'taskdoclistgrid'+id,
 		store:dlstore,		
-		width:'98%',
+		width:'95%',
 		scrollable:true,
 		tbar:[
 		      {
@@ -264,7 +264,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 		      }],
 		
 	    columns: [
-	              {text:"",dataIndex:'restricted', width:20,
+	              {text:"",dataIndex:'restricted', width:30,
 	               renderer:function(val)
 	               {
 	            	 if(val==true)
@@ -290,7 +290,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	              {text: "type",  dataIndex: 'doctype',width:120},	         
 	              {text: "Date", dataIndex: 'uploadDate',formatter: 'date("m/d/Y")',width:80},
 	              {text: "User",  dataIndex: 'user',width:80},	
-	              {dataIndex:"required",width:24,
+	              {dataIndex:"required",width:30,
 	            	renderer:function(val)
 	            	{
 	            		if(val=="Y")
@@ -302,7 +302,7 @@ oms.task.createTaskDocumentPanel=function(task,id)
 	               },
 	              { 
 	            	   xtype:'actioncolumn',
-			           width:40,
+			           width:60,
 			           items: [			        	   
 			        	   {
 			        		   icon: 'css/images/shared/icons/fam/delete.gif',

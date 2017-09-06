@@ -281,13 +281,14 @@ Ext.onReady(function(){
 										var colors=["#ffcccc","#ccffcc","orange"];
 										var index=Ext.getCmp('searchtabpanel').items.length;
 										var c=colors[index%3];
-										var panel=Ext.create('Ext.tree.Panel', {
+									
+										var treepanel=Ext.create('Ext.tree.Panel', {
 											style: {borderColor:c, borderStyle:'double', borderWidth:'3px'},
-											title: '['+key+':]', 
-											closable: true,
 										    autoScroll:true,
 										    scroll:'vertical',
+										    flex:1,
 										    store:store,
+										    region:'center',
 										    listeners:{
 										    itemclick: function(s,r) {
 										    	if(r.data.id=='root'){
@@ -302,23 +303,22 @@ Ext.onReady(function(){
 								            	{
 								            		oms.doc.openDoc(d.documentId);
 								            	}
-								          /*  	if(r.data&&r.data.startPage)
-								            	{
-								            		ccg.ui.updateSelectedContent(r.data,searchkey);
-								            		if(r.data.text.indexOf("Article")>-1)
-								            		{
-								            			if(r.data.expanded!=true)
-								            			{
-								            				this.expandNode(r,true);
-								            			}
-								            		}
-								            	}	
-								            	// now check if the tree is expanded
-								            	*/
 								            }
 										    }
 										});
-										Ext.getCmp('searchtabpanel').add(panel).show();
+										var filterpanel=oms.doc.makeFilterPanel(respObj.result,key,treepanel);
+										var cpanel=Ext.create('Ext.form.Panel', {
+											// title:"Project Information:",
+											title:'['+key+']',
+											closable:true,
+											margin:'2 2 2 2', 
+											autoScroll:true,
+											layout:'border',
+											scroll:'vertical',
+											height:'98%',
+											items:[filterpanel,treepanel]
+										});
+										Ext.getCmp('searchtabpanel').add(cpanel).show();
 										setTimeout(oms.loadUserDoc,2000);
 										myMask.close();
 									}

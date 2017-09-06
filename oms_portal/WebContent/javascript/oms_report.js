@@ -73,4 +73,5 @@ oms.report.openPRPanel=function(){
 		}
 	});
 	Ext.getCmp('centerViewPort').add(mainpanel);
+	Ext.getCmp('centerViewPort').setActiveTab(mainpanel);
 };
