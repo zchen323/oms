@@ -71,13 +71,16 @@ public class DocumentController {
 		}
 		
 		response.setHeader("content-disposition", "inline; filename=" + document.getName());
-		if("pdf".equalsIgnoreCase(document.getType())){
+		String documentName = document.getName();
+		int positoin = documentName.lastIndexOf(".");
+		String docExtname = documentName.substring(positoin + 1);
+		if("pdf".equalsIgnoreCase(docExtname)){
 			response.setContentType("application/pdf");
-		}else if("doc".equalsIgnoreCase(document.getType())){
+		}else if("doc".equalsIgnoreCase(docExtname)){
 			response.setContentType("application/msword");
-		}else if("docx".equalsIgnoreCase(document.getType())){
+		}else if("docx".equalsIgnoreCase(docExtname)){
 			response.setContentType("application/msword");
-		}else if("xml".equalsIgnoreCase(document.getType())){
+		}else if("xml".equalsIgnoreCase(docExtname)){
 			response.setContentType("application/xml");
 		}else{
 			response.setContentType("text/plain");
