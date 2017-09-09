@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +38,7 @@ import com.ccg.oms.common.data.user.UserInfo;
 import com.ccg.oms.common.indexing.Doc;
 import com.ccg.oms.common.indexing.IndexingHelper;
 import com.ccg.oms.common.indexing.ResultDoc;
+import com.ccg.oms.common.indexing.ResultType;
 import com.ccg.oms.common.indexing.SearchResult;
 import com.ccg.oms.common.pdf.util.PdfUtil;
 import com.ccg.oms.service.DocumentService;
@@ -308,11 +310,63 @@ public class DocumentController {
 		return resp;
 	}
 
+	@RequestMapping(value="search2", method=RequestMethod.GET)
+	public @ResponseBody RestResponse search2(
+			@RequestParam(value="query", required=false) String query,
+			HttpServletRequest request) {
+		RestResponse resp = RestResponse.getSuccessResponse();
+		try{
+			List<ResultDoc> list = _search(query, request);
+			Map<String, ResultType> map = new HashMap<String, ResultType>();
+			for( ResultDoc rd : list){
+				String docType = rd.getDoctype();
+				if(map.containsKey(docType)){
+					map.get(docType).incrementCountBy1();
+				}else{
+					ResultType rt = new ResultType();
+					rt.incrementCountBy1();
+					rt.setDocType(docType);
+					map.put(docType, rt);
+				}
+			}
+			List<ResultType> resultTypes = new ArrayList<ResultType>();
+			Set<String> keySet = map.keySet();
+			for(String key : keySet){
+				resultTypes.add(map.get(key));
+			}
+			
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("docType", resultTypes);
+			result.put("docs", list);
+						
+			resp.setResult(result);
+		}catch(Exception e){
+			e.printStackTrace();
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+		}
+		return resp;
+	}
+	
 	@RequestMapping(value="search", method=RequestMethod.GET)
 	public @ResponseBody RestResponse search(
 			@RequestParam(value="query", required=false) String query,
 			HttpServletRequest request) {
 		RestResponse resp = RestResponse.getSuccessResponse();
+		try{			
+			resp.setResult(_search(query, request));
+		}catch(Exception e){
+			e.printStackTrace();
+			resp.setMessage(e.getMessage());
+			resp.setStatus(RestResponseConstants.FAIL);
+		}
+		return resp;
+	}
+	
+	private List<ResultDoc> _search(String query, HttpServletRequest request) throws Exception{
+
+		//RestResponse resp = RestResponse.getSuccessResponse();
+		List<ResultDoc> srs = null;
 		try{
 			List<Doc> docs = IndexingHelper.search(query);
 			
@@ -362,7 +416,7 @@ public class DocumentController {
 			}
 			
 			// final searh result
-			List<ResultDoc> srs = new ArrayList<ResultDoc>();
+			srs = new ArrayList<ResultDoc>();
 			for(Integer docId : order){
 				DocumentInfo docInfo = docService.findDocumentInfoById(docId);
 				if(docInfo != null && docInfo.getProject() != null && docInfo.getProject().get(0) != null){
@@ -371,18 +425,12 @@ public class DocumentController {
 						srs.add(map.get(docId).getDocuement());
 					}
 				}
-			}
-			resp.setResult(srs);
+			}	
 		}catch(Exception e){
-			e.printStackTrace();
-			resp.setMessage(e.getMessage());
-			resp.setStatus(RestResponseConstants.FAIL);
-		}
-	
-		return resp;
+			throw e;
+		}	
+		return srs;
 	}
-	
-	
 	
 
 	@RequestMapping(value="upload", method=RequestMethod.POST)
