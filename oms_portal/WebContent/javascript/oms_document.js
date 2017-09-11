@@ -348,9 +348,10 @@ oms.doc.buildTreeStore=function(searchkey,nodes){
 };
 　
 
-oms.doc.makeFilterPanel=function(docary,key,treepanel)
+oms.doc.makeFilterPanel=function(docary,key,treepanel,dtypes)
 {
 	// first find out all the doctype
+	/*
 	var dtypes=[];
 	for (doc of docary)
 		{
@@ -363,20 +364,29 @@ oms.doc.makeFilterPanel=function(docary,key,treepanel)
 			}
 		}
 	console.log(dtypes);
+	*/
 	var panel=Ext.create('Ext.form.Panel', {
 		title:'Doc Types Filters:',
 		region:'north',
-		layout:'vbox',
+		layout: {
+		    type: 'table',
+		    columns: 2
+		},
 		items:[]
 	});
 	
 	panel.filters=[];
+	var ii=0;
 	for(t of dtypes)
 	{
+		var coly=ii%2;
+		var colx=ii/2;
 		lbl=Ext.create('Ext.form.Checkbox',{
 			margin: '0 2 2 15',
-			fieldLabel:t.toUpperCase(),
-			inputValue:t,
+			html:'"'+coly+","+colx+'"',
+			fieldLabel:t.docType.toUpperCase(),
+			inputValue:t.docType,
+			boxLabel:t.count,
 			checked:true,
 	        listeners: {
 	            change: function (obj, oldvalue,newvalue,eops) {
@@ -386,6 +396,7 @@ oms.doc.makeFilterPanel=function(docary,key,treepanel)
 		});
 		panel.add(lbl);
 		panel.filters.push(lbl);
+		ii=ii+1;
 	}
 	return panel;
 };

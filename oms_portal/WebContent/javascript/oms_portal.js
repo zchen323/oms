@@ -259,7 +259,7 @@ Ext.onReady(function(){
 						handler: function()
 						{
 							var key=Ext.getCmp('docsearchkey').getValue();
-							var urlstr="api/document/search?query="+Ext.encode(key);
+							var urlstr="api/document/search2?query="+Ext.encode(key);
 							var myMask = Ext.MessageBox.wait("Processing....","Searching Article...");
 						
 							Ext.Ajax.request({
@@ -277,7 +277,7 @@ Ext.onReady(function(){
 										// now we need to render the documents
 									//	var htmlstr=oms.doc.buildSearchDocs(respObj.result.response.docs);
 										console.log(respObj);
-										var store=oms.doc.buildTreeStore(key,respObj.result);
+										var store=oms.doc.buildTreeStore(key,respObj.result.docs);
 										var colors=["#ffcccc","#ccffcc","orange"];
 										var index=Ext.getCmp('searchtabpanel').items.length;
 										var c=colors[index%3];
@@ -306,7 +306,7 @@ Ext.onReady(function(){
 								            }
 										    }
 										});
-										var filterpanel=oms.doc.makeFilterPanel(respObj.result,key,treepanel);
+										var filterpanel=oms.doc.makeFilterPanel(respObj.result.docs,key,treepanel,respObj.result.docType);
 										var cpanel=Ext.create('Ext.form.Panel', {
 											// title:"Project Information:",
 											title:'['+key+']',
