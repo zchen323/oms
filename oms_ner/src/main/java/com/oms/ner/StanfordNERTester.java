@@ -16,7 +16,7 @@ public class StanfordNERTester {
 	* identify Name,organization location etc entities and return Map<List>
 	* @param text -- data
 	* @param model - Stanford model names out of the three models
-	* @return
+	* @return  
 	*/
 	public static LinkedHashMap <String,LinkedHashSet<String>> identifyNER(String text,String model)
 	{
